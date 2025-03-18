@@ -1,10 +1,10 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { useForm } from 'react-hook-form';
-import { JsonForm } from '../JsonForm';
+import { SchemaForm } from '../SchemaForm';
 import { useGlobalContext } from '../../hooks/useGlobalContext';
 import { createResolver } from '../../utils/resolverUtils';
-import { FieldSchemas, JsonFormInnerProps } from '../../types';
-import { JsonFormField } from '../JsonFormField';
+import { FieldSchemas, SchemaFormRenderProps } from '../../types';
+import { SchemaFormField } from '../SchemaFormField';
 
 // Mock dependencies
 jest.mock('react-hook-form', () => ({
@@ -21,8 +21,8 @@ jest.mock('../../utils/resolverUtils', () => ({
     createResolver: jest.fn(),
 }));
 
-jest.mock('../JsonFormField', () => ({
-    JsonFormField: jest.fn(({ name }) => <div data-testid={`field-${name}`}>{name}</div>),
+jest.mock('../SchemaFormField', () => ({
+    SchemaFormField: jest.fn(({ name }) => <div data-testid={`field-${name}`}>{name}</div>),
 }));
 
 jest.mock('deepmerge', () => ({
@@ -30,7 +30,7 @@ jest.mock('deepmerge', () => ({
     default: jest.fn((a, b) => ({ ...a, ...b })),
 }));
 
-describe('JsonForm', () => {
+describe('SchemaForm', () => {
     const mockGetValues = jest.fn();
     const mockForm = {
         control: {},
@@ -47,7 +47,7 @@ describe('JsonForm', () => {
 
     const mockResolver = jest.fn();
 
-    const mockInnerForm = jest.fn(({ children, onSubmit, form }: JsonFormInnerProps) => (
+    const mockInnerForm = jest.fn(({ children, onSubmit, form }: SchemaFormRenderProps) => (
         <form data-testid="default-form" onSubmit={form.handleSubmit(onSubmit)}>
             {children}
             <button type="submit" data-testid="submit-button">Submit</button>
@@ -73,25 +73,25 @@ describe('JsonForm', () => {
 
     test('renders fields based on schema', () => {
         render(
-            <JsonForm
+            <SchemaForm
                 onSubmit={mockOnSubmit}
                 fields={mockFields}
             />
         );
 
-        expect(JsonFormField).toHaveBeenCalledTimes(2);
+        expect(SchemaFormField).toHaveBeenCalledTimes(2);
         expect(screen.getByTestId('field-name')).toBeInTheDocument();
         expect(screen.getByTestId('field-email')).toBeInTheDocument();
     });
 
     test('uses custom form component when provided via children function', () => {
         render(
-            <JsonForm
+            <SchemaForm
                 onSubmit={mockOnSubmit}
                 fields={mockFields}
             >
                 {(props) => <div data-testid="custom-form">Custom Form with {props.children}</div>}
-            </JsonForm>
+            </SchemaForm>
         );
 
         expect(screen.getByTestId('custom-form')).toBeInTheDocument();
@@ -100,7 +100,7 @@ describe('JsonForm', () => {
 
     test('uses default form component when no children function is provided', () => {
         render(
-            <JsonForm
+            <SchemaForm
                 onSubmit={mockOnSubmit}
                 fields={mockFields}
             />
@@ -112,7 +112,7 @@ describe('JsonForm', () => {
 
     test('creates resolver when not provided', () => {
         render(
-            <JsonForm
+            <SchemaForm
                 fields={mockFields}
                 onSubmit={mockOnSubmit}
                 schema={{ type: 'object' }}
@@ -131,7 +131,7 @@ describe('JsonForm', () => {
         const customResolver = jest.fn();
 
         render(
-            <JsonForm
+            <SchemaForm
                 onSubmit={mockOnSubmit}
                 fields={mockFields}
                 schema={{}}
@@ -156,15 +156,15 @@ describe('JsonForm', () => {
         });
 
         render(
-            <JsonForm
+            <SchemaForm
                 fields={mockFields}
-                context={userContext}
+                renderContext={userContext}
             />
         );
 
         expect(mockInnerForm).toHaveBeenCalledWith(
             expect.objectContaining({
-                context: expect.objectContaining({
+                renderContext: expect.objectContaining({
                     theme: 'light',
                     language: 'en',
                 }),
@@ -178,7 +178,7 @@ describe('JsonForm', () => {
         mockForm.getValues.mockReturnValue(formData);
 
         render(
-            <JsonForm
+            <SchemaForm
                 onSubmit={mockOnSubmit}
                 fields={mockFields}
             />

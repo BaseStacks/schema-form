@@ -1,12 +1,12 @@
-# React JSON Form
+# Schema Form
 
 A small React library for building dynamic forms using JSON schemas.
 
 ## Key points
 
-- Build on top of [react-hook-form](https://react-hook-form.com/) and its ecosystem
-- Low learning curve, easy to get started
+- Build on top of [react-hook-form](https://react-hook-form.com/)
 - Headless design to integrate with any UI library and framework
+- Low learning curve, easy to get started
 - Extensible and customizable
 
 ## UI Templates and demos
@@ -15,11 +15,11 @@ A small React library for building dynamic forms using JSON schemas.
 ## Installation
 
 ```bash
-npm install @workbench-js/json-form
+npm install schema-form
 # or
-yarn add @workbench-js/json-form
+yarn add schema-form
 # or
-bun add @workbench-js/json-form
+bun add schema-form
 ```
 
 ## Usage
@@ -27,9 +27,8 @@ bun add @workbench-js/json-form
 Example with a simple login form:
 
 ```tsx
-import { JsonForm } from '@workbench-js/json-form';
+import { SchemaForm } from 'schema-form';
 
-// Define your form schema with detailed configuration
 const fields = {
   username: {
     type: 'text',
@@ -62,40 +61,10 @@ function LoginForm() {
   };
 
   return (
-    <JsonForm 
-    fields={fields}
-    onSubmit={handleSubmit}
+    <SchemaForm 
+      fields={fields}
+      onSubmit={handleSubmit}
     />
-  );
-}
-```
-
-### Custom components
-
-```tsx
-import { JsonFormProvider } from '@workbench-js/json-form';
-
-const jsonFormConfig = {
-  components: {
-    form: ({children, handleSubmit}) => (
-    <form obSubmit={handleSubmit}>
-      <div>{props.children}</div>
-      <button type="submit">Submit</button>
-    </form>
-    ),
-    fields: {
-      text: ({input}) => <input type="text" {...input} />,
-      password: ({input}) => <input type="password" {...input} />,
-      checkbox: ({input}) => <input type="checkbox" {...input} />,
-    },
-  }
-};
-
-function App() {
-  return (
-    <JsonFormProvider jsonFormConfig={jsonFormConfig}>
-    <MyForm />
-    </JsonFormProvider>
   );
 }
 ```

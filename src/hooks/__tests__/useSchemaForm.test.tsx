@@ -1,28 +1,28 @@
 import { renderHook } from '@testing-library/react';
-import { JsonFormContext } from '../../contexts';
+import { SchemaFormContext } from '../../contexts';
 import { useSchemaForm } from '../useSchemaForm';
-import { JsonFormContextType } from '../../types';
+import { SchemaFormContextType } from '../../types';
 
 describe('useSchemaForm', () => {
-    it('should throw error when used outside JsonFormContext', () => {
+    it('should throw error when used outside SchemaFormContext', () => {
         // Act & Assert
         expect(() => {
             renderHook(() => useSchemaForm());
         }).toThrow();
     });
 
-    it('should return context when inside JsonFormContext', () => {
+    it('should return context when inside SchemaFormContext', () => {
         // Arrange
-        const mockContext: JsonFormContextType = {
+        const mockContext: SchemaFormContextType = {
             fields: { testField: { type: 'text' } },
             form: { setValue: jest.fn() } as any,
-            context: { theme: 'light' },
+            renderContext: { theme: 'light' },
         };
 
         const wrapper = ({ children }) => (
-            <JsonFormContext.Provider value={mockContext}>
+            <SchemaFormContext.Provider value={mockContext}>
                 {children}
-            </JsonFormContext.Provider>
+            </SchemaFormContext.Provider>
         );
 
         // Act

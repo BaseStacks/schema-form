@@ -1,46 +1,26 @@
-import { FieldArrayPath, FieldError, FieldPath, FieldValues, RegisterOptions, Resolver, ResolverOptions, SubmitHandler, UseFieldArrayProps, UseFieldArrayReturn, UseFormProps, UseFormRegisterReturn, UseFormReturn } from 'react-hook-form';
+import { FieldArrayPath, FieldError, FieldPath, FieldValues, RegisterOptions, Resolver, ResolverOptions, SubmitHandler, UseFieldArrayProps, UseFieldArrayReturn, UseFormRegisterReturn, UseFormReturn } from 'react-hook-form';
 
-export type RenderProps = unknown;
+export type RenderContext = Record<string, any>;
 
 export type ValidationSchema = unknown;
 
 export type ResolverType<T extends FieldValues = FieldValues> = (schema: any, schemaOptions?: any, resolverOptions?: any) => Resolver<T>;
 
-export type CreateValidationSchema<T extends FieldValues = FieldValues> = (values: T, context: RenderProps, options: ResolverOptions<T>) => ValidationSchema;
+export type CreateValidationSchema<T extends FieldValues = FieldValues> = (values: T, renderContext: RenderContext, options: ResolverOptions<T>) => ValidationSchema;
 
-export type SelectOption<TValue = any, TContext = RenderProps> = TContext & {
+export type SelectOption<TValue = any, TRenderContext = RenderContext> = TRenderContext & {
     readonly value: TValue;
     readonly label: string;
 };
 
-export type JsonFormProps<TFormValue extends FieldValues = FieldValues, TContext = RenderProps> = UseFormProps<TFormValue> & {
-    readonly schema?: ValidationSchema;
-    readonly schemaOptions?: any;
-    readonly resolverOptions?: any;
-    readonly createSchema?: CreateValidationSchema<TFormValue>;
-    readonly fields: FieldSchemas<TFormValue>;
-    readonly onSubmit?: SubmitHandler<TFormValue>;
-    readonly context?: TContext;
-    readonly children?: (innerProps: JsonFormInnerProps<TContext, TFormValue>) => React.ReactNode;
-};
-
-export type JsonFormInnerProps<TContext = RenderProps, TFormValues extends FieldValues = FieldValues> = {
+export type SchemaFormRenderProps<TRenderContext = RenderContext, TFormValues extends FieldValues = FieldValues> = {
     readonly form: UseFormReturn<TFormValues>;
     readonly fields: FieldSchemas<TFormValues>;
     readonly onSubmit: SubmitHandler<TFormValues>;
     readonly defaultValues?: Partial<TFormValues>;
-    readonly context?: TContext;
+    readonly renderContext?: TRenderContext;
     readonly children: React.ReactNode;
 };
-
-export interface JsonFormComponents {
-    /** Form component used to render the form */
-    readonly Form: React.ComponentType<JsonFormInnerProps<RenderProps, GenericFieldProps>>;
-    /** Map of field components by field type */
-    readonly fields: {
-        readonly [key: string]: React.ComponentType<GenericFieldProps<any> | ArrayFieldProps<any> | ObjectFieldProps<any>>;
-    };
-}
 
 export interface ValidationStats {
     readonly required?: boolean;
@@ -62,14 +42,23 @@ export type DefaultMessages = {
     readonly max?: Message;
 };
 
+export interface SchemaFormComponents {
+    /** Form component used to render the form */
+    readonly Form: React.ComponentType<SchemaFormRenderProps<RenderContext, GenericFieldProps>>;
+    /** Map of field components by field type */
+    readonly fields: {
+        readonly [key: string]: React.ComponentType<GenericFieldProps<any> | ArrayFieldProps<any> | ObjectFieldProps<any>>;
+    };
+}
+
 /**
  * Global context for the JSON form configuration
  */
-export interface JsonFormGlobalContextType {
+export interface SchemaFormGlobalContextType {
     /** Component overrides for form and fields */
-    readonly components?: JsonFormComponents;
+    readonly components?: SchemaFormComponents;
     /** Global render context */
-    readonly renderContext?: RenderProps;
+    readonly renderContext?: RenderContext;
     /** Resolver type to use for schema validation */
     readonly validationResolver?: ResolverType<any>;
     /** Function to get default validation messages */
@@ -79,13 +68,13 @@ export interface JsonFormGlobalContextType {
 /**
  * Context type for a specific JSON form instance
  */
-export interface JsonFormContextType<TFormValues extends FieldValues = FieldValues> {
+export interface SchemaFormContextType<TFormValues extends FieldValues = FieldValues> {
     /** Form control object */
     readonly form: UseFormReturn<TFormValues>;
     /** Field schema definitions */
     readonly fields: FieldSchemas;
     /** Render context */
-    readonly context: unknown;
+    readonly renderContext: unknown;
 }
 
 /**
@@ -101,7 +90,7 @@ export interface FieldSchemaWithFormat {
 };
 
 export type BaseFieldSchema<
-    TContext = RenderProps,
+    TRenderContext = RenderContext,
     TFormValues extends FieldValues = FieldValues
 > = {
     // Field information
@@ -115,68 +104,68 @@ export type BaseFieldSchema<
     readonly disabled?: ConditionedRule<TFormValues>;
 
     // Context and component overrides
-    readonly context?: TContext;
+    readonly renderContext?: TRenderContext;
 };
 
 export type GenericFieldSchema<
-    TContext = RenderProps,
+    TRenderContext = RenderContext,
     TFormValues extends FieldValues = FieldValues
-> = RegisterOptions<TFormValues> & BaseFieldSchema<TContext, TFormValues> & FieldSchemaWithOption & FieldSchemaWithFormat & {
+> = RegisterOptions<TFormValues> & BaseFieldSchema<TRenderContext, TFormValues> & FieldSchemaWithOption & FieldSchemaWithFormat & {
     readonly type: string;
 };
 
 export type CustomFieldSchema<
-    TContext = RenderProps,
+    TRenderContext = RenderContext,
     TFormValues extends FieldValues = FieldValues
-> = RegisterOptions<TFormValues> & BaseFieldSchema<TContext, TFormValues> & FieldSchemaWithOption & FieldSchemaWithFormat & {
+> = RegisterOptions<TFormValues> & BaseFieldSchema<TRenderContext, TFormValues> & FieldSchemaWithOption & FieldSchemaWithFormat & {
     readonly type?: null;
-    readonly Component: React.ComponentType<GenericFieldProps<TContext, TFormValues>>;
+    readonly Component: React.ComponentType<GenericFieldProps<TRenderContext, TFormValues>>;
 };
 
 export type ArrayFieldSchema<
     TFieldValue extends FieldValues = FieldValues,
-    TContext = RenderProps,
+    TRenderContext = RenderContext,
     TFormValues extends FieldValues = FieldValues,
-> = BaseFieldSchema<TContext, TFormValues> & UseFieldArrayProps<TFormValues>['rules'] & {
+> = BaseFieldSchema<TRenderContext, TFormValues> & UseFieldArrayProps<TFormValues>['rules'] & {
     /** Field type */
     readonly type: 'array';
     /** Schema for individual items in the array */
-    readonly items: ObjectFieldSchema<TFieldValue, TContext, TFormValues>;
+    readonly items: ObjectFieldSchema<TFieldValue, TRenderContext, TFormValues>;
     readonly uniqueItems?: true;
 };
 
 export type ObjectFieldProperties<
     TProperties extends FieldValues = FieldValues,
-    TContext = RenderProps,
+    TRenderContext = RenderContext,
     TFormValues extends FieldValues = FieldValues,
 > = {
         readonly [K in keyof TProperties]:
-        | GenericFieldSchema<TContext, TFormValues>
-        | ObjectFieldSchema<TProperties[K] extends FieldValues ? TProperties[K] : any, TContext, TFormValues>
-        | ArrayFieldSchema<TProperties[K] extends FieldValues ? TProperties[K] : any, TContext, TFormValues>;
+        | GenericFieldSchema<TRenderContext, TFormValues>
+        | ObjectFieldSchema<TProperties[K] extends FieldValues ? TProperties[K] : any, TRenderContext, TFormValues>
+        | ArrayFieldSchema<TProperties[K] extends FieldValues ? TProperties[K] : any, TRenderContext, TFormValues>;
     };
 
 export type ObjectFieldSchema<
     TFieldValue extends FieldValues = FieldValues,
-    TContext = RenderProps,
+    TRenderContext = RenderContext,
     TFormValues extends FieldValues = FieldValues
-> = BaseFieldSchema<TContext, TFormValues> & {
+> = BaseFieldSchema<TRenderContext, TFormValues> & {
     readonly type: 'object';
     readonly properties: ObjectFieldProperties<TFieldValue>;
 };
 
 export type FieldSchemas<
     TFormValues extends FieldValues = FieldValues,
-    TContext = RenderProps
+    TRenderContext = RenderContext
 > = {
         readonly [K in keyof TFormValues]:
-        | CustomFieldSchema<TContext, TFormValues>
-        | GenericFieldSchema<TContext, TFormValues>
-        | ObjectFieldSchema<TFormValues[K] extends FieldValues ? TFormValues[K] : any, TContext, TFormValues>
-        | ArrayFieldSchema<TFormValues[K] extends FieldValues ? TFormValues[K] : any, TContext, TFormValues>;
+        | CustomFieldSchema<TRenderContext, TFormValues>
+        | GenericFieldSchema<TRenderContext, TFormValues>
+        | ObjectFieldSchema<TFormValues[K] extends FieldValues ? TFormValues[K] : any, TRenderContext, TFormValues>
+        | ArrayFieldSchema<TFormValues[K] extends FieldValues ? TFormValues[K] : any, TRenderContext, TFormValues>;
     };
 
-export type BaseFieldProps<TContext> = {
+export interface BaseFieldProps<TRenderContext> {
     readonly name: string;
     readonly title?: string | null;
     readonly description?: string;
@@ -184,27 +173,27 @@ export type BaseFieldProps<TContext> = {
     readonly required?: boolean;
     readonly readOnly?: boolean;
     readonly disabled?: boolean;
-    readonly context: TContext;
+    readonly renderContext: TRenderContext;
     readonly error?: FieldError;
 };
 
 export type GenericFieldProps<
-    TContext = RenderProps,
+    TRenderContext = RenderContext,
     TFormValues extends FieldValues = FieldValues
-> = BaseFieldProps<TContext> & UseFormRegisterReturn<FieldPath<TFormValues>> & {
+> = BaseFieldProps<TRenderContext> & UseFormRegisterReturn<FieldPath<TFormValues>> & {
     // Field options
     readonly options?: SelectOption[];
 };
 
 export type ArrayFieldProps<
-    TContext = unknown,
+    TRenderContext = unknown,
     TFieldValue extends FieldValues = FieldValues,
     TFormValues extends FieldValues = FieldValues,
     TFieldPath extends FieldArrayPath<TFormValues> = FieldArrayPath<TFormValues>,
     TFieldKey extends string = 'id',
-> = BaseFieldProps<TContext>
+> = BaseFieldProps<TRenderContext>
     & {
-        readonly field: ArrayFieldSchema<TFieldValue, TContext, TFormValues>;
+        readonly field: ArrayFieldSchema<TFieldValue, TRenderContext, TFormValues>;
         readonly array: UseFieldArrayReturn<TFormValues, TFieldPath, TFieldKey>;
         /** Whether items can be removed from the array */
         readonly canRemoveItem: boolean;
@@ -215,12 +204,12 @@ export type ArrayFieldProps<
     };
 
 export type ObjectFieldProps<
-    TContext = unknown,
+    TRenderContext = unknown,
     TFieldValue extends FieldValues = FieldValues,
     TFormValues extends FieldValues = FieldValues,
-> = BaseFieldProps<TContext>
+> = BaseFieldProps<TRenderContext>
     & {
-        readonly field: ObjectFieldSchema<TFieldValue, TContext, TFormValues>;
+        readonly field: ObjectFieldSchema<TFieldValue, TRenderContext, TFormValues>;
         /** Child elements to render within the object field */
         readonly children: React.ReactNode;
     };
@@ -235,7 +224,7 @@ export type ConditionedRule<T extends FieldValues = FieldValues> =
 
 export interface FieldWrapperProps<
     TFormValues extends FieldValues,
-    TContext = unknown,
+    TRenderContext = unknown,
 > {
     readonly form: UseFormReturn<TFormValues>;
     readonly name: FieldPath<TFormValues>;
@@ -243,5 +232,5 @@ export interface FieldWrapperProps<
     readonly disabled?: boolean;
     readonly validationStats?: ValidationStats;
     readonly error?: FieldError;
-    readonly context?: TContext;
+    readonly renderContext?: TRenderContext;
 };

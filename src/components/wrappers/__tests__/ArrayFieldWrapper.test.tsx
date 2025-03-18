@@ -3,6 +3,7 @@ import { ArrayFieldWrapper } from '../ArrayFieldWrapper';
 import { useFieldComponent } from '../../../hooks/useFieldComponent';
 import { useFieldArray, UseFormReturn } from 'react-hook-form';
 import { ArrayFieldSchema } from '../../../types';
+import { SchemaFormFieldProps } from '../../SchemaFormField';
 
 // Mock the hooks
 jest.mock('../../../hooks/useFieldComponent', () => ({
@@ -218,14 +219,17 @@ describe('ArrayFieldWrapper', () => {
                 form={mockForm}
                 name="items"
                 field={mockField}
-                context={mockContext}
+                renderContext={mockContext}
                 renderChild={mockRenderChild}
             />
         );
 
         // Assert
         expect(mockRenderChild).toHaveBeenCalledWith(
-            expect.objectContaining({ context: mockContext })
+            expect.objectContaining({
+                name: 'items[0]',
+                renderContext: mockContext
+            } as SchemaFormFieldProps)
         );
     });
 });

@@ -1,8 +1,8 @@
 import React from 'react';
 import { ajvResolver } from '@hookform/resolvers/ajv';
 
-import { BaseFieldProps, ObjectFieldProps, JsonFormInnerProps, ArrayFieldProps, SelectFieldProps } from '../../../../src/types';
-import { JsonFormProvider } from '../../../../src/components/JsonFormProvider';
+import { BaseFieldProps, ObjectFieldProps, SchemaFormRenderProps, ArrayFieldProps, SelectFieldProps } from '../../../../src/types';
+import { SchemaFormProvider } from '../../../../src/components/SchemaFormProvider';
 import { format } from 'date-fns';
 
 import { FormField, FormItem, FormLabel, FormDescription, FormMessage, FormControl } from './form';
@@ -19,7 +19,7 @@ import { PropsWithChildren, useMemo, useState } from 'react';
 
 export function FormProvider({ children }: React.PropsWithChildren<{}>) {
     return (
-        <JsonFormProvider
+        <SchemaFormProvider
             validationResolver={ajvResolver}
             components={{
                 Form: InnerForm,
@@ -42,11 +42,11 @@ export function FormProvider({ children }: React.PropsWithChildren<{}>) {
             }}
         >
             {children}
-        </ JsonFormProvider>
+        </ SchemaFormProvider>
     );
 };
 
-function InnerForm({ form, children, onSubmit }: JsonFormInnerProps<ExtendedFieldProps>) {
+function InnerForm({ form, children, onSubmit }: SchemaFormRenderProps<ExtendedFieldProps>) {
     return (
         <form onSubmit={onSubmit && form.handleSubmit(onSubmit)} className="grid grid-cols-12 w-[350px]">
             <div className="flex flex-col gap-4 col-span-12">

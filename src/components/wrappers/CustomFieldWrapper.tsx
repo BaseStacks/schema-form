@@ -2,19 +2,19 @@ import { useFieldRegister } from '../../hooks/useFieldRegister';
 import { CustomFieldSchema, FieldWrapperProps } from '../../types';
 import { FieldValues } from 'react-hook-form';
 
-interface CustomFieldWrapperProps<TFormValues extends FieldValues, TContext> extends FieldWrapperProps<TFormValues, TContext> {
-    readonly field: CustomFieldSchema<TContext, TFormValues>;
+interface CustomFieldWrapperProps<TFormValues extends FieldValues, TRenderContext> extends FieldWrapperProps<TFormValues, TRenderContext> {
+    readonly field: CustomFieldSchema<TRenderContext, TFormValues>;
 }
 
-export function CustomFieldWrapper<TFormValues extends FieldValues, TContext>({
+export function CustomFieldWrapper<TFormValues extends FieldValues, TRenderContext>({
     form,
     field,
     name,
     readOnly,
     disabled,
     error,
-    context
-}: CustomFieldWrapperProps<TFormValues, TContext>) {
+    renderContext: context
+}: CustomFieldWrapperProps<TFormValues, TRenderContext>) {
 
     const { title, description, placeholder } = field;
 
@@ -38,7 +38,7 @@ export function CustomFieldWrapper<TFormValues extends FieldValues, TContext>({
             // For select
             options={field.options}
             // Context
-            context={context}
+            renderContext={context}
             // Error
             error={error}
         />

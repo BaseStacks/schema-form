@@ -1,44 +1,41 @@
-import { FieldPath, FieldValues, UseFormReturn } from 'react-hook-form';
+import { FieldPath, FieldValues } from 'react-hook-form';
 import { useFieldComponent } from '../../hooks/useFieldComponent';
-import { ObjectFieldProps, ObjectFieldSchema } from '../../types';
-import { JsonFormFieldProps } from '../JsonFormField';
+import { FieldWrapperProps, ObjectFieldProps, ObjectFieldSchema } from '../../types';
+import { SchemaFormFieldProps } from '../SchemaFormField';
 
 export interface ObjectFieldWrapperProps<
     TFieldValue extends FieldValues,
     TFormValues extends FieldValues,
-    TContext
-> {
-    form: UseFormReturn<TFormValues>;
-    name: string;
-    field: ObjectFieldSchema<TFieldValue, TContext, TFormValues>;
-    context?: TContext;
-    renderChild: (props: JsonFormFieldProps<TFormValues>) => React.ReactNode;
+    TRenderContext
+> extends FieldWrapperProps<TFormValues, TRenderContext> {
+    readonly field: ObjectFieldSchema<TFieldValue, TRenderContext, TFormValues>;
+    readonly renderChild: (props: SchemaFormFieldProps<TFormValues>) => React.ReactNode;
 }
 
 export function ObjectFieldWrapper<
     TFieldValue extends FieldValues,
     TFormValues extends FieldValues,
-    TContext
+    TRenderContext
 >({
     name,
     field,
     renderChild,
-    context
-}: ObjectFieldWrapperProps<TFieldValue, TFormValues, TContext>) {
-    const FieldComponent = useFieldComponent<ObjectFieldProps<TContext, TFieldValue, TFormValues>>('object');
+    renderContext
+}: ObjectFieldWrapperProps<TFieldValue, TFormValues, TRenderContext>) {
+    const FieldComponent = useFieldComponent<ObjectFieldProps<TRenderContext, TFieldValue, TFormValues>>('object');
 
     return (
         <FieldComponent
             key={name}
             field={field}
-            context={context}
+            renderContext={renderContext}
             name={name}
         >
             {Object.entries(field.properties!).map(([key]) => {
                 const childFieldName = `${name}.${key}` as FieldPath<TFormValues>;
                 return renderChild({
                     name: childFieldName,
-                    context: context
+                    renderContext
                 });
             })}
         </FieldComponent>

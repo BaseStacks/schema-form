@@ -1,5 +1,5 @@
-import { JsonFormInnerProps, GenericFieldProps, ObjectFieldProps, ArrayFieldProps } from '../../../../src/types';
-import { JsonFormProvider } from '../../../../src/components/JsonFormProvider';
+import { SchemaFormRenderProps, GenericFieldProps, ObjectFieldProps, ArrayFieldProps } from '../../../../src/types';
+import { SchemaFormProvider } from '../../../../src/components/SchemaFormProvider';
 import { useState } from 'react';
 
 export interface FormContext {
@@ -9,7 +9,7 @@ export interface FormContext {
 
 export function FormProvider({ children }: React.PropsWithChildren<{}>) {
     return (
-        <JsonFormProvider
+        <SchemaFormProvider
             components={{
                 Form: FormLayout,
                 fields: {
@@ -33,11 +33,11 @@ export function FormProvider({ children }: React.PropsWithChildren<{}>) {
             }}
         >
             {children}
-        </JsonFormProvider>
+        </SchemaFormProvider>
     );
 };
 
-export function FormLayout({ form, children, onSubmit, context }: JsonFormInnerProps<FormContext, any>) {
+export function FormLayout({ form, children, onSubmit, context }: SchemaFormRenderProps<FormContext, any>) {
     return (
         <form onSubmit={onSubmit && form.handleSubmit(onSubmit)} className="w-[350px]" >
             <div className="gap-4 grid grid-cols-12">

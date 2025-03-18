@@ -1,4 +1,4 @@
-export * from './components/JsonForm';
-export * from './components/JsonFormProvider';
-export * from './components/JsonFormField';
+export * from './components/SchemaForm';
+export * from './components/SchemaFormProvider';
+export * from './components/SchemaFormField';
 export * from './types';

@@ -1,13 +1,13 @@
 import { render, screen } from '@testing-library/react';
 import { useContext } from 'react';
-import { JsonFormProvider } from '../JsonFormProvider';
-import { JsonFormGlobalContext } from '../../contexts';
+import { SchemaFormProvider } from '../SchemaFormProvider';
+import { SchemaFormGlobalContext } from '../../contexts';
 
-describe('JsonFormProvider', () => {
+describe('SchemaFormProvider', () => {
     test('provides context values to children', () => {
         // Create a test consumer component
         const TestConsumer = () => {
-            const context = useContext(JsonFormGlobalContext);
+            const context = useContext(SchemaFormGlobalContext);
             return <div data-testid="test-consumer">{JSON.stringify(context)}</div>;
         };
 
@@ -22,9 +22,9 @@ describe('JsonFormProvider', () => {
         };
 
         render(
-            <JsonFormProvider {...testValues}>
+            <SchemaFormProvider {...testValues}>
                 <TestConsumer />
-            </JsonFormProvider>
+            </SchemaFormProvider>
         );
 
         const consumer = screen.getByTestId('test-consumer');

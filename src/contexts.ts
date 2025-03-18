@@ -1,6 +1,6 @@
 import React from 'react';
-import { JsonFormContextType, JsonFormGlobalContextType } from './types';
+import { SchemaFormContextType, SchemaFormGlobalContextType } from './types';
 
-export const JsonFormGlobalContext = React.createContext<JsonFormGlobalContextType>(null!);
+export const SchemaFormGlobalContext = React.createContext<SchemaFormGlobalContextType>(null!);
 
-export const JsonFormContext = React.createContext<JsonFormContextType<any>>(null!);
+export const SchemaFormContext = React.createContext<SchemaFormContextType<any>>(null!);

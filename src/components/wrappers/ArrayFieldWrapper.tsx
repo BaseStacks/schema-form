@@ -1,39 +1,34 @@
 import React, { useCallback } from 'react';
-import { ArrayPath, FieldError, FieldPath, FieldValues, useFieldArray, UseFormReturn } from 'react-hook-form';
-import { ArrayFieldProps, ArrayFieldSchema, RenderProps } from '../../types';
+import { ArrayPath, FieldPath, FieldValues, useFieldArray } from 'react-hook-form';
+import { ArrayFieldProps, ArrayFieldSchema, FieldWrapperProps, RenderContext } from '../../types';
 import { useFieldComponent } from '../../hooks/useFieldComponent';
-import { JsonFormFieldProps } from '../JsonFormField';
+import { SchemaFormFieldProps } from '../SchemaFormField';
 
 export interface ArrayFieldWrapperProps<
     TFieldValue extends FieldValues,
     TFormValues extends FieldValues,
-    TContext
-> {
-    form: UseFormReturn<TFormValues>;
-    name: ArrayPath<TFormValues>;
-    field: ArrayFieldSchema<TFieldValue, TContext, TFormValues>;
-    disabled?: boolean;
-    readOnly?: boolean;
-    context?: TContext;
-    error?: FieldError;
-    renderChild: (props: JsonFormFieldProps<TFormValues, TContext>) => React.ReactNode;
+    TRenderContext
+> extends Omit<FieldWrapperProps<TFormValues, TRenderContext>, 'name'> {
+    readonly name: ArrayPath<TFormValues>;
+    readonly field: ArrayFieldSchema<TFieldValue, TRenderContext, TFormValues>;
+    readonly renderChild: (props: SchemaFormFieldProps<TFormValues, TRenderContext>) => React.ReactNode;
 }
 
 export function ArrayFieldWrapper<
     TFieldValue extends FieldValues,
     TFormValues extends FieldValues,
-    TContext = RenderProps
+    TRenderContext = RenderContext
 >({
     form,
     name,
     field,
     disabled,
     readOnly,
-    context,
+    renderContext,
     error,
     renderChild
-}: ArrayFieldWrapperProps<TFieldValue, TFormValues, TContext>) {
-    const FieldComponent = useFieldComponent<ArrayFieldProps<TContext, TFieldValue, TFormValues>>('array');
+}: ArrayFieldWrapperProps<TFieldValue, TFormValues, TRenderContext>) {
+    const FieldComponent = useFieldComponent<ArrayFieldProps<TRenderContext, TFieldValue, TFormValues>>('array');
 
     // Use fieldArray from react-hook-form to manage the array items
     const array = useFieldArray({
@@ -59,16 +54,16 @@ export function ArrayFieldWrapper<
     const renderItem = useCallback((index: number) => {
         return renderChild({
             name: `${name}[${index}]` as FieldPath<TFormValues>,
-            context: context
+            renderContext
         });
-    }, [name, renderChild, context]); // Add fields as dependency
+    }, [name, renderChild, renderContext]); // Add fields as dependency
 
     return (
         <FieldComponent
             key={name}
             field={field}
             disabled={disabled}
-            context={context}
+            renderContext={renderContext}
             array={array}
             error={error}
             name={name}

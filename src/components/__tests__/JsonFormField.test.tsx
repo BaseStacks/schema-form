@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { JsonFormField } from '../JsonFormField';
+import { SchemaFormField } from '../SchemaFormField';
 import { useFieldStatus } from '../../hooks/useFieldStatus';
 import { useFieldSchema } from '../../hooks/useFieldSchema';
 import { useSchemaForm } from '../../hooks/useSchemaForm';
@@ -7,7 +7,8 @@ import { ArrayFieldWrapper } from '../wrappers/ArrayFieldWrapper';
 import { ObjectFieldWrapper } from '../wrappers/ObjectFieldWrapper';
 import { GenericFieldWrapper } from '../wrappers/GenericFieldWrapper';
 import { CustomFieldWrapper } from '../wrappers/CustomFieldWrapper';
-import { ArrayFieldSchema, GenericFieldSchema, ObjectFieldSchema, CustomFieldSchema } from '../../types';
+import { ArrayFieldSchema, GenericFieldSchema, ObjectFieldSchema, CustomFieldSchema, SchemaFormContextType } from '../../types';
+import { UseFormReturn } from 'react-hook-form';
 
 // Mock dependencies
 jest.mock('react-hook-form');
@@ -33,7 +34,7 @@ jest.mock('../wrappers/CustomFieldWrapper', () => ({
     CustomFieldWrapper: jest.fn(() => <div data-testid="custom-wrapper" />),
 }));
 
-describe('JsonFormField', () => {
+describe('SchemaFormField', () => {
     const arrayField: ArrayFieldSchema = {
         type: 'array',
         items: { type: 'object', properties: {} },
@@ -55,12 +56,12 @@ describe('JsonFormField', () => {
         formState: { errors: {} },
         register: jest.fn(),
         control: {},
-    };
+    } as any as UseFormReturn<any>;
 
     const mockSchemaForm = {
         form: mockForm,
-        context: { theme: 'light' },
-    };
+        renderContext: { theme: 'light' },
+    } as SchemaFormContextType;
 
     beforeEach(() => {
         jest.clearAllMocks();
@@ -73,7 +74,7 @@ describe('JsonFormField', () => {
         (useFieldStatus as jest.Mock).mockReturnValue({ isVisible: false });
 
         const { container } = render(
-            <JsonFormField name="test" />
+            <SchemaFormField name="test" />
         );
 
         expect(container).toBeEmptyDOMElement();
@@ -83,7 +84,7 @@ describe('JsonFormField', () => {
         (useFieldSchema as jest.Mock).mockReturnValue(arrayField);
 
         render(
-            <JsonFormField name="testArray" />
+            <SchemaFormField name="testArray" />
         );
 
         expect(screen.getByTestId('array-wrapper')).toBeInTheDocument();
@@ -100,7 +101,7 @@ describe('JsonFormField', () => {
         (useFieldSchema as jest.Mock).mockReturnValue(objectField);
 
         render(
-            <JsonFormField name="testObject" />
+            <SchemaFormField name="testObject" />
         );
 
         expect(screen.getByTestId('object-wrapper')).toBeInTheDocument();
@@ -117,7 +118,7 @@ describe('JsonFormField', () => {
         (useFieldSchema as jest.Mock).mockReturnValue(genericField);
 
         render(
-            <JsonFormField name="testString" />
+            <SchemaFormField name="testString" />
         );
 
         expect(screen.getByTestId('generic-wrapper')).toBeInTheDocument();
@@ -134,7 +135,7 @@ describe('JsonFormField', () => {
         (useFieldSchema as jest.Mock).mockReturnValue(customField);
 
         render(
-            <JsonFormField name="testCustom" />
+            <SchemaFormField name="testCustom" />
         );
 
         expect(screen.getByTestId('custom-wrapper')).toBeInTheDocument();
@@ -152,7 +153,7 @@ describe('JsonFormField', () => {
         (useFieldStatus as jest.Mock).mockReturnValue({ isVisible: true, isReadOnly: true, isDisabled: false });
 
         render(
-            <JsonFormField name="testString" />
+            <SchemaFormField name="testString" />
         );
 
         expect(GenericFieldWrapper).toHaveBeenCalledWith(
@@ -167,22 +168,22 @@ describe('JsonFormField', () => {
     test('should merge context from different sources', () => {
         (useFieldSchema as jest.Mock).mockReturnValue({
             ...genericField,
-            context: { fieldTheme: 'dark' },
+            renderContext: { fieldTheme: 'dark' },
         });
 
         const customContext = { customTheme: 'blue' };
 
         render(
-            <JsonFormField name="testString" context={customContext} />
+            <SchemaFormField name="testString" renderContext={customContext} />
         );
 
         expect(GenericFieldWrapper).toHaveBeenCalledWith(
             expect.objectContaining({
-                context: expect.objectContaining({
+                renderContext: {
                     theme: 'light',
                     fieldTheme: 'dark',
                     customTheme: 'blue',
-                }),
+                },
             }),
             undefined
         );

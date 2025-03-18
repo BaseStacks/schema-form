@@ -3,20 +3,20 @@ import { useFieldRegister } from '../../hooks/useFieldRegister';
 import { GenericFieldProps, FieldWrapperProps, GenericFieldSchema } from '../../types';
 import { FieldValues } from 'react-hook-form';
 
-interface GenericFieldWrapperProps<TFormValues extends FieldValues, TContext> extends FieldWrapperProps<TFormValues, TContext> {
-    readonly field: GenericFieldSchema<TContext, TFormValues>;
+interface GenericFieldWrapperProps<TFormValues extends FieldValues, TRenderContext> extends FieldWrapperProps<TFormValues, TRenderContext> {
+    readonly field: GenericFieldSchema<TRenderContext, TFormValues>;
 }
 
-export function GenericFieldWrapper<TFormValues extends FieldValues, TContext>({
+export function GenericFieldWrapper<TFormValues extends FieldValues, TRenderContext>({
     form,
     field,
     name,
     readOnly,
     disabled,
     error,
-    context
-}: GenericFieldWrapperProps<TFormValues, TContext>) {
-    const FieldComponent = useFieldComponent<GenericFieldProps<TContext, TFormValues>>(field.type);
+    renderContext
+}: GenericFieldWrapperProps<TFormValues, TRenderContext>) {
+    const FieldComponent = useFieldComponent<GenericFieldProps<TRenderContext, TFormValues>>(field.type);
 
     if (!FieldComponent) {
         throw new Error(`Field component not found for type: ${field.type}`);
@@ -43,7 +43,7 @@ export function GenericFieldWrapper<TFormValues extends FieldValues, TContext>({
             // For select
             options={field.options}
             // Context
-            context={context}
+            renderContext={renderContext}
             // Error
             error={error}
         />

@@ -21,7 +21,7 @@ export function createRollupConfig(options, callback) {
       file: outputName,
       format: options.format,
       name: 'ReactHookForm',
-      sourcemap: true,
+      sourcemap: false,
       globals: { react: 'React' },
       exports: 'named',
     },

@@ -1,6 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { useFieldContext } from '../useFieldContext';
 import { useSchemaForm } from '../useSchemaForm';
+import { BaseFieldSchema, SchemaFormContextType } from '../../types';
 
 // Mock dependencies
 jest.mock('../useSchemaForm', () => ({
@@ -11,14 +12,14 @@ describe('useFieldContext', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         (useSchemaForm as jest.Mock).mockReturnValue({
-            context: { theme: 'light', locale: 'en' },
-        });
+            renderContext: { theme: 'light', locale: 'en' },
+        } as SchemaFormContextType);
     });
 
     it('should merge form context with field context', () => {
         // Arrange
-        const mockField = {
-            context: { readOnly: true, disabled: false },
+        const mockField: BaseFieldSchema = {
+            renderContext: { readOnly: true, disabled: false },
         };
 
         // Act
@@ -35,8 +36,8 @@ describe('useFieldContext', () => {
 
     it('should prioritize field context over form context', () => {
         // Arrange
-        const mockField = {
-            context: { theme: 'dark', customProp: 'value' },
+        const mockField: BaseFieldSchema = {
+            renderContext: { theme: 'dark', customProp: 'value' },
         };
 
         // Act

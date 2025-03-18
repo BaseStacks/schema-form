@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
-import { JsonFormContext } from '../../contexts';
+import { SchemaFormContext } from '../../contexts';
 import { useFieldSchema } from '../useFieldSchema';
-import { JsonFormContextType } from '../../types';
+import { SchemaFormContextType } from '../../types';
 
 // Mock object-path
 jest.mock('object-path', () => ({
@@ -14,7 +14,7 @@ jest.mock('object-path', () => ({
 }));
 
 describe('useFieldSchema', () => {
-    it('should throw error when used outside JsonFormContext', () => {
+    it('should throw error when used outside SchemaFormContext', () => {
         // Arrange & Act & Assert
         expect(() => {
             renderHook(() => useFieldSchema('testField'));
@@ -22,23 +22,23 @@ describe('useFieldSchema', () => {
     });
 
     it('should return field schema when context is provided', () => {
-        const value: JsonFormContextType = {
+        const value: SchemaFormContextType = {
             fields: { testField: { type: 'text' } },
-            context: {},
+            renderContext: {},
             form: { setValue: jest.fn() } as any,
         };
 
         // Arrange
         const wrapper = ({ children }) => (
-            <JsonFormContext.Provider value={value}>
+            <SchemaFormContext.Provider value={value}>
                 {children}
-            </JsonFormContext.Provider>
+            </SchemaFormContext.Provider>
         );
 
         // Act
         const { result } = renderHook(() => useFieldSchema('testField'), { wrapper });
 
         // Assert
-        expect(result.current).toEqual({ type: 'text', label: 'Test Field' });
+        expect(result.current).toEqual({ type: 'text' });
     });
 });

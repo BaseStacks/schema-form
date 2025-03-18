@@ -49,7 +49,7 @@ describe('CustomFieldWrapper', () => {
                 readOnly={true}
                 disabled={true}
                 error={mockError}
-                context={mockContext}
+                renderContext={mockContext}
             />
         );
 

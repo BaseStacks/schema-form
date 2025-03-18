@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { JsonForm } from '../../../src/components/JsonForm';
-import { JsonFormProps } from '../../../src/types';
+import { SchemaForm } from '../../../src/components/SchemaForm';
+import { SchemaFormProps } from '../../../src/types';
 import { FormProvider } from '../components/vanilla/form';
 
-function Content(props: JsonFormProps) {
+function Content(props: SchemaFormProps) {
     return (
         <FormProvider>
-            <JsonForm shouldUseNativeValidation={true} {...props} />
+            <SchemaForm shouldUseNativeValidation={true} {...props} />
         </FormProvider>
     );
 }

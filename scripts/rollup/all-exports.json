@@ -1,3 +1,5 @@
 [
-    "JsonForm"
+    "SchemaForm",
+    "SchemaFormField",
+    "SchemaFormProvider"
 ]

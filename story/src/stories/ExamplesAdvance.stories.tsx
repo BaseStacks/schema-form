@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { FieldSchemas, JsonFormProps } from 'schema-form';
+import { FieldSchemas, SchemaFormProps } from 'schema-form';
 import { AdvanceFormProvider, FormSubmitBtn } from '../components/vanilla/form-advance';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { JsonFormField } from '../../../src/components/JsonFormField';
+import { SchemaFormField } from '../../../src/components/SchemaFormField';
 import React from 'react';
 
-interface ContentProps extends JsonFormProps {
+interface ContentProps extends SchemaFormProps {
     readonly showLanguageSwitcher?: boolean;
 }
 
@@ -21,7 +21,7 @@ function Content({ showLanguageSwitcher, ...props }: ContentProps) {
     return (
         <AdvanceFormProvider>
             <div>
-                <JsonForm shouldUseNativeValidation={true} {...props} />
+                <SchemaForm shouldUseNativeValidation={true} {...props} />
                 {
                     showLanguageSwitcher && (
                         <div className="border-t mt-4 pt-4 flex gap-2 text-sm text-gray-500">
@@ -120,11 +120,11 @@ export const CustomLayout: Story = {
                 <form onSubmit={form.handleSubmit(onSubmit)} className="w-[550px]" >
                     <div className="gap-4 grid grid-cols-12 mb-4">
                         <div className="col-span-8 flex flex-col gap-4">
-                            <JsonFormField name="task" />
-                            <JsonFormField name="description" />
+                            <SchemaFormField name="task" />
+                            <SchemaFormField name="description" />
                         </div>
                         <div className="col-span-4">
-                            <JsonFormField name="assignee" />
+                            <SchemaFormField name="assignee" />
                         </div>
                     </div>
                     <FormSubmitBtn>

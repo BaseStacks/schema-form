@@ -3,7 +3,7 @@ import { ObjectFieldWrapper } from '../ObjectFieldWrapper';
 import { useFieldComponent } from '../../../hooks/useFieldComponent';
 import { ObjectFieldProps, ObjectFieldSchema } from '../../../types';
 import { UseFormReturn } from 'react-hook-form';
-import { JsonFormFieldProps } from '../../JsonFormField';
+import { SchemaFormFieldProps } from '../../SchemaFormField';
 
 // Mock dependencies
 jest.mock('../../../hooks/useFieldComponent', () => ({
@@ -79,14 +79,14 @@ describe('ObjectFieldWrapper', () => {
     });
 
     test('passes render context to field component and child renderer', () => {
-        const context = { variant: 'outlined', size: 'small' };
+        const renderContext = { variant: 'outlined', size: 'small' };
 
         render(
             <ObjectFieldWrapper
                 form={mockForm as any}
                 name="person"
                 field={mockField}
-                context={context}
+                renderContext={renderContext}
                 renderChild={mockRenderChild}
             />
         );
@@ -94,7 +94,7 @@ describe('ObjectFieldWrapper', () => {
         // Check that the component received the context
         expect(MockObjectComponent).toHaveBeenCalledWith(
             expect.objectContaining({
-                context: context,
+                renderContext: renderContext,
             }),
             undefined
         );
@@ -104,7 +104,7 @@ describe('ObjectFieldWrapper', () => {
             1,
             expect.objectContaining({
                 name: 'person.firstName',
-                context
+                renderContext: renderContext
             })
         );
 
@@ -112,7 +112,7 @@ describe('ObjectFieldWrapper', () => {
             2,
             expect.objectContaining({
                 name: 'person.lastName',
-                context
+                renderContext: renderContext
             })
         );
     });
@@ -127,7 +127,7 @@ describe('ObjectFieldWrapper', () => {
                 age: { type: 'number' },
             },
         } as ObjectFieldSchema;
-        const mockRenderChild = jest.fn(({ name }: JsonFormFieldProps) => <div key={name}>Child Field</div>);
+        const mockRenderChild = jest.fn(({ name }: SchemaFormFieldProps) => <div key={name}>Child Field</div>);
 
         // Act
         render(
@@ -160,7 +160,7 @@ describe('ObjectFieldWrapper', () => {
             },
         } as ObjectFieldSchema;
         const mockContext = { theme: 'dark' };
-        const mockRenderChild = jest.fn(({ name }: JsonFormFieldProps) => <div key={name}>Child Field</div>);
+        const mockRenderChild = jest.fn(({ name }: SchemaFormFieldProps) => <div key={name}>Child Field</div>);
 
         // Act
         render(
@@ -168,14 +168,17 @@ describe('ObjectFieldWrapper', () => {
                 form={mockForm}
                 name="person"
                 field={mockField}
-                context={mockContext}
+                renderContext={mockContext}
                 renderChild={mockRenderChild}
             />
         );
 
         // Assert
         expect(mockRenderChild).toHaveBeenCalledWith(
-            expect.objectContaining({ context: mockContext })
+            expect.objectContaining({
+                name: 'person.name',
+                renderContext: mockContext
+            } as SchemaFormFieldProps)
         );
     });
 });

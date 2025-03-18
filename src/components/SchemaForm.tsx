@@ -1,26 +1,36 @@
 import { useCallback, useMemo } from 'react';
-import deepMerge from 'deepmerge';
-import { FieldValues, FormProvider, useForm, useWatch } from 'react-hook-form';
-import { JsonFormContextType, JsonFormInnerProps, JsonFormProps, RenderProps } from '../types';
-import { JsonFormField } from './JsonFormField';
+import { FieldValues, FormProvider, SubmitHandler, useForm, UseFormProps, useWatch } from 'react-hook-form';
+import { SchemaFormContextType, SchemaFormRenderProps, RenderContext, ValidationSchema, CreateValidationSchema, FieldSchemas } from '../types';
+import { SchemaFormField } from './SchemaFormField';
 import { useGlobalContext } from '../hooks/useGlobalContext';
 import { createResolver } from '../utils/resolverUtils';
-import { JsonFormContext } from '../contexts';
+import { SchemaFormContext } from '../contexts';
+
+export type SchemaFormProps<TFormValue extends FieldValues = FieldValues, TRenderContext = RenderContext> = UseFormProps<TFormValue> & {
+    readonly schema?: ValidationSchema;
+    readonly schemaOptions?: any;
+    readonly resolverOptions?: any;
+    readonly createSchema?: CreateValidationSchema<TFormValue>;
+    readonly fields: FieldSchemas<TFormValue>;
+    readonly onSubmit?: SubmitHandler<TFormValue>;
+    readonly renderContext?: TRenderContext;
+    readonly children?: (innerProps: SchemaFormRenderProps<TRenderContext, TFormValue>) => React.ReactNode;
+};
 
 /**
  * Main Schema Form component
  */
-export function JsonForm<TFormValues extends FieldValues = FieldValues, TContext extends RenderProps = RenderProps>({
+export function SchemaForm<TFormValues extends FieldValues = FieldValues, TRenderContext extends RenderContext = RenderContext>({
     schema,
     schemaOptions,
     createSchema,
     resolverOptions,
     fields,
-    context: userContext,
+    renderContext,
     children,
     onSubmit,
     ...formProps
-}: JsonFormProps<TFormValues, TContext>) {
+}: SchemaFormProps<TFormValues, TRenderContext>) {
 
     const { validationResolver: resolverType, components, renderContext: globalRenderContext, } = useGlobalContext();
 
@@ -46,11 +56,11 @@ export function JsonForm<TFormValues extends FieldValues = FieldValues, TContext
 
     useWatch({ control: form.control });
 
-    const mergedContext = useMemo(() => deepMerge<TContext>((globalRenderContext ?? {}) as TContext, userContext ?? {}), [globalRenderContext, userContext]);
+    const mergedRenderContext = useMemo(() => Object.assign({}, globalRenderContext, renderContext), [globalRenderContext, renderContext]);
 
     const childrenElements = useMemo(() => {
         return Object.entries(fields).map(([fieldName]) => (
-            <JsonFormField key={fieldName} name={fieldName} />
+            <SchemaFormField key={fieldName} name={fieldName} />
         ));
     }, [fields]);
 
@@ -61,26 +71,26 @@ export function JsonForm<TFormValues extends FieldValues = FieldValues, TContext
 
     }, [onSubmit]);
 
-    const innerProps: JsonFormInnerProps<TContext, any> = {
+    const innerProps: SchemaFormRenderProps<TRenderContext, any> = {
         form,
         fields,
         onSubmit: handleSubmit,
         defaultValues: formProps.defaultValues,
         children: childrenElements,
-        context: mergedContext
+        renderContext: mergedRenderContext
     };
 
-    const schemaForm: JsonFormContextType<TFormValues> = {
+    const schemaForm: SchemaFormContextType<TFormValues> = {
         form,
         fields,
-        context: mergedContext,
+        renderContext: mergedRenderContext,
     };
 
     return (
-        <JsonFormContext.Provider value={schemaForm}>
+        <SchemaFormContext.Provider value={schemaForm}>
             <FormProvider {...form}>
                 {children ? children(innerProps) : <components.Form {...innerProps} />}
             </FormProvider>
-        </JsonFormContext.Provider>
+        </SchemaFormContext.Provider>
     );
 }
