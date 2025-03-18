@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { FieldSchemas, JsonFormProps } from '../src/types';
-import { AdvanceFormProvider, FormSubmitBtn } from './components/vanilla/form-advance';
-import { JsonForm } from '../src/components/JsonForm';
+import { FieldSchemas, JsonFormProps } from '../../../src/types';
+import { AdvanceFormProvider, FormSubmitBtn } from '../components/vanilla/form-advance';
+import { JsonForm } from '../../../src/components/JsonForm';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { JsonFormField } from '../src/components/JsonFormField';
+import { JsonFormField } from '../../../src/components/JsonFormField';
 
 interface ContentProps extends JsonFormProps {
     readonly showLanguageSwitcher?: boolean;

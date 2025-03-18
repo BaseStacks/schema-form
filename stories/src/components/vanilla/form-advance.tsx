@@ -1,8 +1,8 @@
 import './i18n';
 
-import { JsonFormProvider } from '../../../src/components/JsonFormProvider';
+import { JsonFormProvider } from '../../../../src/components/JsonFormProvider';
 import { useTranslation } from 'react-i18next';
-import { ArrayFieldProps, GenericFieldProps, JsonFormInnerProps, ObjectFieldProps } from '../../../src/types';
+import { ArrayFieldProps, GenericFieldProps, JsonFormInnerProps, ObjectFieldProps } from '../../../../src/types';
 import { useState } from 'react';
 
 export interface FormContext {

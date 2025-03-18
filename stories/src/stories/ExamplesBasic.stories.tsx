@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { JsonForm } from '../src/components/JsonForm';
-import { JsonFormProps } from '../src/types';
-import { FormProvider } from './components/vanilla/form';
+import { JsonForm } from '../../../src/components/JsonForm';
+import { JsonFormProps } from '../../../src/types';
+import { FormProvider } from '../components/vanilla/form';
 
 function Content(props: JsonFormProps) {
     return (

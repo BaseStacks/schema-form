@@ -1,8 +1,8 @@
 import React from 'react';
 import { ajvResolver } from '@hookform/resolvers/ajv';
 
-import { BaseFieldProps, ObjectFieldProps, JsonFormInnerProps, ArrayFieldProps, SelectFieldProps } from '../../../src/types';
-import { JsonFormProvider } from '../../../src/components/JsonFormProvider';
+import { BaseFieldProps, ObjectFieldProps, JsonFormInnerProps, ArrayFieldProps, SelectFieldProps } from '../../../../src/types';
+import { JsonFormProvider } from '../../../../src/components/JsonFormProvider';
 import { format } from 'date-fns';
 
 import { FormField, FormItem, FormLabel, FormDescription, FormMessage, FormControl } from './form';

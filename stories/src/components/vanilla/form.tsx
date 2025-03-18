@@ -1,5 +1,5 @@
-import { JsonFormInnerProps, GenericFieldProps, ObjectFieldProps, ArrayFieldProps } from '../../../src/types';
-import { JsonFormProvider } from '../../../src/components/JsonFormProvider';
+import { JsonFormInnerProps, GenericFieldProps, ObjectFieldProps, ArrayFieldProps } from '../../../../src/types';
+import { JsonFormProvider } from '../../../../src/components/JsonFormProvider';
 import { useState } from 'react';
 
 export interface FormContext {
