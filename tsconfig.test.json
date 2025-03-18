@@ -1,0 +1,41 @@
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "useDefineForClassFields": true,
+        "lib": [
+            "ES2020",
+            "DOM",
+            "DOM.Iterable"
+        ],
+        "module": "ES2022",
+        "skipLibCheck": true,
+        /* Bundler mode */
+        "moduleResolution": "Bundler",
+        "allowImportingTsExtensions": true,
+        "isolatedModules": false,
+        "moduleDetection": "force",
+        "noEmit": true,
+        "jsx": "react-jsx",
+        /* Linting */
+        "strict": false,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
+        "noFallthroughCasesInSwitch": true,
+        "noUncheckedSideEffectImports": true,
+        /* Recommended */
+        "forceConsistentCasingInFileNames": true,
+        /* Experimental */
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "esModuleInterop": true,
+        "types": [
+            "node",
+            "jest",
+            "@testing-library/jest-dom"
+        ],
+    },
+    "include": [
+        "src/**/*.test.ts",
+        "src/**/*.test.tsx",
+    ]
+}

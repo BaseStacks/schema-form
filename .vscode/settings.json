@@ -1,0 +1,35 @@
+{
+    "cSpell.words": [
+        "basestack",
+        "datagrid",
+        "Dexie",
+        "hookform",
+        "lucide",
+        "Rxdb",
+        "shadcn",
+        "tsyringe",
+        "VITE"
+    ],
+    "editor.linkedEditing": true,
+    "editor.indentSize": 4,
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "always"
+    },
+    "typescript.format.semicolons": "insert",
+    "typescript.preferences.quoteStyle": "single",
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.expand": false,
+    "explorer.fileNesting.patterns": {
+        ".env": ".env.*",
+        "*.ts": "${capture}.test.ts, ${capture}.test.tsx",
+        "*.tsx": "${capture}.test.tsx, ${capture}.test.ts",
+        "vite.config.ts": "vite.config.*.ts",
+        "tsconfig.json": "tsconfig.*",
+        "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, bun.lock"
+    },
+    "files.associations": {
+        "*.css": "tailwindcss"
+    },
+    "jest.runMode": "on-demand"
+}
