@@ -24,8 +24,11 @@ dist-ssr
 .fake
 .firebase
 
-# Test files
+# Jest
 coverage
 
 # Typescript
 *.tsbuildinfo
+
+# Editor
+.vscode
