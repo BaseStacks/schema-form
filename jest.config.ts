@@ -6,7 +6,7 @@ const config: Config = {
     moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
     transform: {
         '^.+\\.(ts|tsx)$': ['ts-jest', {
-            tsconfig: 'tsconfig.test.json',
+            tsconfig: 'tsconfig.json',
         }],
     },
     moduleNameMapper: {

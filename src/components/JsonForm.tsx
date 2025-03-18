@@ -58,6 +58,7 @@ export function JsonForm<TFormValues extends FieldValues = FieldValues, TContext
         if (onSubmit) {
             return onSubmit(data, event);
         }
+
     }, [onSubmit]);
 
     const innerProps: JsonFormInnerProps<TContext, any> = {

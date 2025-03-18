@@ -5,7 +5,7 @@ import { JsonFormContextType } from '../../types';
 
 // Mock object-path
 jest.mock('object-path', () => ({
-    get: jest.fn((obj, path) => {
+    get: jest.fn((_obj, path) => {
         if (path === 'testField') {
             return { type: 'text', label: 'Test Field' };
         }

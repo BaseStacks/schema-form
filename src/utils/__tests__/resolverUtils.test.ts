@@ -4,7 +4,7 @@ import { FieldValues, ResolverOptions } from 'react-hook-form';
 describe('resolverUtils', () => {
     describe('createResolver', () => {
         // Mock resolver and schema
-        const mockResolverType = jest.fn().mockImplementation((schema) => {
+        const mockResolverType = jest.fn().mockImplementation(() => {
             return jest.fn().mockReturnValue({ values: 'result' });
         });
         const mockSchema = { type: 'object', properties: {} };

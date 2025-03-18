@@ -4,7 +4,6 @@ import { JsonForm } from '../JsonForm';
 import { useGlobalContext } from '../../hooks/useGlobalContext';
 import { createResolver } from '../../utils/resolverUtils';
 import { FieldSchemas, JsonFormInnerProps } from '../../types';
-import { PropsWithChildren } from 'react';
 import { JsonFormField } from '../JsonFormField';
 
 // Mock dependencies
