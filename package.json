@@ -28,8 +28,6 @@
         "type": "tsc --noEmit"
     },
     "dependencies": {
-        "deepmerge": "^4.3.1",
-        "object-path": "^0.11.8",
         "react-hook-form": "^7.54.2"
     },
     "devDependencies": {

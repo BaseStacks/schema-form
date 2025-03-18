@@ -3,16 +3,6 @@ import { SchemaFormContext } from '../../contexts';
 import { useFieldSchema } from '../useFieldSchema';
 import { SchemaFormContextType } from '../../types';
 
-// Mock object-path
-jest.mock('object-path', () => ({
-    get: jest.fn((_obj, path) => {
-        if (path === 'testField') {
-            return { type: 'text', label: 'Test Field' };
-        }
-        return undefined;
-    }),
-}));
-
 describe('useFieldSchema', () => {
     it('should throw error when used outside SchemaFormContext', () => {
         // Arrange & Act & Assert
