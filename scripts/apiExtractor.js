@@ -121,7 +121,7 @@ function red(message) {
  * @param message {string}
  */
 function exit(...message) {
-  /* eslint-disable-next-line no-console */
+   
   console.log(`${red('FAILURE REASON')} ${message.join(' ')}`);
   process.exit(1);
 }

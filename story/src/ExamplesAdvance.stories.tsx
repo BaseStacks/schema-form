@@ -1,13 +1,20 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { FieldSchemas, SchemaFormProps } from 'schema-form';
-import { AdvanceFormProvider, FormSubmitBtn } from '../components/vanilla/form-advance';
+import {
+    FieldSchemas,
+    SchemaForm,
+    SchemaFormProps,
+} from '@basestacks/schema-form';
+import {
+    AdvanceFormProvider,
+    FormSubmitBtn,
+} from './components/vanilla/form-advance';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SchemaFormField } from '../../../src/components/SchemaFormField';
+import { SchemaFormField } from '../../src/components/SchemaFormField';
 import React from 'react';
 
 interface ContentProps extends SchemaFormProps {
-    readonly showLanguageSwitcher?: boolean;
+  readonly showLanguageSwitcher?: boolean;
 }
 
 function Content({ showLanguageSwitcher, ...props }: ContentProps) {
@@ -22,14 +29,23 @@ function Content({ showLanguageSwitcher, ...props }: ContentProps) {
         <AdvanceFormProvider>
             <div>
                 <SchemaForm shouldUseNativeValidation={true} {...props} />
-                {
-                    showLanguageSwitcher && (
-                        <div className="border-t mt-4 pt-4 flex gap-2 text-sm text-gray-500">
-                            <span className={language === 'en' && 'text-primary'} onClick={() => setLanguage('en')}>English</span>
-                            |
-                            <span className={language === 'fr' && 'text-primary'} onClick={() => setLanguage('fr')}>Français</span>
-                        </div>
-                    )}
+                {showLanguageSwitcher && (
+                    <div className="border-t mt-4 pt-4 flex gap-2 text-sm text-gray-500">
+                        <span
+                            className={language === 'en' ? 'text-primary' : ''}
+                            onClick={() => setLanguage('en')}
+                        >
+              English
+                        </span>
+            |
+                        <span
+                            className={language === 'fr' ? 'text-primary' : ''}
+                            onClick={() => setLanguage('fr')}
+                        >
+              Français
+                        </span>
+                    </div>
+                )}
             </div>
         </AdvanceFormProvider>
     );
@@ -64,7 +80,7 @@ export const I18n: Story = {
                 placeholder: 'auth.username.placeholder',
                 required: true,
                 minLength: 3,
-                maxLength: 20
+                maxLength: 20,
             },
             password: {
                 type: 'text',
@@ -72,20 +88,20 @@ export const I18n: Story = {
                 placeholder: '••••••••',
                 required: true,
                 minLength: 6,
-                context: {
-                    secureText: true
-                }
+                renderContext: {
+                    secureText: true,
+                },
             },
             rememberMe: {
                 type: 'checkbox',
                 title: 'auth.rememberMe',
-            }
+            },
         } satisfies FieldSchemas,
-        context: {
+        renderContext: {
             submitLabel: 'auth.login',
         },
         onSubmit: console.log,
-    }
+    },
 };
 
 export const CustomLayout: Story = {
@@ -102,7 +118,7 @@ export const CustomLayout: Story = {
             description: {
                 type: 'textarea',
                 title: 'Description',
-                placeholder: 'Enter description'
+                placeholder: 'Enter description',
             },
             assignee: {
                 type: 'select',
@@ -113,11 +129,11 @@ export const CustomLayout: Story = {
                     { value: '2', label: 'Jane Doe' },
                     { value: '3', label: 'John Smith' },
                 ],
-            }
+            },
         } satisfies FieldSchemas,
         children: ({ form, onSubmit }) => {
             return (
-                <form onSubmit={form.handleSubmit(onSubmit)} className="w-[550px]" >
+                <form onSubmit={form.handleSubmit(onSubmit)} className="w-[550px]">
                     <div className="gap-4 grid grid-cols-12 mb-4">
                         <div className="col-span-8 flex flex-col gap-4">
                             <SchemaFormField name="task" />
@@ -127,12 +143,10 @@ export const CustomLayout: Story = {
                             <SchemaFormField name="assignee" />
                         </div>
                     </div>
-                    <FormSubmitBtn>
-                        Save
-                    </FormSubmitBtn>
+                    <FormSubmitBtn>Save</FormSubmitBtn>
                 </form>
             );
         },
         onSubmit: console.log,
-    }
+    },
 };

@@ -4,7 +4,7 @@
  *
  * @see https://nodejs.org/docs/latest/api/packages.html#packages_determining_module_system
  */
-import * as exported from 'schema-form';
+import * as exported from '@basestacks/schema-form';
 import assert from 'assert';
 import fs from 'fs';
 import path from 'path';

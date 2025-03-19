@@ -1,4 +1,4 @@
-import '../stories/tailwind.css';
+import '../src/tailwind.css';
 import { themes } from '@storybook/theming';
 import type { Preview } from '@storybook/react';
 
@@ -16,6 +16,8 @@ const preview: Preview = {
             light: themes.normal
         }
     },
+
+    tags: ['autodocs']
 };
 
 export default preview;

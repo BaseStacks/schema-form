@@ -15,11 +15,11 @@ A small React library for building dynamic forms using JSON schemas.
 ## Installation
 
 ```bash
-npm install schema-form
+npm install @basestacks/schema-form
 # or
-yarn add schema-form
+yarn add @basestacks/schema-form
 # or
-bun add schema-form
+bun add @basestacks/schema-form
 ```
 
 ## Usage
@@ -27,7 +27,7 @@ bun add schema-form
 Example with a simple login form:
 
 ```tsx
-import { SchemaForm } from 'schema-form';
+import { SchemaForm } from '@basestacks/schema-form';
 
 const fields = {
   username: {

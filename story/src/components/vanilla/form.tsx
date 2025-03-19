@@ -1,5 +1,5 @@
-import { SchemaFormRenderProps, GenericFieldProps, ObjectFieldProps, ArrayFieldProps } from '../../../../src/types';
-import { SchemaFormProvider } from '../../../../src/components/SchemaFormProvider';
+import React from 'react';
+import { SchemaFormProvider, SchemaFormRenderProps, GenericFieldProps, ObjectFieldProps, ArrayFieldProps } from '@basestacks/schema-form';
 import { useState } from 'react';
 
 export interface FormContext {
@@ -37,7 +37,7 @@ export function FormProvider({ children }: React.PropsWithChildren<{}>) {
     );
 };
 
-export function FormLayout({ form, children, onSubmit, context }: SchemaFormRenderProps<FormContext, any>) {
+export function FormLayout({ form, children, onSubmit, renderContext }: SchemaFormRenderProps<FormContext, any>) {
     return (
         <form onSubmit={onSubmit && form.handleSubmit(onSubmit)} className="w-[350px]" >
             <div className="gap-4 grid grid-cols-12">
@@ -48,7 +48,7 @@ export function FormLayout({ form, children, onSubmit, context }: SchemaFormRend
                     type="submit"
                     className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-xs disabled:bg-gray-300 hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                 >
-                    {context.submitLabel ?? 'Submit'}
+                    {renderContext.submitLabel ?? 'Submit'}
                 </button>
             </div>
         </form>
@@ -64,12 +64,12 @@ export function FieldWrapper({ children, name, title, required }: Pick<GenericFi
     );
 };
 
-export function TextField({ ref, name, title, placeholder, required, readOnly, disabled, onChange, onBlur, error, context }: GenericFieldProps<FormContext>) {
+export function TextField({ ref, name, title, placeholder, required, readOnly, disabled, onChange, onBlur, error, renderContext }: GenericFieldProps<FormContext>) {
     return (
         <FieldWrapper name={name} title={title} required={required} error={error}>
             <input
                 ref={ref}
-                type={context.secureText ? 'password' : 'text'}
+                type={renderContext.secureText ? 'password' : 'text'}
                 name={name}
                 id={name}
                 onChange={onChange}

@@ -1,8 +1,8 @@
 import './i18n';
 
-import { SchemaFormProvider } from '../../../../src/components/SchemaFormProvider';
+import React from 'react';
+import { SchemaFormProvider, SchemaFormRenderProps, GenericFieldProps, ObjectFieldProps, ArrayFieldProps } from '@basestacks/schema-form';
 import { useTranslation } from 'react-i18next';
-import { ArrayFieldProps, GenericFieldProps, SchemaFormRenderProps, ObjectFieldProps } from '../../../../src/types';
 import { useState } from 'react';
 
 export interface FormContext {
@@ -42,7 +42,7 @@ export function AdvanceFormProvider({ children }: React.PropsWithChildren<{}>) {
     );
 };
 
-export function FormLayout({ form, children, onSubmit, context }: SchemaFormRenderProps<FormContext, any>) {
+export function FormLayout({ form, children, onSubmit, context }: SchemaFormRenderProps<FormContext>) {
     const { t } = useTranslation();
     return (
         <form onSubmit={onSubmit && form.handleSubmit(onSubmit)} className="w-[350px]" >
