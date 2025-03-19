@@ -186,7 +186,7 @@ export type GenericFieldProps<
 };
 
 export type ArrayFieldProps<
-    TRenderContext = unknown,
+    TRenderContext extends RenderContext = RenderContext,
     TFieldValue extends FieldValues = FieldValues,
     TFormValues extends FieldValues = FieldValues,
     TFieldPath extends FieldArrayPath<TFormValues> = FieldArrayPath<TFormValues>,
@@ -204,7 +204,7 @@ export type ArrayFieldProps<
     };
 
 export type ObjectFieldProps<
-    TRenderContext = unknown,
+    TRenderContext extends RenderContext = RenderContext,
     TFieldValue extends FieldValues = FieldValues,
     TFormValues extends FieldValues = FieldValues,
 > = BaseFieldProps<TRenderContext>
@@ -224,7 +224,7 @@ export type ConditionedRule<T extends FieldValues = FieldValues> =
 
 export interface FieldWrapperProps<
     TFormValues extends FieldValues,
-    TRenderContext = unknown,
+    TRenderContext extends RenderContext = RenderContext,
 > {
     readonly form: UseFormReturn<TFormValues>;
     readonly name: FieldPath<TFormValues>;

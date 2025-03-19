@@ -22,7 +22,7 @@ import { UseFormRegisterReturn } from 'react-hook-form';
 import { UseFormReturn } from 'react-hook-form';
 
 // @public (undocumented)
-export type ArrayFieldProps<TRenderContext = unknown, TFieldValue extends FieldValues = FieldValues, TFormValues extends FieldValues = FieldValues, TFieldPath extends FieldArrayPath<TFormValues> = FieldArrayPath<TFormValues>, TFieldKey extends string = 'id'> = BaseFieldProps<TRenderContext> & {
+export type ArrayFieldProps<TRenderContext extends RenderContext = RenderContext, TFieldValue extends FieldValues = FieldValues, TFormValues extends FieldValues = FieldValues, TFieldPath extends FieldArrayPath<TFormValues> = FieldArrayPath<TFormValues>, TFieldKey extends string = 'id'> = BaseFieldProps<TRenderContext> & {
     readonly field: ArrayFieldSchema<TFieldValue, TRenderContext, TFormValues>;
     readonly array: UseFieldArrayReturn<TFormValues, TFieldPath, TFieldKey>;
     readonly canRemoveItem: boolean;
@@ -109,7 +109,7 @@ export interface FieldSchemaWithOption {
 }
 
 // @public (undocumented)
-export interface FieldWrapperProps<TFormValues extends FieldValues, TRenderContext = unknown> {
+export interface FieldWrapperProps<TFormValues extends FieldValues, TRenderContext extends RenderContext = RenderContext> {
     // (undocumented)
     readonly disabled?: boolean;
     // (undocumented)
@@ -145,7 +145,7 @@ export type ObjectFieldProperties<TProperties extends FieldValues = FieldValues,
 };
 
 // @public (undocumented)
-export type ObjectFieldProps<TRenderContext = unknown, TFieldValue extends FieldValues = FieldValues, TFormValues extends FieldValues = FieldValues> = BaseFieldProps<TRenderContext> & {
+export type ObjectFieldProps<TRenderContext extends RenderContext = RenderContext, TFieldValue extends FieldValues = FieldValues, TFormValues extends FieldValues = FieldValues> = BaseFieldProps<TRenderContext> & {
     readonly field: ObjectFieldSchema<TFieldValue, TRenderContext, TFormValues>;
     readonly children: React.ReactNode;
 };

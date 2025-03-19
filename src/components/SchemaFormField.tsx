@@ -45,7 +45,7 @@ export function SchemaFormField<TFormValues extends FieldValues = FieldValues, T
         return (
             <CustomFieldWrapper
                 {...commonProps}
-                field={field as CustomFieldSchema<unknown, TFormValues>}
+                field={field as CustomFieldSchema<RenderContext, TFormValues>}
             />
         );
     }
@@ -54,7 +54,7 @@ export function SchemaFormField<TFormValues extends FieldValues = FieldValues, T
         return (
             <ArrayFieldWrapper
                 {...commonProps}
-                field={field as ArrayFieldSchema<any, unknown, TFormValues>}
+                field={field as ArrayFieldSchema<any, RenderContext, TFormValues>}
                 name={name as ArrayPath<TFormValues>}
                 renderChild={(props) => <SchemaFormField key={props.name} {...props} />}
             />
@@ -65,7 +65,7 @@ export function SchemaFormField<TFormValues extends FieldValues = FieldValues, T
         return (
             <ObjectFieldWrapper
                 {...commonProps}
-                field={field as ObjectFieldSchema<any, unknown, TFormValues>}
+                field={field as ObjectFieldSchema<any, RenderContext, TFormValues>}
                 renderChild={(props) => <SchemaFormField key={props.name} {...props} />}
             />
         );
@@ -74,7 +74,7 @@ export function SchemaFormField<TFormValues extends FieldValues = FieldValues, T
     return (
         <GenericFieldWrapper
             {...commonProps}
-            field={field as GenericFieldSchema<unknown, TFormValues>}
+            field={field as GenericFieldSchema<RenderContext, TFormValues>}
         />
     );
 }

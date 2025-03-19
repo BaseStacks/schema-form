@@ -1,8 +1,9 @@
 {
     "name": "schema-form",
     "version": "0.1.0",
-    "description": "A flexible and powerful React library for building dynamic forms using JSON schemas",
+    "description": "A small React library for building dynamic forms using JSON schemas",
     "license": "MIT",
+    "sideEffects": false,
     "exports": {
         "./package.json": "./package.json",
         ".": {
@@ -11,7 +12,17 @@
             "require": "./dist/index.cjs.js"
         }
     },
+    "main": "dist/index.cjs.js",
+    "umd:main": "dist/index.umd.js",
+    "jsdelivr": "dist/index.umd.js",
+    "unpkg": "dist/index.umd.js",
+    "module": "dist/index.esm.mjs",
     "source": "src/index.ts",
+    "jsnext:main": "dist/index.esm.mjs",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
     "scripts": {
         "api-extractor": "api-extractor run --local",
         "api-extractor:build": "bun run build:esm && bun run api-extractor",
@@ -64,5 +75,8 @@
     "peerDependencies": {
         "react": "^17 || ^18 || ^19",
         "react-hook-form": "^7"
+    },
+    "engines": {
+        "node": ">=18.0.0"
     }
 }
