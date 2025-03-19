@@ -32,3 +32,6 @@ coverage
 
 # Editor
 .vscode
+
+# Api Extractor
+temp

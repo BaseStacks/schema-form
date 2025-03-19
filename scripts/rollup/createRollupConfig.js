@@ -25,7 +25,7 @@ export function createRollupConfig(options, callback) {
       globals: { react: 'React' },
       exports: 'named',
     },
-    external: Object.keys(pkg.peerDependencies),
+    external: [...Object.keys(pkg.dependencies), 'react/jsx-runtime'],
     plugins: [
       typescript({
         tsconfig: options.tsconfig,
