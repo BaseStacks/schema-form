@@ -1,9 +1,13 @@
 import { useContext, useMemo } from 'react';
 import { FieldPath, FieldValues, get } from 'react-hook-form';
 import { SchemaFormContext } from '../contexts';
-import { BaseFieldSchema } from '../types';
+import { BaseFieldSchema, RenderContext } from '../types';
 
-export const useFieldSchema = <TFormValue extends FieldValues>(name: FieldPath<TFormValue>) => {
+export const useFieldSchema = <
+    TFormValue extends FieldValues,
+    TRenderContext extends RenderContext,
+    TSchema extends BaseFieldSchema<TRenderContext, TFormValue> = BaseFieldSchema<TRenderContext, TFormValue>
+>(name: FieldPath<TFormValue>) => {
     const schemaForm = useContext(SchemaFormContext);
 
     if (!schemaForm) {
@@ -17,5 +21,5 @@ export const useFieldSchema = <TFormValue extends FieldValues>(name: FieldPath<T
         return field;
     }, [fields, name]);
 
-    return field as BaseFieldSchema & { type: string };
+    return field as TSchema & { type?: string | null };
 };

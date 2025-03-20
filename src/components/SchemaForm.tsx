@@ -6,7 +6,7 @@ import { useGlobalContext } from '../hooks/useGlobalContext';
 import { createResolver } from '../utils/resolverUtils';
 import { SchemaFormContext } from '../contexts';
 
-export type SchemaFormProps<TFormValue extends FieldValues = FieldValues, TRenderContext = RenderContext> = UseFormProps<TFormValue> & {
+export type SchemaFormProps<TFormValue extends FieldValues = FieldValues, TRenderContext extends RenderContext = RenderContext> = UseFormProps<TFormValue> & {
     readonly schema?: ValidationSchema;
     readonly schemaOptions?: any;
     readonly resolverOptions?: any;
@@ -20,7 +20,7 @@ export type SchemaFormProps<TFormValue extends FieldValues = FieldValues, TRende
 /**
  * Main Schema Form component
  */
-export function SchemaForm<TFormValues extends FieldValues = FieldValues, TRenderContext extends RenderContext = RenderContext>({
+export function SchemaForm<TFormValue extends FieldValues = FieldValues, TRenderContext extends RenderContext = RenderContext>({
     schema,
     schemaOptions,
     createSchema,
@@ -30,7 +30,7 @@ export function SchemaForm<TFormValues extends FieldValues = FieldValues, TRende
     children,
     onSubmit,
     ...formProps
-}: SchemaFormProps<TFormValues, TRenderContext>) {
+}: SchemaFormProps<TFormValue, TRenderContext>) {
 
     const { validationResolver: resolverType, components, renderContext: globalRenderContext, } = useGlobalContext();
 
@@ -39,7 +39,7 @@ export function SchemaForm<TFormValues extends FieldValues = FieldValues, TRende
             return formProps.resolver;
         }
 
-        return createResolver<TFormValues>({
+        return createResolver<TFormValue>({
             resolverType,
             resolverOptions,
             schema,
@@ -64,7 +64,7 @@ export function SchemaForm<TFormValues extends FieldValues = FieldValues, TRende
         ));
     }, [fields]);
 
-    const handleSubmit = useCallback((data: TFormValues, event: React.BaseSyntheticEvent) => {
+    const handleSubmit = useCallback((data: TFormValue, event: React.BaseSyntheticEvent) => {
         if (onSubmit) {
             return onSubmit(data, event);
         }
@@ -80,7 +80,7 @@ export function SchemaForm<TFormValues extends FieldValues = FieldValues, TRende
         renderContext: mergedRenderContext
     };
 
-    const schemaForm: SchemaFormContextType<TFormValues> = {
+    const schemaForm: SchemaFormContextType<TFormValue> = {
         form,
         fields,
         renderContext: mergedRenderContext,

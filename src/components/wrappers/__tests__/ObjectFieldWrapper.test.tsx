@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { ObjectFieldWrapper } from '../ObjectFieldWrapper';
 import { useFieldComponent } from '../../../hooks/useFieldComponent';
-import { ObjectFieldProps, ObjectFieldSchema } from '../../../types';
+import { FieldWithObjectProps, ObjectFieldSchema } from '../../../types';
 import { UseFormReturn } from 'react-hook-form';
 import { SchemaFormFieldProps } from '../../SchemaFormField';
 
@@ -25,7 +25,7 @@ describe('ObjectFieldWrapper', () => {
         },
     };
 
-    const MockObjectComponent = jest.fn(({ field, children }: ObjectFieldProps) => (
+    const MockObjectComponent = jest.fn(({ schema: field, children }: FieldWithObjectProps) => (
         <div data-testid="object-component">
             <div data-testid="object-title">{field.title}</div>
             <div data-testid="object-children">{children}</div>
@@ -54,9 +54,9 @@ describe('ObjectFieldWrapper', () => {
         expect(useFieldComponent).toHaveBeenCalledWith('object');
         expect(MockObjectComponent).toHaveBeenCalledWith(
             expect.objectContaining({
-                field: mockField,
+                schema: mockField,
                 name: 'person'
-            } as ObjectFieldProps),
+            } as FieldWithObjectProps),
             undefined
         );
         expect(screen.getByTestId('object-component')).toBeInTheDocument();
