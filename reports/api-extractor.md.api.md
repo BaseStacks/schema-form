@@ -166,11 +166,11 @@ export type ResolverType<T extends FieldValues = FieldValues> = (schema: any, sc
 export function SchemaForm<TFormValues extends FieldValues = FieldValues, TRenderContext extends RenderContext = RenderContext>({ schema, schemaOptions, createSchema, resolverOptions, fields, renderContext, children, onSubmit, ...formProps }: SchemaFormProps<TFormValues, TRenderContext>): JSX.Element;
 
 // @public (undocumented)
-export interface SchemaFormComponents {
+export interface SchemaFormComponents<TRenderContext extends RenderContext = RenderContext> {
     readonly fields: {
-        readonly [key: string]: React.ComponentType<GenericFieldProps<any> | ArrayFieldProps<any> | ObjectFieldProps<any>>;
+        readonly [key: string]: React.ComponentType<GenericFieldProps<TRenderContext> | ArrayFieldProps<TRenderContext> | ObjectFieldProps<TRenderContext>>;
     };
-    readonly Form: React.ComponentType<SchemaFormRenderProps<RenderContext, GenericFieldProps>>;
+    readonly Form: React.ComponentType<SchemaFormRenderProps<TRenderContext>>;
 }
 
 // @public

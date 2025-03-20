@@ -42,12 +42,12 @@ export type DefaultMessages = {
     readonly max?: Message;
 };
 
-export interface SchemaFormComponents {
+export interface SchemaFormComponents<TRenderContext extends RenderContext = RenderContext> {
     /** Form component used to render the form */
-    readonly Form: React.ComponentType<SchemaFormRenderProps<RenderContext, GenericFieldProps>>;
+    readonly Form: React.ComponentType<SchemaFormRenderProps<TRenderContext>>;
     /** Map of field components by field type */
     readonly fields: {
-        readonly [key: string]: React.ComponentType<GenericFieldProps<any> | ArrayFieldProps<any> | ObjectFieldProps<any>>;
+        readonly [key: string]: React.ComponentType<GenericFieldProps<TRenderContext> | ArrayFieldProps<TRenderContext> | ObjectFieldProps<TRenderContext>>;
     };
 }
 
