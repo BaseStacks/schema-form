@@ -19,6 +19,7 @@ describe('useFieldContext', () => {
     it('should merge form context with field context', () => {
         // Arrange
         const mockField: BaseFieldSchema = {
+            type: 'test',
             renderContext: { readOnly: true, disabled: false },
         };
 
@@ -37,6 +38,7 @@ describe('useFieldContext', () => {
     it('should prioritize field context over form context', () => {
         // Arrange
         const mockField: BaseFieldSchema = {
+            type: 'test',
             renderContext: { theme: 'dark', customProp: 'value' },
         };
 

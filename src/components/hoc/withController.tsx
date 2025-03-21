@@ -1,7 +1,7 @@
 import { Controller, FieldValues } from 'react-hook-form';
-import { FieldWithControllerProps, FieldWrapperProps, RenderContext } from '../../types';
+import { FieldWithControllerProps, FieldHocProps, RenderContext } from '../../types';
 
-interface FieldWithControllerWrapperProps<TFormValue extends FieldValues, TRenderContext extends RenderContext> extends FieldWrapperProps<TFormValue, TRenderContext> {
+interface FieldWithControllerWrapperProps<TFormValue extends FieldValues, TRenderContext extends RenderContext> extends FieldHocProps<TRenderContext, TFormValue> {
 }
 
 export function withController<TRenderContext extends RenderContext = RenderContext>(
@@ -11,8 +11,6 @@ export function withController<TRenderContext extends RenderContext = RenderCont
         form,
         schema,
         name,
-        readOnly,
-        disabled,
         error,
         renderContext
     }: FieldWithControllerWrapperProps<TFormValue, TRenderContext>) {
@@ -24,7 +22,6 @@ export function withController<TRenderContext extends RenderContext = RenderCont
                 control={form.control}
                 rules={schema}
                 shouldUnregister={schema.shouldUnregister}
-                disabled={disabled}
                 defaultValue={schema.value}
                 render={(controller) => (
                     <Component
@@ -35,8 +32,6 @@ export function withController<TRenderContext extends RenderContext = RenderCont
                         title={title}
                         description={description}
                         placeholder={placeholder}
-                        readOnly={readOnly}
-                        disabled={disabled}
                         renderContext={renderContext}
                         error={error}
                     />

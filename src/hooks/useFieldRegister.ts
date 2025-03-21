@@ -6,24 +6,24 @@ import { getValidationOptions, getValidationStats } from '../utils/fieldUtils';
 export const useFieldRegister = <TFormValue extends FieldValues>(
     form: UseFormReturn<TFormValue>,
     name: FieldPath<TFormValue>,
-    field: RegisterOptions<TFormValue>
+    options: RegisterOptions<TFormValue>
 ) => {
     const { getDefaultMessages } = useGlobalContext();
 
     const fieldProps = useMemo(() => {
-        const validationStats = getValidationStats(field);
+        const validationStats = getValidationStats(options);
         if (!validationStats) {
-            return form.register(name, field);
+            return form.register(name, options);
         }
 
-        const defaultMessages = getDefaultMessages(validationStats, field);
-        const validationOptions = getValidationOptions(field, defaultMessages);
+        const defaultMessages = getDefaultMessages(validationStats, options);
+        const validationOptions = getValidationOptions(options, defaultMessages);
 
         return form.register(name, {
-            ...field,
+            ...options,
             ...validationOptions
         });
-    }, [getDefaultMessages, field, form, name]);
+    }, [getDefaultMessages, options, form, name]);
 
     return fieldProps;
 };

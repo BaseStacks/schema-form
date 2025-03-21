@@ -1,15 +1,14 @@
 import { ArrayPath, FieldPath, FieldValues, useFieldArray } from 'react-hook-form';
-import { ArrayFieldSchema, FieldWithArrayProps, FieldWrapperProps, RenderContext } from '../../types';
+import { FieldWithArrayProps, FieldHocProps, RenderContext, ArrayFieldSchema } from '../../types';
 import { SchemaFormField } from '../SchemaFormField';
 import { useCallback } from 'react';
 
 export interface FieldWithArrayWrapperProps<
-    TFieldValue extends FieldValues,
+    TRenderContext extends RenderContext,
     TFormValue extends FieldValues,
-    TRenderContext
-> extends Omit<FieldWrapperProps<TFormValue, TRenderContext>, 'name'> {
+    TFieldValue extends FieldValues
+> extends Omit<FieldHocProps<TRenderContext, TFormValue, TFieldValue>, 'name'> {
     readonly name: ArrayPath<TFormValue>;
-    readonly schema: ArrayFieldSchema<TFieldValue, TRenderContext, TFormValue>;
 }
 
 export function withArray<TRenderContext extends RenderContext = RenderContext>(
@@ -23,28 +22,30 @@ export function withArray<TRenderContext extends RenderContext = RenderContext>(
         readOnly,
         renderContext,
         error
-    }: FieldWithArrayWrapperProps<TFieldValue, TFormValue, TRenderContext>) {
+    }: FieldWithArrayWrapperProps<TRenderContext, TFormValue, TFieldValue>) {
+
+        const arraySchema = schema as ArrayFieldSchema<TRenderContext, TFormValue, TFieldValue[]>;
 
         // Use fieldArray from react-hook-form to manage the array items
         const array = useFieldArray({
             control: form.control, name, rules: {
-                minLength: schema.minLength,
-                maxLength: schema.maxLength,
-                required: schema.required,
-                validate: schema.validate
+                minLength: arraySchema.minLength,
+                maxLength: arraySchema.maxLength,
+                required: arraySchema.required,
+                validate: arraySchema.validate
             }
         });
 
         const { fields } = array;
 
         // Get min/max items constraints from field
-        const minItems = typeof schema.minLength === 'number' ? schema.minLength : schema.minLength?.value;
-        const maxItems = typeof schema.maxLength === 'number' ? schema.maxLength : isNaN(schema.maxLength?.value) ? Infinity : schema.maxLength.value;
+        const minItems = typeof arraySchema.minLength === 'number' ? arraySchema.minLength : arraySchema.minLength?.value;
+        const maxItems = typeof arraySchema.maxLength === 'number' ? arraySchema.maxLength : isNaN(arraySchema.maxLength?.value) ? Infinity : arraySchema.maxLength.value;
 
         // Check if we can add more items
-        const canAddItem = !schema.readOnly && (!maxItems || fields.length < (maxItems));
+        const canAddItem = !maxItems || fields.length < maxItems;
         // Check if we can remove items
-        const canRemoveItem = !schema.readOnly && fields.length > minItems;
+        const canRemoveItem = fields.length > minItems;
 
         const renderItem = useCallback((index: number) => {
             const key = `${name}[${index}]` as FieldPath<TFormValue>;
@@ -54,14 +55,14 @@ export function withArray<TRenderContext extends RenderContext = RenderContext>(
         return (
             <Component
                 array={array}
-                schema={schema}
+                schema={arraySchema}
                 name={name}
-                title={schema.title}
-                description={schema.description}
-                placeholder={schema.placeholder}
+                title={arraySchema.title}
+                description={arraySchema.description}
+                placeholder={arraySchema.placeholder}
                 canAddItem={canAddItem}
                 canRemoveItem={canRemoveItem}
-                required={!!schema.required}
+                required={!!arraySchema.required}
                 readOnly={readOnly}
                 renderItem={renderItem}
                 disabled={disabled}

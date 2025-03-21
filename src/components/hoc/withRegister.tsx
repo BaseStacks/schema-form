@@ -1,8 +1,8 @@
 import { FieldValues } from 'react-hook-form';
-import { FieldWithRegisterProps, FieldWrapperProps, RenderContext } from '../../types';
+import { FieldWithRegisterProps, FieldHocProps, RenderContext } from '../../types';
 import { useFieldRegister } from '../../hooks/useFieldRegister';
 
-interface FieldWithRegisterWrapperProps<TFormValue extends FieldValues, TRenderContext extends RenderContext> extends FieldWrapperProps<TFormValue, TRenderContext> {
+interface FieldWithRegisterWrapperProps<TRenderContext extends RenderContext, TFormValue extends FieldValues> extends FieldHocProps<TRenderContext, TFormValue> {
 }
 
 export function withRegister<TRenderContext extends RenderContext = RenderContext>(
@@ -12,11 +12,9 @@ export function withRegister<TRenderContext extends RenderContext = RenderContex
         form,
         schema,
         name,
-        readOnly,
-        disabled,
         error,
         renderContext
-    }: FieldWithRegisterWrapperProps<TFormValue, TRenderContext>) {
+    }: FieldWithRegisterWrapperProps<TRenderContext, TFormValue>) {
         const { title, description, placeholder } = schema;
 
         // Get only the necessary props from register
@@ -29,8 +27,6 @@ export function withRegister<TRenderContext extends RenderContext = RenderContex
                 title={title}
                 description={description}
                 placeholder={placeholder}
-                readOnly={readOnly}
-                disabled={disabled}
                 renderContext={renderContext}
                 error={error}
             />

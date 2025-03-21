@@ -1,17 +1,23 @@
 import { FieldError, FieldPath, FieldValues } from 'react-hook-form';
-import { BaseFieldSchema, CustomFieldSchema, FieldWrapperProps, RenderContext } from '../types';
+import { BaseFieldSchema, CustomFieldSchema, FieldHocProps, RenderContext } from '../types';
 import { useFieldStatus } from '../hooks/useFieldStatus';
 import { useFieldSchema } from '../hooks/useFieldSchema';
 import { useSchemaForm } from '../hooks/useSchemaForm';
 import { useMemo } from 'react';
 import { useFieldComponent } from '../hooks/useFieldComponent';
 
-export interface SchemaFormFieldProps<TFormValue extends FieldValues = FieldValues, TRenderContext extends RenderContext = RenderContext> {
+export interface SchemaFormFieldProps<
+    TRenderContext extends RenderContext = RenderContext,
+    TFormValue extends FieldValues = FieldValues
+> {
     readonly name: FieldPath<TFormValue>;
     readonly renderContext?: TRenderContext;
 }
 
-export function SchemaFormField<TFormValue extends FieldValues = FieldValues, TRenderContext extends RenderContext = RenderContext>({ name, renderContext }: SchemaFormFieldProps<TFormValue, TRenderContext>) {
+export function SchemaFormField<
+    TRenderContext extends RenderContext = RenderContext,
+    TFormValue extends FieldValues = FieldValues
+>({ name, renderContext }: SchemaFormFieldProps<TRenderContext, TFormValue>) {
     const { form, renderContext: formRenderContext } = useSchemaForm<TFormValue>();
     const formValues = form.getValues();
 
@@ -31,14 +37,12 @@ export function SchemaFormField<TFormValue extends FieldValues = FieldValues, TR
 
     const error = form.formState.errors[name] as FieldError | undefined;
 
-    const commonProps: FieldWrapperProps<TFormValue, TRenderContext> = {
+    const commonProps: FieldHocProps<TRenderContext, TFormValue> = {
         form,
         name,
         error,
         schema,
-        renderContext: fieldRenderContext,
-        readOnly: fieldStatus.isReadOnly,
-        disabled: fieldStatus.isDisabled
+        renderContext: fieldRenderContext
     };
 
     if (!schema.type) {

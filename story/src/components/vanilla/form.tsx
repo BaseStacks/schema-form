@@ -1,10 +1,11 @@
 import React from 'react';
-import { SchemaFormProvider, SchemaFormRenderProps, GenericFieldProps, ObjectFieldProps, ArrayFieldProps } from '@basestacks/schema-form';
+import { withArray, SchemaFormProvider, SchemaFormRenderProps, GenericFieldProps, FieldWithArrayProps, FieldWithRegisterProps, withRegister, FieldWithObjectProps, withObject } from '@basestacks/schema-form';
 import { useState } from 'react';
 
-export interface FormContext {
+export interface RenderContext {
     readonly secureText?: boolean;
     readonly submitLabel?: string;
+    readonly options?: { value: string; label: string }[];
 }
 
 export function FormProvider({ children }: React.PropsWithChildren<{}>) {
@@ -13,17 +14,18 @@ export function FormProvider({ children }: React.PropsWithChildren<{}>) {
             components={{
                 Form: FormLayout,
                 fields: {
-                    array: ArrayField,
-                    object: ObjectField,
-                    text: TextField,
-                    checkbox: CheckboxField,
-                    select: SelectField,
-                    number: NumberField,
+                    array: withArray(ArrayField),
+                    object: withObject(ObjectField),
+                    text: withRegister(TextField),
+                    password: withRegister(TextField),
+                    checkbox: withRegister(CheckboxField),
+                    select: withRegister(SelectField),
+                    number: withRegister(NumberField),
                 }
             }}
-            getDefaultMessages={(validation, field) => {
+            getDefaultMessages={(validation) => {
                 return {
-                    required: `${field.title} is required`,
+                    required: 'this field is required',
                     minLength: `Must be at least ${validation.minLength} characters long`,
                     maxLength: `Must be at most ${validation.maxLength} characters long`,
                     pattern: 'Invalid format',
@@ -37,7 +39,7 @@ export function FormProvider({ children }: React.PropsWithChildren<{}>) {
     );
 };
 
-export function FormLayout({ form, children, onSubmit, renderContext }: SchemaFormRenderProps<FormContext, any>) {
+export function FormLayout({ form, children, onSubmit, renderContext }: SchemaFormRenderProps<RenderContext, any>) {
     return (
         <form onSubmit={onSubmit && form.handleSubmit(onSubmit)} className="w-[350px]" >
             <div className="gap-4 grid grid-cols-12">
@@ -48,14 +50,14 @@ export function FormLayout({ form, children, onSubmit, renderContext }: SchemaFo
                     type="submit"
                     className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-xs disabled:bg-gray-300 hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                 >
-                    {renderContext.submitLabel ?? 'Submit'}
+                    {renderContext?.submitLabel ?? 'Submit'}
                 </button>
             </div>
         </form>
     );
 };
 
-export function FieldWrapper({ children, name, title, required }: Pick<GenericFieldProps<FormContext>, 'name' | 'title' | 'required' | 'error'> & { children: React.ReactNode; }) {
+export function FieldWrapper({ children, name, title, required }: Pick<GenericFieldProps<RenderContext>, 'name' | 'title' | 'required' | 'error'> & { children: React.ReactNode; }) {
     return (
         <div className="col-span-12">
             {title && <label htmlFor={name} className="block text-sm font-medium mb-2 text-gray-900">{title} {required && '*'}</label>}
@@ -64,16 +66,14 @@ export function FieldWrapper({ children, name, title, required }: Pick<GenericFi
     );
 };
 
-export function TextField({ ref, name, title, placeholder, required, readOnly, disabled, onChange, onBlur, error, renderContext }: GenericFieldProps<FormContext>) {
+export function TextField({ name, title, placeholder, required, readOnly, disabled, error, register, renderContext }: FieldWithRegisterProps<RenderContext>) {
     return (
         <FieldWrapper name={name} title={title} required={required} error={error}>
             <input
-                ref={ref}
+                {...register}
                 type={renderContext.secureText ? 'password' : 'text'}
                 name={name}
                 id={name}
-                onChange={onChange}
-                onBlur={onBlur}
                 placeholder={placeholder}
                 readOnly={readOnly}
                 disabled={disabled}
@@ -84,37 +84,32 @@ export function TextField({ ref, name, title, placeholder, required, readOnly, d
     );
 };
 
-export function NumberField({ ref, name, title, placeholder, required, readOnly, disabled, onChange, onBlur, error }: GenericFieldProps<FormContext>) {
+export function NumberField({ register, name, title, placeholder, required, readOnly, disabled, error }: FieldWithRegisterProps<RenderContext>) {
     return (
         <FieldWrapper name={name} title={title} required={required} error={error}>
             <input
-                ref={ref}
+                {...register}
                 type="number"
                 name={name}
                 id={name}
-                onChange={onChange}
-                onBlur={onBlur}
                 placeholder={placeholder}
                 readOnly={readOnly}
                 disabled={disabled}
                 className="block w-full rounded-md bg-white px-3 h-9 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6 invalid:!outline-red-500 invalid:text-red-500"
             />
-
         </FieldWrapper>
     );
 };
 
-export function CheckboxField({ ref, name, title, required, onChange, onBlur }: GenericFieldProps<FormContext>) {
+export function CheckboxField({ register, name, title, required, }: FieldWithRegisterProps<RenderContext>) {
     return (
         <FieldWrapper name={name}>
             <div className="flex items-center">
                 <input
-                    ref={ref}
+                    {...register}
                     type="checkbox"
                     name={name}
                     id={name}
-                    onChange={onChange}
-                    onBlur={onBlur}
                     required={required}
                     className="rounded text-blue-600 focus:ring-blue-500 h-4 w-4"
                 />
@@ -124,22 +119,20 @@ export function CheckboxField({ ref, name, title, required, onChange, onBlur }: 
     );
 }
 
-export function SelectField({ ref, name, title, placeholder, required, options, onChange, onBlur, error }: GenericFieldProps<FormContext> & { options: { value: string; label: string; }[]; }) {
+export function SelectField({ register, name, title, placeholder, required, error, renderContext }: FieldWithRegisterProps<RenderContext>) {
     return (
         <FieldWrapper name={name} title={title} required={required} error={error}>
             <div className="grid">
                 <svg className="pointer-events-none relative right-1 z-10 col-start-1 row-start-1 h-4 w-4 self-center justify-self-end forced-colors:hidden" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path></svg>
                 <select
-                    ref={ref}
+                    {...register}
                     name={name}
                     id={name}
-                    onChange={onChange}
-                    onBlur={onBlur}
                     required={required}
                     className="col-start-1 row-start-1 block w-full rounded-md bg-white px-3 h-9 text-base text-gray-900 appearance-none outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6 invalid:!outline-red-500 invalid:text-red-500"
                 >
                     <option value="">{placeholder}</option>
-                    {options.map(option => (
+                    {renderContext.options?.map(option => (
                         <option key={option.value} value={option.value}>{option.label}</option>
                     ))}
                 </select>
@@ -148,7 +141,7 @@ export function SelectField({ ref, name, title, placeholder, required, options, 
     );
 }
 
-export function ObjectField({ children }: ObjectFieldProps<FormContext>) {
+export function ObjectField({ children }: FieldWithObjectProps<RenderContext>) {
     return (
         <div className="gap-2 grid grid-cols-12 col-span-12">
             {children}
@@ -156,7 +149,7 @@ export function ObjectField({ children }: ObjectFieldProps<FormContext>) {
     );
 }
 
-export function ArrayField({ name, title, placeholder, array, required, canAddItem, renderItem, error }: ArrayFieldProps<FormContext>) {
+export function ArrayField({ name, title, placeholder, array, required, canAddItem, renderItem, error }: FieldWithArrayProps<RenderContext>) {
     return (
         <FieldWrapper name={name} required={required} title={title}>
             {error?.root && <div className="text-red-500 text-sm mb-2">{error.root.message}</div>}
