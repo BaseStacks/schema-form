@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { FormProvider } from './components/vanilla/form';
-import { FieldSchemas, RenderContext, SchemaForm, SchemaFormProps } from '@basestacks/schema-form';
+import { FieldSchemas, RenderContext, SchemaForm, SchemaFormProps, withRegister } from '@basestacks/schema-form';
 import React from 'react';
+import { fn } from '@storybook/test';
 
 function Content(props: SchemaFormProps<any, RenderContext>) {
     return (
@@ -59,7 +60,7 @@ export const GettingStarted: Story = {
         renderContext: {
             submitLabel: 'Sign in',
         },
-        onSubmit: console.log,
+        onSubmit: fn(),
     },
 };
 
@@ -102,15 +103,15 @@ const registerSchema: FieldSchemas<RegisterValues, RenderContext> = {
         },
     },
     agreeTermAndConditions: {
-        Component: function CustomCheckboxField({ ref, name, onChange }) {
+        validate: (value) => value || 'You must agree to terms and conditions',
+        Component: withRegister(function CustomCheckboxField({ register, name }) {
             return (
                 <div className="flex items-center col-span-12">
                     <input
-                        ref={ref}
+                        {...register}
                         type="checkbox"
                         name={name}
                         id={name}
-                        onChange={onChange}
                         className="rounded text-blue-600 focus:ring-blue-500 h-4 w-4"
                     />
                     <label
@@ -122,7 +123,7 @@ const registerSchema: FieldSchemas<RegisterValues, RenderContext> = {
                     </label>
                 </div>
             );
-        },
+        }),
     }
 };
 
@@ -132,7 +133,7 @@ export const CustomComponent: Story = {
         renderContext: {
             submitLabel: 'Sign up',
         },
-        onSubmit: console.log,
+        onSubmit: fn(),
     },
 };
 
@@ -153,7 +154,7 @@ export const CustomErrorMessage: Story = {
         renderContext: {
             submitLabel: 'View content',
         },
-        onSubmit: console.log,
+        onSubmit: fn(),
     },
 };
 
@@ -207,7 +208,7 @@ export const ConditionalField: Story = {
                 },
             },
         },
-        onSubmit: console.log,
+        onSubmit: fn(),
     },
 };
 
@@ -242,6 +243,6 @@ export const ArrayField: Story = {
                 },
             },
         },
-        onSubmit: console.log,
+        onSubmit: fn(),
     },
 };

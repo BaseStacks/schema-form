@@ -53,6 +53,10 @@ export function SchemaFormField<
         );
     }
 
+    if(!FieldComponent) {
+        throw new Error(`No field component found for type: ${schema.type}`);
+    }
+
     return (
         <FieldComponent {...commonProps} />
     );

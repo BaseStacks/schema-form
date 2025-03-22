@@ -114,7 +114,7 @@ export type GenericFieldSchema<
 export type CustomFieldSchema<
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues,
-> = Omit<BaseFieldSchema<TRenderContext, TFormValue>, 'type'> & FieldSchemaWithOption & FieldSchemaWithFormat & {
+> = BaseFieldSchema<TRenderContext, TFormValue> & FieldSchemaWithOption & FieldSchemaWithFormat & {
     readonly type?: undefined;
     readonly Component: React.ComponentType<any>;
 };
@@ -125,7 +125,7 @@ export type ArrayFieldSchema<
     TFieldValue extends FieldValues[] = FieldValues[]
 > = BaseFieldSchema<TRenderContext, TFormValue> & {
     /** Schema for individual items in the array */
-    readonly items: ObjectFieldSchema<TFieldValue[0], TRenderContext, TFormValue>;
+    readonly items: ObjectFieldSchema<TRenderContext, TFormValue, TFieldValue[0]>;
 };
 
 export type ObjectFieldSchema<
@@ -144,7 +144,7 @@ export type ObjectFieldProperties<
         | CustomFieldSchema<TRenderContext, TProperties>
         | GenericFieldSchema<TRenderContext, TProperties>
         | ObjectFieldSchema<TRenderContext, TProperties, TProperties[K] extends FieldValues ? TProperties[K] : any>
-        | ArrayFieldSchema<TProperties, TRenderContext, TProperties[K] extends FieldValues ? TProperties[K] : any>;
+        | ArrayFieldSchema<TRenderContext, TProperties, TProperties[K] extends FieldValues ? TProperties[K] : any>;
     };
 
 export type FieldSchemas<
@@ -155,7 +155,7 @@ export type FieldSchemas<
         | CustomFieldSchema<TRenderContext, TFormValue>
         | GenericFieldSchema<TRenderContext, TFormValue>
         | ObjectFieldSchema<TRenderContext, TFormValue, TFormValue[K] extends FieldValues ? TFormValue[K] : any>
-        | ArrayFieldSchema<TFormValue, TRenderContext, TFormValue[K] extends FieldValues ? TFormValue[K] : any>;
+        | ArrayFieldSchema<TRenderContext, TFormValue, TFormValue[K] extends FieldValues ? TFormValue[K] : any>;
     };
 
 export interface BaseFieldProps<
