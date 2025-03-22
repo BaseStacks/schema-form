@@ -102,7 +102,6 @@ const registerSchema: FieldSchemas<RegisterValues, RenderContext> = {
         },
     },
     agreeTermAndConditions: {
-        type: 'any',
         Component: function CustomCheckboxField({ ref, name, onChange }) {
             return (
                 <div className="flex items-center col-span-12">

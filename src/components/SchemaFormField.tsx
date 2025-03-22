@@ -23,7 +23,7 @@ export function SchemaFormField<
 
     const schema = useFieldSchema<TFormValue, TRenderContext>(name);
 
-    const FieldComponent = useFieldComponent<any>(schema.type);
+    const FieldComponent = useFieldComponent(schema.type);
 
     const fieldStatus = useFieldStatus(schema as BaseFieldSchema, formValues);
     const fieldRenderContext = useMemo(

@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "build-storybook": "storybook build",
-    "start": "storybook dev -p 6006"
+    "start": "storybook dev -p 6006",
+    "chromatic": "npx chromatic --project-token=chpt_c3454bc87a0ee3c"
   },
   "dependencies": {
     "@basestacks/schema-form": "file:..",
@@ -27,7 +28,7 @@
     "date-fns": "^4.1.0",
     "i18next": "^24.2.3",
     "lucide-react": "^0.483.0",
-    "react-day-picker": "^9.6.3",
+    "react-day-picker": "^8.10.1",
     "react-i18next": "^15.4.1",
     "storybook": "^8.6.7",
     "storybook-dark-mode": "^4.0.2",
