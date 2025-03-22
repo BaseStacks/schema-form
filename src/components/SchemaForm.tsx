@@ -75,7 +75,6 @@ export function SchemaForm<TFormValue extends FieldValues = FieldValues, TRender
         form,
         fields,
         onSubmit: handleSubmit,
-        defaultValues: formProps.defaultValues,
         children: childrenElements,
         renderContext: mergedRenderContext
     };

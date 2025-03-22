@@ -55,7 +55,7 @@ export function FormLayout({ form, children, onSubmit, renderContext }: SchemaFo
             </div>
             <div className="mt-4">
                 <FormSubmitBtn>
-                    {t(renderContext?.submitLabel ?? 'Submit')}
+                    {t(renderContext.submitLabel ?? 'Submit')}
                 </FormSubmitBtn>
             </div>
         </form>

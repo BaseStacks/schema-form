@@ -2,6 +2,10 @@ import { PropsWithChildren } from 'react';
 import { FieldSchemas, FieldWithArrayProps, FieldWithControllerProps, FieldWithObjectProps, FieldWithRegisterProps, SchemaForm, SchemaFormProvider, SchemaFormRenderProps, withArray, withController, withObject, withRegister } from '../src';
 import React from 'react';
 
+interface FormRenderContext {
+    readonly fieldLayout: 'horizontal' | 'vertical';
+}
+
 function FormProvider({ children }: PropsWithChildren<{}>) {
     return (
         <SchemaFormProvider
@@ -14,13 +18,16 @@ function FormProvider({ children }: PropsWithChildren<{}>) {
                     object: withObject(ObjectField),
                 },
             }}
+            renderContext={{
+                fieldLayout: 'horizontal'
+            }}
         >
             {children}
         </SchemaFormProvider>
     );
 };
 
-function FormLayout({ form, onSubmit, children }: SchemaFormRenderProps) {
+function FormLayout({ form, onSubmit, children }: SchemaFormRenderProps<FormRenderContext>) {
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>
             {children}

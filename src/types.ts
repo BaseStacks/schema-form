@@ -1,6 +1,6 @@
 import { ControllerFieldState, ControllerRenderProps, FieldArrayPath, FieldError, FieldPath, FieldValues, RegisterOptions, Resolver, ResolverOptions, SubmitHandler, UseFieldArrayReturn, UseFormRegisterReturn, UseFormReturn, UseFormStateReturn } from 'react-hook-form';
 
-export type RenderContext = Record<string, any>;
+export type RenderContext = any;
 
 export type ValidationSchema = unknown;
 
@@ -17,8 +17,7 @@ export type SchemaFormRenderProps<TRenderContext extends RenderContext = RenderC
     readonly form: UseFormReturn<TFormValue>;
     readonly fields: FieldSchemas<TFormValue>;
     readonly onSubmit: SubmitHandler<TFormValue>;
-    readonly defaultValues?: Partial<TFormValue>;
-    readonly renderContext?: TRenderContext;
+    readonly renderContext: TRenderContext;
     readonly children: React.ReactNode;
 };
 
@@ -93,8 +92,7 @@ export type BaseFieldSchema<
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues
 > = RegisterOptions<TFormValue> & {
-    readonly type: string;
-
+    readonly type?: string;
     // Field information
     readonly title?: string | null;
     readonly description?: string;
@@ -116,8 +114,8 @@ export type GenericFieldSchema<
 export type CustomFieldSchema<
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues,
-> = BaseFieldSchema<TRenderContext, TFormValue> & FieldSchemaWithOption & FieldSchemaWithFormat & {
-    readonly type?: null;
+> = Omit<BaseFieldSchema<TRenderContext, TFormValue>, 'type'> & FieldSchemaWithOption & FieldSchemaWithFormat & {
+    readonly type?: undefined;
     readonly Component: React.ComponentType<any>;
 };
 
@@ -242,7 +240,7 @@ export interface FieldHocProps<
     readonly form: UseFormReturn<TFormValue>;
     readonly schema: GenericFieldSchema<TRenderContext, TFormValue>
     | ArrayFieldSchema<TRenderContext, TFormValue, TFieldValues[]>
-    | ObjectFieldSchema<TRenderContext, TFormValue, TFieldValues>;
+    | ObjectFieldSchema<TRenderContext, TFormValue, TFieldValues>;  
     readonly name: FieldPath<TFormValue>;
     readonly readOnly?: boolean;
     readonly disabled?: boolean;

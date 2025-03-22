@@ -17,7 +17,7 @@ import { cn } from '../utils';
 import { PropsWithChildren, useMemo, useState } from 'react';
 
 export interface FormRenderContext {
-    readonly layout?: FieldLayout;
+    readonly layout: FieldLayout;
     readonly options?: {
         value: string;
         label: string;

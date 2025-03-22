@@ -21,5 +21,5 @@ export const useFieldSchema = <
         return field;
     }, [fields, name]);
 
-    return field as TSchema & { type?: string | null };
+    return field as TSchema;
 };

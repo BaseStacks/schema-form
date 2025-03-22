@@ -50,7 +50,7 @@ export function FormLayout({ form, children, onSubmit, renderContext }: SchemaFo
                     type="submit"
                     className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-xs disabled:bg-gray-300 hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                 >
-                    {renderContext?.submitLabel ?? 'Submit'}
+                    {renderContext.submitLabel ?? 'Submit'}
                 </button>
             </div>
         </form>
