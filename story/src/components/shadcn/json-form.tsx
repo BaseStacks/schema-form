@@ -1,7 +1,7 @@
 import React from 'react';
 import { ajvResolver } from '@hookform/resolvers/ajv';
 
-import { FieldWithControllerProps, FieldWithArrayProps, FieldWithObjectProps, withArray, withController, withObject, SchemaFormRenderProps, SchemaFormProvider } from '@basestacks/schema-form';
+import { WithControllerProps, WithArrayProps, WithObjectProps, withArray, withController, withObject, SchemaFormRenderProps, SchemaFormProvider } from '@basestacks/schema-form';
 import { format } from 'date-fns';
 
 import { FormItem, FormLabel, FormDescription, FormMessage, FormControl } from './form';
@@ -122,9 +122,8 @@ export function StringField({
     description,
     required,
     placeholder,
-    readOnly,
     renderContext: { layout },
-}: FieldWithControllerProps<FormRenderContext>) {
+}: WithControllerProps<FormRenderContext>) {
     const { containerClx, labelClx, controlClx } = calculateLayout(layout);
 
     return (
@@ -136,7 +135,6 @@ export function StringField({
                     className={cn(controlClx)}
                     placeholder={placeholder || ''}
                     required={required}
-                    readOnly={readOnly}
                 />
             </FormControl>
             {description && <FormDescription>{description}</FormDescription>}
@@ -151,9 +149,8 @@ export function DateField({
     description,
     required,
     placeholder,
-    readOnly,
     renderContext: { layout },
-}: FieldWithControllerProps<FormRenderContext>) {
+}: WithControllerProps<FormRenderContext>) {
     // Use provided placeholder or default text
     const datePlaceholder = placeholder || 'Pick a date';
 
@@ -163,17 +160,15 @@ export function DateField({
         <FormItem className={cn('grid grid-cols-12', containerClx)} >
             {title && <FormLabel className={cn(labelClx, 'mt-2')}>{title}{required ? ' *' : ''}</FormLabel>}
             <Popover>
-                <PopoverTrigger asChild disabled={readOnly}>
+                <PopoverTrigger asChild>
                     <FormControl>
                         <Button
                             variant={'outline'}
                             className={cn(
                                 controlClx,
                                 'w-[240px] pl-3 text-left font-normal',
-                                !field.value && 'text-muted-foreground',
-                                readOnly && 'opacity-50 cursor-not-allowed'
+                                !field.value && 'text-muted-foreground'
                             )}
-                            disabled={readOnly}
                         >
                             {field.value ? (
                                 format(field.value, 'PPP')
@@ -184,19 +179,17 @@ export function DateField({
                         </Button>
                     </FormControl>
                 </PopoverTrigger>
-                {!readOnly && (
-                    <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={field.onChange}
-                            disabled={(date) =>
-                                date > new Date() || date < new Date('1900-01-01')
-                            }
-                            initialFocus
-                        />
-                    </PopoverContent>
-                )}
+                <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) =>
+                            date > new Date() || date < new Date('1900-01-01')
+                        }
+                        initialFocus
+                    />
+                </PopoverContent>
             </Popover>
             {description && <FormDescription>{description}</FormDescription>}
             <FormMessage className="col-span-12" />
@@ -210,9 +203,8 @@ export function SelectField({
     description,
     required,
     placeholder,
-    readOnly,
     renderContext: { layout, options },
-}: FieldWithControllerProps<FormRenderContext>) {
+}: WithControllerProps<FormRenderContext>) {
     // Use provided placeholder or default text
     const selectPlaceholder = placeholder || 'Select an option';
 
@@ -222,7 +214,7 @@ export function SelectField({
         <FormItem className={cn('grid grid-cols-12', containerClx)} >
             {title && <FormLabel className={cn(labelClx, 'mt-2')}>{title}{required ? ' *' : ''}</FormLabel>}
             <FormControl>
-                <Select value={field.value} onValueChange={field.onChange} disabled={readOnly} >
+                <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger className={cn(controlClx)}>
                         <SelectValue placeholder={selectPlaceholder} />
                     </SelectTrigger>
@@ -247,9 +239,8 @@ export function NumberField({
     description,
     required,
     placeholder,
-    readOnly,
     renderContext: { layout },
-}: FieldWithControllerProps<FormRenderContext>) {
+}: WithControllerProps<FormRenderContext>) {
 
     const { containerClx, labelClx, controlClx } = calculateLayout(layout);
 
@@ -261,7 +252,6 @@ export function NumberField({
                     {...field}
                     type="number"
                     placeholder={placeholder || ''}
-                    readOnly={readOnly}
                     className={cn(controlClx)}
                     onChange={(e) => {
                         const value = e.target.valueAsNumber;
@@ -280,9 +270,8 @@ export function BooleanField({
     title,
     description,
     required,
-    readOnly,
     renderContext: { layout },
-}: FieldWithControllerProps<FormRenderContext>) {
+}: WithControllerProps<FormRenderContext>) {
 
     const { containerClx, labelClx } = calculateLayout(layout);
 
@@ -292,7 +281,6 @@ export function BooleanField({
                 <Checkbox
                     checked={field.value}
                     onCheckedChange={field.onChange}
-                    disabled={readOnly}
                 />
             </FormControl>
             <div className="space-y-1 leading-none">
@@ -304,7 +292,7 @@ export function BooleanField({
     );
 }
 
-export function ObjectField({ children, renderContext }: FieldWithObjectProps<FormRenderContext>) {
+export function ObjectField({ children, renderContext }: WithObjectProps<FormRenderContext>) {
     const { containerClx, } = calculateLayout(renderContext.layout);
 
     return (
@@ -325,7 +313,7 @@ export function ArrayField({
     canRemoveItem,
     renderItem,
     renderContext
-}: FieldWithArrayProps<FormRenderContext>) {
+}: WithArrayProps<FormRenderContext>) {
     const { append, remove, fields } = array;
     const { containerClx, labelClx, controlClx } = calculateLayout(renderContext.layout);
     const itemSchema = schema.items;

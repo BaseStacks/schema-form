@@ -1,7 +1,7 @@
 import './i18n';
 
 import React from 'react';
-import { SchemaFormProvider, SchemaFormRenderProps, GenericFieldProps, WithArrayProps, WithRegisterProps, WithObjectProps, withArray, withObject, withRegister } from '@basestacks/schema-form';
+import { SchemaFormProvider, SchemaFormRenderProps, WithArrayProps, WithRegisterProps, WithObjectProps, withArray, withObject, withRegister, BaseFieldProps } from '@basestacks/schema-form';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 
@@ -73,7 +73,7 @@ export function FormSubmitBtn({ children }: React.PropsWithChildren<{}>) {
     );
 }
 
-export function FieldWrapper({ children, name, title, required }: Pick<GenericFieldProps<FormContext>, 'name' | 'title' | 'required' | 'error'> & { children: React.ReactNode; }) {
+export function FieldWrapper({ children, name, title, required }: Pick<BaseFieldProps<FormContext>, 'name' | 'title' | 'required' | 'error'> & { children: React.ReactNode; }) {
     const { t } = useTranslation();
     return (
         <div className="col-span-12">
@@ -83,7 +83,7 @@ export function FieldWrapper({ children, name, title, required }: Pick<GenericFi
     );
 };
 
-export function TextField({ register, name, title, placeholder, required, readOnly, disabled, error, renderContext }: WithRegisterProps<FormContext>) {
+export function TextField({ register, name, title, placeholder, required, error, renderContext }: WithRegisterProps<FormContext>) {
     const { t } = useTranslation();
 
     return (
@@ -94,8 +94,6 @@ export function TextField({ register, name, title, placeholder, required, readOn
                 name={name}
                 id={name}
                 placeholder={placeholder ? t(placeholder) : ''}
-                readOnly={readOnly}
-                disabled={disabled}
                 className="block w-full rounded-md bg-white px-3 h-9 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6 invalid:!outline-red-500 invalid:text-red-500"
             />
 
@@ -103,7 +101,7 @@ export function TextField({ register, name, title, placeholder, required, readOn
     );
 };
 
-export function TextArea({ register, name, title, placeholder, required, readOnly, disabled, error }: WithRegisterProps<FormContext>) {
+export function TextArea({ register, name, title, placeholder, required, error }: WithRegisterProps<FormContext>) {
     const { t } = useTranslation();
 
     return (
@@ -113,8 +111,6 @@ export function TextArea({ register, name, title, placeholder, required, readOnl
                 name={name}
                 id={name}
                 placeholder={placeholder ? t(placeholder) : ''}
-                readOnly={readOnly}
-                disabled={disabled}
                 className="block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6 invalid:!outline-red-500 invalid:text-red-500"
             />
 
@@ -122,7 +118,7 @@ export function TextArea({ register, name, title, placeholder, required, readOnl
     );
 };
 
-export function NumberField({ register, name, title, placeholder, required, readOnly, disabled, error }: WithRegisterProps<FormContext>) {
+export function NumberField({ register, name, title, placeholder, required, error }: WithRegisterProps<FormContext>) {
     const { t } = useTranslation();
 
     return (
@@ -133,19 +129,17 @@ export function NumberField({ register, name, title, placeholder, required, read
                 name={name}
                 id={name}
                 placeholder={placeholder ? t(placeholder) : ''}
-                readOnly={readOnly}
-                disabled={disabled}
                 className="block w-full rounded-md bg-white px-3 h-9 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6 invalid:!outline-red-500 invalid:text-red-500"
             />
         </FieldWrapper>
     );
 };
 
-export function CheckboxField({ register, name, title, required, }: WithRegisterProps<FormContext>) {
+export function CheckboxField({ register, name, title, required, error}: WithRegisterProps<FormContext>) {
     const { t } = useTranslation();
 
     return (
-        <FieldWrapper name={name}>
+        <FieldWrapper name={name} error={error}>
             <div className="flex items-center">
                 <input
                     {...register}
@@ -163,7 +157,7 @@ export function CheckboxField({ register, name, title, required, }: WithRegister
     );
 }
 
-export function SelectField({ register, name, title, placeholder, required, error, renderContext }: WithRegisterProps<FormContext>) {
+export function SelectField({ register, name, title, placeholder, required, error, schema }: WithRegisterProps<FormContext>) {
     const { t } = useTranslation();
 
     return (
@@ -178,7 +172,7 @@ export function SelectField({ register, name, title, placeholder, required, erro
                     className="col-start-1 row-start-1 block w-full rounded-md bg-white px-3 h-9 text-base text-gray-900 appearance-none outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6 invalid:!outline-red-500 invalid:text-red-500"
                 >
                     <option value="" disabled selected>{placeholder ? t(placeholder) : ''}</option>
-                    {renderContext.options?.map(option => (
+                    {schema.options?.map(option => (
                         <option key={option.value} value={option.value}>{t(option.label)}</option>
                     ))}
                 </select>
@@ -199,7 +193,7 @@ export function ArrayField({ name, title, placeholder, array, required, canAddIt
     const { t } = useTranslation();
 
     return (
-        <FieldWrapper name={name} required={required} title={title}>
+        <FieldWrapper name={name} required={required} title={title} error={error}>
             {error?.root && <div className="text-red-500 text-sm mb-2">{error.root.message}</div>}
             <div className="gap-2 grid grid-cols-12 mb-2">
                 {array.fields?.map((field, index) => (

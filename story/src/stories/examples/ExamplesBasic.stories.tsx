@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { FormProvider } from './components/vanilla/form';
+import { FormProvider } from '../../components/vanilla/form';
 import { FieldSchemas, RenderContext, SchemaForm, SchemaFormProps, withRegister } from '@basestacks/schema-form';
 import React from 'react';
 import { fn, userEvent, within } from '@storybook/test';

@@ -1,11 +1,10 @@
 import React from 'react';
-import { withArray, SchemaFormProvider, SchemaFormRenderProps, GenericFieldProps, WithArrayProps, WithRegisterProps, withRegister, WithObjectProps, withObject } from '@basestacks/schema-form';
+import { withArray, SchemaFormProvider, SchemaFormRenderProps, BaseFieldProps, WithArrayProps, WithRegisterProps, withRegister, WithObjectProps, withObject } from '@basestacks/schema-form';
 import { useState } from 'react';
 
 export interface RenderContext {
     readonly secureText?: boolean;
     readonly submitLabel?: string;
-    readonly options?: { value: string; label: string }[];
 }
 
 export function FormProvider({ children }: React.PropsWithChildren<{}>) {
@@ -57,7 +56,7 @@ export function FormLayout({ form, children, onSubmit, renderContext }: SchemaFo
     );
 };
 
-export function FieldWrapper({ children, name, title, required }: Pick<GenericFieldProps<RenderContext>, 'name' | 'title' | 'required' | 'error'> & { children: React.ReactNode; }) {
+export function FieldWrapper({ children, name, title, required }: Pick<BaseFieldProps<RenderContext>, 'name' | 'title' | 'required' | 'error'> & { children: React.ReactNode; }) {
     return (
         <div className="col-span-12">
             {title && <label htmlFor={name} className="block text-sm font-medium mb-2 text-gray-900">{title} {required && '*'}</label>}
@@ -66,7 +65,7 @@ export function FieldWrapper({ children, name, title, required }: Pick<GenericFi
     );
 };
 
-export function TextField({ name, title, placeholder, required, readOnly, disabled, error, register, renderContext }: WithRegisterProps<RenderContext>) {
+export function TextField({ name, title, placeholder, required, error, register, renderContext }: WithRegisterProps<RenderContext>) {
     return (
         <FieldWrapper name={name} title={title} required={required} error={error}>
             <input
@@ -75,8 +74,6 @@ export function TextField({ name, title, placeholder, required, readOnly, disabl
                 name={name}
                 id={name}
                 placeholder={placeholder}
-                readOnly={readOnly}
-                disabled={disabled}
                 className="block w-full rounded-md bg-white px-3 h-9 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6 invalid:!outline-red-500 invalid:text-red-500"
             />
 
@@ -84,7 +81,7 @@ export function TextField({ name, title, placeholder, required, readOnly, disabl
     );
 };
 
-export function NumberField({ register, name, title, placeholder, required, readOnly, disabled, error }: WithRegisterProps<RenderContext>) {
+export function NumberField({ register, name, title, placeholder, required, error }: WithRegisterProps<RenderContext>) {
     return (
         <FieldWrapper name={name} title={title} required={required} error={error}>
             <input
@@ -93,8 +90,6 @@ export function NumberField({ register, name, title, placeholder, required, read
                 name={name}
                 id={name}
                 placeholder={placeholder}
-                readOnly={readOnly}
-                disabled={disabled}
                 className="block w-full rounded-md bg-white px-3 h-9 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6 invalid:!outline-red-500 invalid:text-red-500"
             />
         </FieldWrapper>
@@ -119,7 +114,7 @@ export function CheckboxField({ register, name, title, required, }: WithRegister
     );
 }
 
-export function SelectField({ register, name, title, placeholder, required, error, renderContext }: WithRegisterProps<RenderContext>) {
+export function SelectField({ register, name, title, placeholder, required, error, schema }: WithRegisterProps<RenderContext>) {
     return (
         <FieldWrapper name={name} title={title} required={required} error={error}>
             <div className="grid">
@@ -132,7 +127,7 @@ export function SelectField({ register, name, title, placeholder, required, erro
                     className="col-start-1 row-start-1 block w-full rounded-md bg-white px-3 h-9 text-base text-gray-900 appearance-none outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6 invalid:!outline-red-500 invalid:text-red-500"
                 >
                     <option value="">{placeholder}</option>
-                    {renderContext.options?.map(option => (
+                    {schema.options?.map(option => (
                         <option key={option.value} value={option.value}>{option.label}</option>
                     ))}
                 </select>

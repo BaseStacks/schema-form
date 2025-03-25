@@ -25,6 +25,7 @@ export function withController<TRenderContext extends RenderContext = RenderCont
                 defaultValue={schema.value}
                 render={(controller) => (
                     <Component
+                        schema={schema}
                         field={controller.field}
                         fieldState={controller.fieldState}
                         formState={controller.formState}

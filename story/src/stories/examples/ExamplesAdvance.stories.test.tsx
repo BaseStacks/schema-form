@@ -2,7 +2,7 @@ import React from 'react';
 import { createTest } from '@storybook/react/experimental-playwright';
 import { test as base, expect } from '@playwright/experimental-ct-react';
 
-import stories from '../src/ExamplesAdvance.stories.portable'
+import stories from './ExamplesAdvance.stories.portable'
 
 const test = createTest(base);
 

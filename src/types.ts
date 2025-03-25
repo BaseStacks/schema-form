@@ -166,24 +166,15 @@ export interface BaseFieldProps<
     readonly description?: string;
     readonly placeholder?: string;
     readonly required?: boolean;
-    readonly readOnly?: boolean;
-    readonly disabled?: boolean;
     readonly renderContext: TRenderContext;
     readonly error?: FieldError;
-};
-
-export type GenericFieldProps<
-    TRenderContext extends RenderContext = RenderContext,
-    TFormValue extends FieldValues = FieldValues
-> = BaseFieldProps<TRenderContext> & UseFormRegisterReturn<FieldPath<TFormValue>> & {
-    // Field options
-    readonly options?: SelectOption[];
 };
 
 export type WithRegisterProps<
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues
 > = BaseFieldProps<TRenderContext> & {
+    readonly schema: GenericFieldSchema<TRenderContext, TFormValue>;
     readonly register: UseFormRegisterReturn<FieldPath<TFormValue>>;
 };
 
@@ -191,6 +182,7 @@ export type WithControllerProps<
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues
 > = BaseFieldProps<TRenderContext> & {
+    readonly schema: GenericFieldSchema<TRenderContext, TFormValue>;
     readonly field: ControllerRenderProps<TFormValue>;
     readonly fieldState: ControllerFieldState;
     readonly formState: UseFormStateReturn<TFormValue>;

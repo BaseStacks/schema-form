@@ -22,6 +22,7 @@ export function withRegister<TRenderContext extends RenderContext = RenderContex
 
         return (
             <Component
+                schema={schema}
                 register={register}
                 name={name}
                 title={title}
