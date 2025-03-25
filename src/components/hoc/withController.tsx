@@ -21,7 +21,7 @@ export function withController<TRenderContext extends RenderContext = RenderCont
 
         const { title, description, placeholder } = genericSchema;
 
-        const rules = useFieldRules(form, name, genericSchema);
+        const rules = useFieldRules(genericSchema);
         const validationStats = useMemo(() => getValidationStats(rules), [rules]);
 
         return (

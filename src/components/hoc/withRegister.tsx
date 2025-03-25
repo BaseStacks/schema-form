@@ -21,11 +21,11 @@ export function withRegister<TRenderContext extends RenderContext = RenderContex
 
         const { title, description, placeholder } = schema;
 
-        const rules = useFieldRules(form, name, genericSchema);
+        const rules = useFieldRules(genericSchema);
 
         const register = useMemo(() => {
             return form.register(name, Object.assign(schema, rules));
-        }, [form, name]);
+        }, [form, name, rules, schema]);
 
         const validationStats = useMemo(() => getValidationStats(rules), [rules]);
 

@@ -25,7 +25,7 @@ export function withArray<TRenderContext extends RenderContext = RenderContext>(
     }: WithArrayHocProps<TRenderContext, TFormValue, TFieldValue>) {
 
         const arraySchema = schema as ArrayFieldSchema<TRenderContext, TFormValue, TFieldValue[]>;
-        const rules = useFieldRules(form, name, arraySchema);
+        const rules = useFieldRules(arraySchema);
 
         // Use fieldArray from react-hook-form to manage the array items
         const array = useFieldArray({

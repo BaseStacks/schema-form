@@ -36,7 +36,7 @@ export const getValidationStats = (field: RegisterOptions<any>): ValidationStats
     return Object.fromEntries(validationStats) as ValidationStats;
 };
 
-export const getValidationRules = (field: RegisterOptions<any>, defaultMessages: DefaultMessages) => {
+export const getValidationRules = (field: RegisterOptions<any>, defaultMessages?: DefaultMessages) => {
     const validationRules: ValidationRules = {};
 
     const validationProps = getValidationProps(field);
@@ -47,7 +47,7 @@ export const getValidationRules = (field: RegisterOptions<any>, defaultMessages:
         else if (value !== null || value !== undefined) {
             validationRules[key] = {
                 value,
-                message: defaultMessages[key]
+                message: defaultMessages?.[key]
             };
         }
     }
