@@ -1,7 +1,7 @@
 import './i18n';
 
 import React from 'react';
-import { SchemaFormProvider, SchemaFormRenderProps, WithArrayProps, WithRegisterProps, WithObjectProps, withArray, withObject, withRegister, BaseFieldProps } from '@basestacks/schema-form';
+import { SchemaFormProvider, SchemaFormRenderProps, WithArrayProps, WithControllerProps, WithObjectProps, withArray, withObject, BaseFieldProps, withController } from '@basestacks/schema-form';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 
@@ -23,11 +23,11 @@ export function AdvanceFormProvider({ children }: React.PropsWithChildren<{}>) {
                 fields: {
                     array: withArray(ArrayField),
                     object: withObject(ObjectField),
-                    text: withRegister(TextField),
-                    textarea: withRegister(TextArea),
-                    checkbox: withRegister(CheckboxField),
-                    select: withRegister(SelectField),
-                    number: withRegister(NumberField),
+                    text: withController(TextField),
+                    textarea: withController(TextArea),
+                    checkbox: withController(CheckboxField),
+                    select: withController(SelectField),
+                    number: withController(NumberField),
                 }
             }}
             getDefaultMessages={(validation) => {
@@ -73,23 +73,24 @@ export function FormSubmitBtn({ children }: React.PropsWithChildren<{}>) {
     );
 }
 
-export function FieldWrapper({ children, name, title, required }: Pick<BaseFieldProps<FormContext>, 'name' | 'title' | 'required' | 'error'> & { children: React.ReactNode; }) {
+export function FieldWrapper({ children, name, title, required, error }: Pick<BaseFieldProps<FormContext>, 'name' | 'title' | 'required' | 'error'> & { children: React.ReactNode; }) {
     const { t } = useTranslation();
     return (
         <div className="col-span-12">
             {title && <label htmlFor={name} className="block text-sm font-medium mb-2 text-gray-900">{t(title)} {required && '*'}</label>}
             {children}
+            {error?.message && <div className="text-red-500 text-sm mt-1">{error.message}</div>}
         </div>
     );
 };
 
-export function TextField({ register, name, title, placeholder, required, error, renderContext }: WithRegisterProps<FormContext>) {
+export function TextField({ field, name, title, placeholder, required, error, renderContext }: WithControllerProps<FormContext>) {
     const { t } = useTranslation();
 
     return (
         <FieldWrapper name={name} title={title} required={required} error={error}>
             <input
-                {...register}
+                {...field}
                 type={renderContext.secureText ? 'password' : 'text'}
                 name={name}
                 id={name}
@@ -101,13 +102,13 @@ export function TextField({ register, name, title, placeholder, required, error,
     );
 };
 
-export function TextArea({ register, name, title, placeholder, required, error }: WithRegisterProps<FormContext>) {
+export function TextArea({ field, name, title, placeholder, required, error }: WithControllerProps<FormContext>) {
     const { t } = useTranslation();
 
     return (
         <FieldWrapper name={name} title={title} required={required} error={error}>
             <textarea
-                {...register}
+                {...field}
                 name={name}
                 id={name}
                 placeholder={placeholder ? t(placeholder) : ''}
@@ -118,13 +119,13 @@ export function TextArea({ register, name, title, placeholder, required, error }
     );
 };
 
-export function NumberField({ register, name, title, placeholder, required, error }: WithRegisterProps<FormContext>) {
+export function NumberField({ field, name, title, placeholder, required, error }: WithControllerProps<FormContext>) {
     const { t } = useTranslation();
 
     return (
         <FieldWrapper name={name} title={title} required={required} error={error}>
             <input
-                {...register}
+                {...field}
                 type="number"
                 name={name}
                 id={name}
@@ -135,14 +136,14 @@ export function NumberField({ register, name, title, placeholder, required, erro
     );
 };
 
-export function CheckboxField({ register, name, title, required, error}: WithRegisterProps<FormContext>) {
+export function CheckboxField({ field, name, title, required, error}: WithControllerProps<FormContext>) {
     const { t } = useTranslation();
 
     return (
         <FieldWrapper name={name} error={error}>
             <div className="flex items-center">
                 <input
-                    {...register}
+                    {...field}
                     type="checkbox"
                     name={name}
                     id={name}
@@ -157,7 +158,7 @@ export function CheckboxField({ register, name, title, required, error}: WithReg
     );
 }
 
-export function SelectField({ register, name, title, placeholder, required, error, schema }: WithRegisterProps<FormContext>) {
+export function SelectField({ field, name, title, placeholder, required, error, schema }: WithControllerProps<FormContext>) {
     const { t } = useTranslation();
 
     return (
@@ -165,7 +166,7 @@ export function SelectField({ register, name, title, placeholder, required, erro
             <div className="grid">
                 <svg className="pointer-events-none relative right-1 z-10 col-start-1 row-start-1 h-4 w-4 self-center justify-self-end forced-colors:hidden" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path></svg>
                 <select
-                    {...register}
+                    {...field}
                     name={name}
                     id={name}
                     required={required}

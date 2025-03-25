@@ -81,5 +81,10 @@
     },
     "engines": {
         "node": ">=18.0.0"
-    }
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/BaseStacks/schema-form"
+    },
+    "homepage": "https://github.com/BaseStacks/schema-form"
 }

@@ -3,14 +3,14 @@ import { useMemo } from 'react';
 import { useGlobalContext } from './useGlobalContext';
 import { getValidationOptions, getValidationStats } from '../utils/fieldUtils';
 
-export const useFieldRegister = <TFormValue extends FieldValues>(
+export const useFieldRules = <TFormValue extends FieldValues>(
     form: UseFormReturn<TFormValue>,
     name: FieldPath<TFormValue>,
     options: RegisterOptions<TFormValue>
 ) => {
     const { getDefaultMessages } = useGlobalContext();
 
-    const fieldProps = useMemo(() => {
+    const rules = useMemo(() => {
         const validationStats = getValidationStats(options);
         if (!validationStats) {
             return form.register(name, options);
@@ -19,11 +19,8 @@ export const useFieldRegister = <TFormValue extends FieldValues>(
         const defaultMessages = getDefaultMessages(validationStats, options);
         const validationOptions = getValidationOptions(options, defaultMessages);
 
-        return form.register(name, {
-            ...options,
-            ...validationOptions
-        });
+        return validationOptions;
     }, [getDefaultMessages, options, form, name]);
 
-    return fieldProps;
+    return rules;
 };

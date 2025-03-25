@@ -1,6 +1,7 @@
 import { FieldValues } from 'react-hook-form';
 import { WithRegisterProps, FieldHocProps, RenderContext } from '../../types';
-import { useFieldRegister } from '../../hooks/useFieldRegister';
+import { useMemo } from 'react';
+import { useFieldRules } from '../../hooks/useFieldRules';
 
 interface WithRegisterHocProps<TRenderContext extends RenderContext, TFormValue extends FieldValues> extends FieldHocProps<TRenderContext, TFormValue> {
 }
@@ -17,8 +18,11 @@ export function withRegister<TRenderContext extends RenderContext = RenderContex
     }: WithRegisterHocProps<TRenderContext, TFormValue>) {
         const { title, description, placeholder } = schema;
 
-        // Get only the necessary props from register
-        const register = useFieldRegister(form, name, schema);
+        const rules = useFieldRules(form, name, schema);
+
+        const register = useMemo(() => {
+            return form.register(name, rules);
+        }, [form, name]);
 
         return (
             <Component

@@ -1,5 +1,6 @@
 import { Controller, FieldValues } from 'react-hook-form';
 import { WithControllerProps, FieldHocProps, RenderContext } from '../../types';
+import { useFieldRules } from '../../hooks/useFieldRules';
 
 interface WithControllerHocProps<TFormValue extends FieldValues, TRenderContext extends RenderContext> extends FieldHocProps<TRenderContext, TFormValue> {
 }
@@ -16,11 +17,13 @@ export function withController<TRenderContext extends RenderContext = RenderCont
     }: WithControllerHocProps<TFormValue, TRenderContext>) {
         const { title, description, placeholder } = schema;
 
+        const rules = useFieldRules(form, name, schema);
+
         return (
             <Controller
                 name={name}
                 control={form.control}
-                rules={schema}
+                rules={rules}
                 shouldUnregister={schema.shouldUnregister}
                 defaultValue={schema.value}
                 render={(controller) => (

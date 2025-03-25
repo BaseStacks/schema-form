@@ -28,7 +28,7 @@ function Content({ showLanguageSwitcher, ...props }: ContentProps) {
     return (
         <AdvanceFormProvider>
             <div>
-                <SchemaForm shouldUseNativeValidation={true} {...props} />
+                <SchemaForm {...props} />
                 {showLanguageSwitcher && (
                     <div className="border-t mt-4 pt-4 flex gap-2 text-sm text-gray-500">
                         <span
