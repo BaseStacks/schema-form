@@ -1,9 +1,9 @@
 import { ArrayPath, FieldPath, FieldValues, useFieldArray } from 'react-hook-form';
-import { FieldWithArrayProps, FieldHocProps, RenderContext, ArrayFieldSchema } from '../../types';
+import { WithArrayProps, FieldHocProps, RenderContext, ArrayFieldSchema } from '../../types';
 import { SchemaFormField } from '../SchemaFormField';
 import { useCallback } from 'react';
 
-export interface FieldWithArrayWrapperProps<
+export interface WithArrayHocProps<
     TRenderContext extends RenderContext,
     TFormValue extends FieldValues,
     TFieldValue extends FieldValues
@@ -12,17 +12,15 @@ export interface FieldWithArrayWrapperProps<
 }
 
 export function withArray<TRenderContext extends RenderContext = RenderContext>(
-    Component: React.ComponentType<FieldWithArrayProps<TRenderContext, any, any>>
+    Component: React.ComponentType<WithArrayProps<TRenderContext, any, any>>
 ) {
-    return function FieldWithArray<TFieldValue extends FieldValues, TFormValue extends FieldValues>({
+    return function ArrayFieldHoc<TFieldValue extends FieldValues, TFormValue extends FieldValues>({
         form,
         schema,
         name,
-        disabled,
-        readOnly,
         renderContext,
         error
-    }: FieldWithArrayWrapperProps<TRenderContext, TFormValue, TFieldValue>) {
+    }: WithArrayHocProps<TRenderContext, TFormValue, TFieldValue>) {
 
         const arraySchema = schema as ArrayFieldSchema<TRenderContext, TFormValue, TFieldValue[]>;
 
@@ -63,9 +61,7 @@ export function withArray<TRenderContext extends RenderContext = RenderContext>(
                 canAddItem={canAddItem}
                 canRemoveItem={canRemoveItem}
                 required={!!arraySchema.required}
-                readOnly={readOnly}
                 renderItem={renderItem}
-                disabled={disabled}
                 renderContext={renderContext}
                 error={error}
             />

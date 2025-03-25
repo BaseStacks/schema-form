@@ -177,16 +177,17 @@ export type GenericFieldProps<
     TFormValue extends FieldValues = FieldValues
 > = BaseFieldProps<TRenderContext> & UseFormRegisterReturn<FieldPath<TFormValue>> & {
     // Field options
+    readonly options?: SelectOption[];
 };
 
-export type FieldWithRegisterProps<
+export type WithRegisterProps<
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues
 > = BaseFieldProps<TRenderContext> & {
     readonly register: UseFormRegisterReturn<FieldPath<TFormValue>>;
 };
 
-export type FieldWithControllerProps<
+export type WithControllerProps<
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues
 > = BaseFieldProps<TRenderContext> & {
@@ -195,7 +196,7 @@ export type FieldWithControllerProps<
     readonly formState: UseFormStateReturn<TFormValue>;
 };
 
-export type FieldWithArrayProps<
+export type WithArrayProps<
     TRenderContext extends RenderContext = RenderContext,
     TFieldValue extends FieldValues = FieldValues,
     TFormValue extends FieldValues = FieldValues,
@@ -213,7 +214,7 @@ export type FieldWithArrayProps<
         readonly renderItem: (index: number) => React.ReactNode;
     };
 
-export type FieldWithObjectProps<
+export type WithObjectProps<
     TRenderContext extends RenderContext = RenderContext,
     TFieldValue extends FieldValues = FieldValues,
     TFormValue extends FieldValues = FieldValues,
@@ -242,10 +243,7 @@ export interface FieldHocProps<
     | ArrayFieldSchema<TRenderContext, TFormValue, TFieldValues[]>
     | ObjectFieldSchema<TRenderContext, TFormValue, TFieldValues>;  
     readonly name: FieldPath<TFormValue>;
-    readonly readOnly?: boolean;
-    readonly disabled?: boolean;
     readonly validationStats?: ValidationStats;
     readonly error?: FieldError;
     readonly renderContext: TRenderContext;
 };
-

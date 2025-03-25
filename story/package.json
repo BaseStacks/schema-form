@@ -5,8 +5,11 @@
   "license": "MIT",
   "scripts": {
     "build-storybook": "storybook build",
-    "start": "storybook dev -p 6006",
-    "chromatic": "npx chromatic --project-token=chpt_c3454bc87a0ee3c"
+    "clear-cache": "rimraf node_modules/.cache/storybook",
+    "start": "pnpm clear-cache && storybook dev -p 6006 --no-open",
+    "chromatic": "npx chromatic --project-token=chpt_c3454bc87a0ee3c",
+    "test": "playwright test",
+    "test-ct": "playwright test -c playwright-ct.config.ts"
   },
   "dependencies": {
     "@basestacks/schema-form": "file:..",
@@ -37,15 +40,19 @@
   },
   "devDependencies": {
     "@chromatic-com/storybook": "3",
+    "@playwright/experimental-ct-react": "^1.51.1",
+    "@playwright/test": "^1.51.1",
     "@storybook/test": "8.6.7",
     "@storybook/theming": "^8.6.7",
     "@tailwindcss/vite": "^4.0.13",
+    "@types/node": "^22.13.13",
     "@types/react": "^19.0.10",
     "@vitejs/plugin-react-swc": "^3.8.0",
     "chromatic": "^11.27.0",
     "tailwindcss": "^4.0.13",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2",
-    "vite": "^5.1.4"
+    "vite": "^5.1.4",
+    "react-dom": "^18.3.1"
   }
 }

@@ -1,19 +1,19 @@
 import { Controller, FieldValues } from 'react-hook-form';
-import { FieldWithControllerProps, FieldHocProps, RenderContext } from '../../types';
+import { WithControllerProps, FieldHocProps, RenderContext } from '../../types';
 
-interface FieldWithControllerWrapperProps<TFormValue extends FieldValues, TRenderContext extends RenderContext> extends FieldHocProps<TRenderContext, TFormValue> {
+interface WithControllerHocProps<TFormValue extends FieldValues, TRenderContext extends RenderContext> extends FieldHocProps<TRenderContext, TFormValue> {
 }
 
 export function withController<TRenderContext extends RenderContext = RenderContext>(
-    Component: React.ComponentType<FieldWithControllerProps<TRenderContext, any>>
+    Component: React.ComponentType<WithControllerProps<TRenderContext, any>>
 ) {
-    return function FieldWithController<TFormValue extends FieldValues>({
+    return function ControllerFieldHoc<TFormValue extends FieldValues>({
         form,
         schema,
         name,
         error,
         renderContext
-    }: FieldWithControllerWrapperProps<TFormValue, TRenderContext>) {
+    }: WithControllerHocProps<TFormValue, TRenderContext>) {
         const { title, description, placeholder } = schema;
 
         return (

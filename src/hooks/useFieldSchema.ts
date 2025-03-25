@@ -3,6 +3,11 @@ import { FieldPath, FieldValues, get } from 'react-hook-form';
 import { SchemaFormContext } from '../contexts';
 import { BaseFieldSchema, RenderContext } from '../types';
 
+interface PathItem {
+    readonly name: string;
+    readonly isArrayItem?: boolean;
+}
+
 export const useFieldSchema = <
     TFormValue extends FieldValues,
     TRenderContext extends RenderContext,
@@ -17,7 +22,36 @@ export const useFieldSchema = <
     const { fields } = schemaForm;
 
     const field = useMemo(() => {
-        const field = get(fields, name);
+        const pathParts = name.split('.');
+
+        const pathItems: PathItem[] = [];
+
+        for (const pathPart of pathParts) {
+            let name = '';
+
+            const isArrayItem = pathPart.endsWith(']');
+            if (isArrayItem) {
+                const arrayName = isArrayItem ? pathPart.split('[')[0] : pathPart;
+                name += isArrayItem ? `${arrayName}.items` : pathPart;
+            }
+            else {
+                const parent = pathItems[pathItems.length - 1];
+                if (parent && parent.isArrayItem) {
+                    name += 'properties.';
+                }
+
+                name += pathPart;
+            }
+
+            pathItems.push({
+                name,
+                isArrayItem
+            });
+        }
+
+        const path = pathItems.map((part) => part.name).join('.');
+
+        const field = get(fields, path);
         return field;
     }, [fields, name]);
 

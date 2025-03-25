@@ -1,6 +1,6 @@
 {
     "name": "@basestacks/schema-form",
-    "version": "0.1.1-dev.5",
+    "version": "0.1.1-dev.6",
     "description": "A small React library for building dynamic forms using JSON schemas",
     "license": "MIT",
     "sideEffects": false,

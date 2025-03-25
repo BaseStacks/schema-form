@@ -1,8 +1,8 @@
 import { FieldPath, FieldValues } from 'react-hook-form';
-import { FieldWithObjectProps, FieldHocProps, RenderContext, ObjectFieldSchema } from '../../types';
+import { WithObjectProps, FieldHocProps, RenderContext, ObjectFieldSchema } from '../../types';
 import { SchemaFormField } from '../SchemaFormField';
 
-export interface FieldWithObjectWrapperProps<
+export interface WithObjectHocProps<
     TRenderContext extends RenderContext,
     TFormValue extends FieldValues,
     TFieldValue extends FieldValues
@@ -10,16 +10,16 @@ export interface FieldWithObjectWrapperProps<
 }
 
 export function withObject<TRenderContext extends RenderContext = RenderContext>(
-    Component: React.ComponentType<FieldWithObjectProps<TRenderContext, any, any>>
+    Component: React.ComponentType<WithObjectProps<TRenderContext, any, any>>
 ) {
-    return function ObjectFieldWrapper<
+    return function ObjectFieldHoc<
         TFormValue extends FieldValues,
         TFieldValue extends FieldValues
     >({
         name,
         schema,
         renderContext
-    }: FieldWithObjectWrapperProps<TRenderContext, TFormValue, TFieldValue>) {
+    }: WithObjectHocProps<TRenderContext, TFormValue, TFieldValue>) {
         const objectSchema = schema as ObjectFieldSchema<TRenderContext, TFormValue, TFieldValue>;
 
         const { title, description, placeholder } = objectSchema;

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { FormProvider } from './components/vanilla/form';
 import { FieldSchemas, RenderContext, SchemaForm, SchemaFormProps, withRegister } from '@basestacks/schema-form';
 import React from 'react';
-import { fn } from '@storybook/test';
+import { fn, userEvent, within } from '@storybook/test';
 
 function Content(props: SchemaFormProps<any, RenderContext>) {
     return (
@@ -212,37 +212,62 @@ export const ConditionalField: Story = {
     },
 };
 
-export const ArrayField: Story = {
-    args: {
-        fields: {
-            tags: {
-                type: 'array',
-                title: 'Tags',
-                placeholder: 'Add a tag',
-                required: true,
-                minLength: 2,
-                maxLength: 5,
-                items: {
-                    type: 'object',
-                    properties: {
-                        value: {
-                            type: 'text',
-                            placeholder: 'Enter tag',
-                            required: true,
-                        },
-                        color: {
-                            type: 'select',
-                            placeholder: 'Select color',
-                            options: [
-                                { value: 'red', label: 'Red' },
-                                { value: 'green', label: 'Green' },
-                                { value: 'blue', label: 'Blue' },
-                            ],
-                        },
-                    },
+interface ArrayValues {
+    tags: { value: string; color: string }[];
+}
+
+const arraySchema: FieldSchemas<ArrayValues, RenderContext> = {
+    tags: {
+        type: 'array',
+        title: 'Tags',
+        placeholder: 'Add a tag',
+        required: true,
+        minLength: 2,
+        maxLength: 5,
+        items: {
+            type: 'object',
+            properties: {
+                value: {
+                    type: 'text',
+                    placeholder: 'Enter tag',
+                    required: true,
                 },
-            },
+                color: {
+                    type: 'select',
+                    placeholder: 'Select color',
+                    options: [
+                        { value: 'red', label: 'Red' },
+                        { value: 'green', label: 'Green' },
+                        { value: 'blue', label: 'Blue' },
+                    ],
+                },
+            }
         },
+    }
+};
+
+export const ArrayField: Story = {
+    parameters: {
+        docs: {
+            story: {
+                autoplay: false,
+            }
+        }
+    },
+    args: {
+        fields: arraySchema,
         onSubmit: fn(),
     },
+    play: async ({ canvasElement, step }) => {
+        const canvas = within(canvasElement);
+
+        await step('Add a tag', async () => {
+            await userEvent.type(canvas.getByTestId('array-add-input'), 'some-tag');
+            await userEvent.click(canvas.getByTestId('array-add-button'));
+        });
+
+        await step('Remove a tag', async () => {
+            await userEvent.click(canvas.getByTestId('array-remove-button-0'));
+        });
+    }
 };

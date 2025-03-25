@@ -1,7 +1,7 @@
 import './i18n';
 
 import React from 'react';
-import { SchemaFormProvider, SchemaFormRenderProps, GenericFieldProps, FieldWithArrayProps, FieldWithRegisterProps, FieldWithObjectProps, withArray, withObject, withRegister } from '@basestacks/schema-form';
+import { SchemaFormProvider, SchemaFormRenderProps, GenericFieldProps, WithArrayProps, WithRegisterProps, WithObjectProps, withArray, withObject, withRegister } from '@basestacks/schema-form';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 
@@ -83,7 +83,7 @@ export function FieldWrapper({ children, name, title, required }: Pick<GenericFi
     );
 };
 
-export function TextField({ register, name, title, placeholder, required, readOnly, disabled, error, renderContext }: FieldWithRegisterProps<FormContext>) {
+export function TextField({ register, name, title, placeholder, required, readOnly, disabled, error, renderContext }: WithRegisterProps<FormContext>) {
     const { t } = useTranslation();
 
     return (
@@ -103,7 +103,7 @@ export function TextField({ register, name, title, placeholder, required, readOn
     );
 };
 
-export function TextArea({ register, name, title, placeholder, required, readOnly, disabled, error }: FieldWithRegisterProps<FormContext>) {
+export function TextArea({ register, name, title, placeholder, required, readOnly, disabled, error }: WithRegisterProps<FormContext>) {
     const { t } = useTranslation();
 
     return (
@@ -122,7 +122,7 @@ export function TextArea({ register, name, title, placeholder, required, readOnl
     );
 };
 
-export function NumberField({ register, name, title, placeholder, required, readOnly, disabled, error }: FieldWithRegisterProps<FormContext>) {
+export function NumberField({ register, name, title, placeholder, required, readOnly, disabled, error }: WithRegisterProps<FormContext>) {
     const { t } = useTranslation();
 
     return (
@@ -141,7 +141,7 @@ export function NumberField({ register, name, title, placeholder, required, read
     );
 };
 
-export function CheckboxField({ register, name, title, required, }: FieldWithRegisterProps<FormContext>) {
+export function CheckboxField({ register, name, title, required, }: WithRegisterProps<FormContext>) {
     const { t } = useTranslation();
 
     return (
@@ -163,7 +163,7 @@ export function CheckboxField({ register, name, title, required, }: FieldWithReg
     );
 }
 
-export function SelectField({ register, name, title, placeholder, required, error, renderContext }: FieldWithRegisterProps<FormContext>) {
+export function SelectField({ register, name, title, placeholder, required, error, renderContext }: WithRegisterProps<FormContext>) {
     const { t } = useTranslation();
 
     return (
@@ -187,7 +187,7 @@ export function SelectField({ register, name, title, placeholder, required, erro
     );
 }
 
-export function ObjectField({ children }: FieldWithObjectProps<FormContext>) {
+export function ObjectField({ children }: WithObjectProps<FormContext>) {
     return (
         <div className="gap-2 grid grid-cols-12 col-span-12">
             {children}
@@ -195,7 +195,7 @@ export function ObjectField({ children }: FieldWithObjectProps<FormContext>) {
     );
 }
 
-export function ArrayField({ name, title, placeholder, array, required, canAddItem, renderItem, error }: FieldWithArrayProps<FormContext>) {
+export function ArrayField({ name, title, placeholder, array, required, canAddItem, renderItem, error }: WithArrayProps<FormContext>) {
     const { t } = useTranslation();
 
     return (
