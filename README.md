@@ -1,6 +1,6 @@
 # Schema Form
 
-A small React library for building dynamic forms using JSON schemas.
+A small React library for building dynamic forms.
 
 ## Key points
 
@@ -9,17 +9,10 @@ A small React library for building dynamic forms using JSON schemas.
 - Low learning curve, easy to get started
 - Extensible and customizable
 
-## UI Templates and demos
-- Shadcn/ui
-
 ## Installation
 
 ```bash
 npm install @basestacks/schema-form
-# or
-yarn add @basestacks/schema-form
-# or
-bun add @basestacks/schema-form
 ```
 
 ## Usage
@@ -27,9 +20,15 @@ bun add @basestacks/schema-form
 Example with a simple login form:
 
 ```tsx
-import { SchemaForm } from '@basestacks/schema-form';
+import { SchemaForm, FieldSchemas } from '@basestacks/schema-form';
 
-const fields = {
+interface FormValues {
+  username: string;
+  password: string;
+  rememberMe: boolean;
+}
+
+const fields: FieldSchemas<FormValues> = {
   username: {
     type: 'text',
     label: 'Username',
@@ -43,11 +42,14 @@ const fields = {
     }
   },
   password: {
-    type: 'password',
+    type: 'text',
     label: 'Password',
     placeholder: '••••••••',
     required: true,
     minLength: 6
+    renderContext: {
+      secureTextEntry: true
+    }
   },
   rememberMe: {
     type: 'checkbox',
@@ -55,7 +57,7 @@ const fields = {
   }
 };
 
-function LoginForm() {
+export function LoginForm() {
   const handleSubmit = (data) => {
     console.log('Form data:', data);
   };

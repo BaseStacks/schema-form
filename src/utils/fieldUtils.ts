@@ -1,13 +1,15 @@
 import { RegisterOptions } from 'react-hook-form';
-import { DefaultMessages, ValidationStats } from '../types';
+import { DefaultMessages, ValidationRules, ValidationStats } from '../types';
+
+const validationKeys: (keyof ValidationRules)[] = ['required', 'minLength', 'maxLength', 'pattern', 'min', 'max'];
 
 export const getValidationProps = (field: RegisterOptions<any>) => {
-    const validationProps = Object.keys(field).filter(key => ['required', 'minLength', 'maxLength', 'pattern', 'format', 'minimum', 'maximum', 'multipleOf'].includes(key));
+    const validationProps = Object.keys(field).filter(key => (validationKeys as string[]).includes(key));
     if (!validationProps.length) return undefined;
     return validationProps.reduce((acc, key) => {
         acc[key] = field[key];
         return acc;
-    }, {} as Record<string, any>);
+    }, {} as ValidationRules);
 };
 
 export const getValidationStats = (field: RegisterOptions<any>): ValidationStats | undefined => {
@@ -15,37 +17,39 @@ export const getValidationStats = (field: RegisterOptions<any>): ValidationStats
 
     if (!validationProps) return undefined;
 
-    const validationStats: ValidationStats = {};
-
-    for (const [key, validationSchema] of Object.entries(validationProps)) {
-        if (typeof validationSchema === 'object') {
-            validationStats[key] = validationSchema.value;
+    const validationStats = Object.entries(validationProps).reduce((acc, [key, rule]) => {
+        if (rule instanceof RegExp) {
+            acc.set(key, rule);
+        }
+        else if (typeof rule === 'object') {
+            acc.set(key, rule.value);
+        }
+        else if (key === 'required') {
+            acc[key] = !!rule;
         }
         else {
-            validationStats[key] = validationSchema;
+            acc[key] = rule;
         }
-    }
+        return acc;
+    }, new Map<string, any>());
 
-    return {
-        ...validationStats
-    };
+    return Object.fromEntries(validationStats) as ValidationStats;
 };
 
-
-export const getValidationOptions = (field: RegisterOptions<any>, defaultMessages: DefaultMessages) => {
-    const validationOptions = {};
+export const getValidationRules = (field: RegisterOptions<any>, defaultMessages: DefaultMessages) => {
+    const validationRules: ValidationRules = {};
 
     const validationProps = getValidationProps(field);
     for (const [key, value] of Object.entries(validationProps ?? {})) {
         if (typeof value == 'object') {
-            validationOptions[key] = value;
+            validationRules[key] = value;
         }
         else if (value !== null || value !== undefined) {
-            validationOptions[key] = {
+            validationRules[key] = {
                 value,
                 message: defaultMessages[key]
             };
         }
     }
-    return validationOptions;
+    return validationRules;
 };

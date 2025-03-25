@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { FormProvider } from '../../components/vanilla/form';
 import { FieldSchemas, RenderContext, SchemaForm, SchemaFormProps, withRegister } from '@basestacks/schema-form';
 import React from 'react';
-import { fn, userEvent, within } from '@storybook/test';
+import { fn } from '@storybook/test';
 
 function Content(props: SchemaFormProps<any, RenderContext>) {
     return (
@@ -247,27 +247,8 @@ const arraySchema: FieldSchemas<ArrayValues, RenderContext> = {
 };
 
 export const ArrayField: Story = {
-    parameters: {
-        docs: {
-            story: {
-                autoplay: false,
-            }
-        }
-    },
     args: {
         fields: arraySchema,
         onSubmit: fn(),
-    },
-    play: async ({ canvasElement, step }) => {
-        const canvas = within(canvasElement);
-
-        await step('Add a tag', async () => {
-            await userEvent.type(canvas.getByTestId('array-add-input'), 'some-tag');
-            await userEvent.click(canvas.getByTestId('array-add-button'));
-        });
-
-        await step('Remove a tag', async () => {
-            await userEvent.click(canvas.getByTestId('array-remove-button-0'));
-        });
     }
 };

@@ -1,11 +1,11 @@
 import { FieldPath, FieldValues, RegisterOptions, UseFormReturn } from 'react-hook-form';
 import { useMemo } from 'react';
 import { useGlobalContext } from './useGlobalContext';
-import { getValidationOptions, getValidationStats } from '../utils/fieldUtils';
+import { getValidationRules, getValidationStats } from '../utils/fieldUtils';
 
 export const useFieldRules = <TFormValue extends FieldValues>(
     form: UseFormReturn<TFormValue>,
-    name: FieldPath<TFormValue>,
+    name: FieldPath<TFormValue> | string,
     options: RegisterOptions<TFormValue>
 ) => {
     const { getDefaultMessages } = useGlobalContext();
@@ -13,11 +13,11 @@ export const useFieldRules = <TFormValue extends FieldValues>(
     const rules = useMemo(() => {
         const validationStats = getValidationStats(options);
         if (!validationStats) {
-            return form.register(name, options);
+            return {};
         }
 
         const defaultMessages = getDefaultMessages(validationStats, options);
-        const validationOptions = getValidationOptions(options, defaultMessages);
+        const validationOptions = getValidationRules(options, defaultMessages);
 
         return validationOptions;
     }, [getDefaultMessages, options, form, name]);

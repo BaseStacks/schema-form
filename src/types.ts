@@ -4,6 +4,8 @@ export type RenderContext = any;
 
 export type ValidationSchema = unknown;
 
+export type ValidationRules = Pick<RegisterOptions<any>, 'required' | 'minLength' | 'maxLength' | 'pattern' | 'min' | 'max'>;
+
 export type ResolverType<T extends FieldValues = FieldValues> = (schema: any, schemaOptions?: any, resolverOptions?: any) => Resolver<T>;
 
 export type CreateValidationSchema<T extends FieldValues = FieldValues> = (values: T, renderContext: RenderContext, options: ResolverOptions<T>) => ValidationSchema;
@@ -50,6 +52,15 @@ export interface SchemaFormComponents<TRenderContext extends RenderContext = Ren
     };
 }
 
+export interface ValidationStats {
+    readonly required?: boolean;
+    readonly minLength?: number;
+    readonly maxLength?: number;
+    readonly pattern?: string;
+    readonly min?: number;
+    readonly max?: number;
+}
+
 /**
  * Global context for the JSON form configuration
  */
@@ -91,7 +102,7 @@ export interface FieldSchemaWithFormat {
 export type BaseFieldSchema<
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues
-> = RegisterOptions<TFormValue> & {
+> = {
     readonly type?: string;
     // Field information
     readonly title?: string | null;
@@ -108,13 +119,13 @@ export type BaseFieldSchema<
 export type GenericFieldSchema<
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues
-> = BaseFieldSchema<TRenderContext, TFormValue> & FieldSchemaWithOption & FieldSchemaWithFormat & {
+> = BaseFieldSchema<TRenderContext, TFormValue> & RegisterOptions<TFormValue> & FieldSchemaWithOption & FieldSchemaWithFormat & {
 };
 
 export type CustomFieldSchema<
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues,
-> = BaseFieldSchema<TRenderContext, TFormValue> & FieldSchemaWithOption & FieldSchemaWithFormat & {
+> = GenericFieldSchema<TRenderContext, TFormValue> & {
     readonly type?: undefined;
     readonly Component: React.ComponentType<any>;
 };
@@ -123,7 +134,7 @@ export type ArrayFieldSchema<
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues,
     TFieldValue extends FieldValues[] = FieldValues[]
-> = BaseFieldSchema<TRenderContext, TFormValue> & {
+> = BaseFieldSchema<TRenderContext, TFormValue> & RegisterOptions<TFormValue> & {
     /** Schema for individual items in the array */
     readonly items: ObjectFieldSchema<TRenderContext, TFormValue, TFieldValue[0]>;
 };
@@ -166,8 +177,8 @@ export interface BaseFieldProps<
     readonly description?: string;
     readonly placeholder?: string;
     readonly required?: boolean;
-    readonly renderContext: TRenderContext;
     readonly error?: FieldError;
+    readonly renderContext: TRenderContext;
 };
 
 export type WithRegisterProps<
@@ -176,6 +187,11 @@ export type WithRegisterProps<
 > = BaseFieldProps<TRenderContext> & {
     readonly schema: GenericFieldSchema<TRenderContext, TFormValue>;
     readonly register: UseFormRegisterReturn<FieldPath<TFormValue>>;
+    readonly minLength?: number;
+    readonly maxLength?: number;
+    readonly min?: number;
+    readonly max?: number;
+    readonly pattern?: string;
 };
 
 export type WithControllerProps<
@@ -186,6 +202,11 @@ export type WithControllerProps<
     readonly field: ControllerRenderProps<TFormValue>;
     readonly fieldState: ControllerFieldState;
     readonly formState: UseFormStateReturn<TFormValue>;
+    readonly minLength?: number;
+    readonly maxLength?: number;
+    readonly min?: number;
+    readonly max?: number;
+    readonly pattern?: string;
 };
 
 export type WithArrayProps<
@@ -198,11 +219,10 @@ export type WithArrayProps<
     & {
         readonly schema: ArrayFieldSchema<TRenderContext, TFormValue, TFieldValue[]>;
         readonly array: UseFieldArrayReturn<TFormValue, TFieldPath, TFieldKey>;
-        /** Whether items can be removed from the array */
         readonly canRemoveItem: boolean;
-        /** Whether new items can be added to the array */
         readonly canAddItem: boolean;
-        /** Function to render an array item at the given index */
+        readonly minLength?: number;
+        readonly maxLength?: number;
         readonly renderItem: (index: number) => React.ReactNode;
     };
 
@@ -233,9 +253,8 @@ export interface FieldHocProps<
     readonly form: UseFormReturn<TFormValue>;
     readonly schema: GenericFieldSchema<TRenderContext, TFormValue>
     | ArrayFieldSchema<TRenderContext, TFormValue, TFieldValues[]>
-    | ObjectFieldSchema<TRenderContext, TFormValue, TFieldValues>;  
+    | ObjectFieldSchema<TRenderContext, TFormValue, TFieldValues>;
     readonly name: FieldPath<TFormValue>;
-    readonly validationStats?: ValidationStats;
     readonly error?: FieldError;
     readonly renderContext: TRenderContext;
 };

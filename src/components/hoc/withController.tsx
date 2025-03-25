@@ -1,6 +1,8 @@
 import { Controller, FieldValues } from 'react-hook-form';
-import { WithControllerProps, FieldHocProps, RenderContext } from '../../types';
+import { WithControllerProps, FieldHocProps, RenderContext, GenericFieldSchema } from '../../types';
 import { useFieldRules } from '../../hooks/useFieldRules';
+import { useMemo } from 'react';
+import { getValidationStats } from '../../utils/fieldUtils';
 
 interface WithControllerHocProps<TFormValue extends FieldValues, TRenderContext extends RenderContext> extends FieldHocProps<TRenderContext, TFormValue> {
 }
@@ -15,17 +17,20 @@ export function withController<TRenderContext extends RenderContext = RenderCont
         error,
         renderContext
     }: WithControllerHocProps<TFormValue, TRenderContext>) {
-        const { title, description, placeholder } = schema;
+        const genericSchema = schema as GenericFieldSchema<TRenderContext, TFormValue>;
 
-        const rules = useFieldRules(form, name, schema);
+        const { title, description, placeholder } = genericSchema;
+
+        const rules = useFieldRules(form, name, genericSchema);
+        const validationStats = useMemo(() => getValidationStats(rules), [rules]);
 
         return (
             <Controller
                 name={name}
                 control={form.control}
                 rules={rules}
-                shouldUnregister={schema.shouldUnregister}
-                defaultValue={schema.value}
+                shouldUnregister={genericSchema.shouldUnregister}
+                defaultValue={genericSchema.value}
                 render={(controller) => (
                     <Component
                         schema={schema}
@@ -38,6 +43,12 @@ export function withController<TRenderContext extends RenderContext = RenderCont
                         placeholder={placeholder}
                         renderContext={renderContext}
                         error={error}
+                        required={validationStats.required}
+                        min={validationStats.min}
+                        max={validationStats.max}
+                        minLength={validationStats.minLength}
+                        maxLength={validationStats.maxLength}
+                        pattern={validationStats.pattern}
                     />
                 )}
             />

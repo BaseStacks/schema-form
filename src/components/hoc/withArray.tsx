@@ -1,7 +1,9 @@
 import { ArrayPath, FieldPath, FieldValues, useFieldArray } from 'react-hook-form';
 import { WithArrayProps, FieldHocProps, RenderContext, ArrayFieldSchema } from '../../types';
 import { SchemaFormField } from '../SchemaFormField';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
+import { getValidationStats } from '../../utils/fieldUtils';
+import { useFieldRules } from '../../hooks/useFieldRules';
 
 export interface WithArrayHocProps<
     TRenderContext extends RenderContext,
@@ -23,22 +25,20 @@ export function withArray<TRenderContext extends RenderContext = RenderContext>(
     }: WithArrayHocProps<TRenderContext, TFormValue, TFieldValue>) {
 
         const arraySchema = schema as ArrayFieldSchema<TRenderContext, TFormValue, TFieldValue[]>;
+        const rules = useFieldRules(form, name, arraySchema);
 
         // Use fieldArray from react-hook-form to manage the array items
         const array = useFieldArray({
-            control: form.control, name, rules: {
-                minLength: arraySchema.minLength,
-                maxLength: arraySchema.maxLength,
-                required: arraySchema.required,
-                validate: arraySchema.validate
-            }
+            name,
+            control: form.control,
+            rules
         });
 
         const { fields } = array;
 
         // Get min/max items constraints from field
-        const minItems = typeof arraySchema.minLength === 'number' ? arraySchema.minLength : arraySchema.minLength?.value;
-        const maxItems = typeof arraySchema.maxLength === 'number' ? arraySchema.maxLength : isNaN(arraySchema.maxLength?.value) ? Infinity : arraySchema.maxLength.value;
+        const minItems = typeof rules.minLength === 'number' ? rules.minLength : rules.minLength?.value;
+        const maxItems = typeof rules.maxLength === 'number' ? rules.maxLength : isNaN(rules.maxLength?.value) ? Infinity : rules.maxLength.value;
 
         // Check if we can add more items
         const canAddItem = !maxItems || fields.length < maxItems;
@@ -50,6 +50,8 @@ export function withArray<TRenderContext extends RenderContext = RenderContext>(
             return <SchemaFormField key={key} name={key} renderContext={renderContext} />;
         }, [name, renderContext]); // Add fields as dependency
 
+        const validationStats = useMemo(() => getValidationStats(rules), [rules]);
+
         return (
             <Component
                 array={array}
@@ -60,10 +62,12 @@ export function withArray<TRenderContext extends RenderContext = RenderContext>(
                 placeholder={arraySchema.placeholder}
                 canAddItem={canAddItem}
                 canRemoveItem={canRemoveItem}
-                required={!!arraySchema.required}
                 renderItem={renderItem}
                 renderContext={renderContext}
                 error={error}
+                required={validationStats.required}
+                minLength={minItems}
+                maxLength={maxItems}
             />
         );
     };

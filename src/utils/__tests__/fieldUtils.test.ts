@@ -1,4 +1,4 @@
-import { getValidationProps, getValidationStats, getValidationOptions } from '../fieldUtils';
+import { getValidationProps, getValidationStats, getValidationRules } from '../fieldUtils';
 import { RegisterOptions } from 'react-hook-form';
 import { DefaultMessages } from '../../types';
 
@@ -90,7 +90,7 @@ describe('fieldUtils', () => {
                 maxLength: 'Maximum length exceeded'
             };
 
-            const result = getValidationOptions(field, defaultMessages);
+            const result = getValidationRules(field, defaultMessages);
 
             expect(result).toEqual({
                 required: { value: true, message: 'This field is required' },
@@ -113,7 +113,7 @@ describe('fieldUtils', () => {
                 pattern: 'Invalid pattern'
             };
 
-            const result = getValidationOptions(field, defaultMessages);
+            const result = getValidationRules(field, defaultMessages);
 
             expect(result).toEqual({
                 required: { value: true, message: 'Required field' },
@@ -130,7 +130,7 @@ describe('fieldUtils', () => {
                 required: 'This field is required'
             };
 
-            const result = getValidationOptions(field, defaultMessages);
+            const result = getValidationRules(field, defaultMessages);
 
             expect(result).toEqual({});
         });
