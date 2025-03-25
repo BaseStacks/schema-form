@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { FieldSchemas, FieldWithArrayProps, FieldWithControllerProps, FieldWithObjectProps, FieldWithRegisterProps, SchemaForm, SchemaFormProvider, SchemaFormRenderProps, withArray, withController, withObject, withRegister } from '../src';
+import { FieldSchemas, WithArrayProps, WithControllerProps, WithObjectProps, WithRegisterProps, SchemaForm, SchemaFormProvider, SchemaFormRenderProps, withArray, withController, withObject, withRegister } from '../src';
 import React from 'react';
 
 interface FormRenderContext {
@@ -37,13 +37,13 @@ function FormLayout({ form, onSubmit, children }: SchemaFormRenderProps<FormRend
     );
 };
 
-function TextField({ register }: FieldWithRegisterProps) {
+function TextField({ register }: WithRegisterProps) {
     return (
         <input {...register} />
     );
 };
 
-function ControlledField({ field }: FieldWithControllerProps) {
+function ControlledField({ field }: WithControllerProps) {
     return (
         <input
             name={field.name}
@@ -54,7 +54,7 @@ function ControlledField({ field }: FieldWithControllerProps) {
     );
 }
 
-function ArrayField({ array, renderItem }: FieldWithArrayProps) {
+function ArrayField({ array, renderItem }: WithArrayProps) {
     return (
         <div>
             {array.fields.map((_field, index) => renderItem(index))}
@@ -65,7 +65,7 @@ function ArrayField({ array, renderItem }: FieldWithArrayProps) {
     );
 }
 
-function ObjectField({ children }: FieldWithObjectProps) {
+function ObjectField({ children }: WithObjectProps) {
     return (
         <div>
             {children}

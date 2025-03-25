@@ -2,12 +2,12 @@
 
 A small React library for building dynamic forms.
 
-## Key points
+## Features
 
-- Build on top of [react-hook-form](https://react-hook-form.com/)
-- Headless design to integrate with any UI library and framework
-- Low learning curve, easy to get started
-- Extensible and customizable
+- Simplifies form creation with [react-hook-form](https://react-hook-form.com/)
+- Reduces boilerplate code for validation.
+- Easy integration with existing React projects.
+- Extensible and customizable.
 
 ## Installation
 
@@ -46,7 +46,7 @@ const fields: FieldSchemas<FormValues> = {
     label: 'Password',
     placeholder: '••••••••',
     required: true,
-    minLength: 6
+    minLength: 6,
     renderContext: {
       secureTextEntry: true
     }
@@ -70,6 +70,65 @@ export function LoginForm() {
   );
 }
 ```
+
+## Customization UI
+
+```tsx
+import { PropsWithChildren } from 'react';
+import { WithRegisterProps, SchemaFormProvider, SchemaFormRenderProps, withRegister } from '@basestacks/schema-form';
+import React from 'react';
+
+interface RenderContext {
+  readonly secureTextEntry?: boolean;
+}
+
+function FormProvider({ children }: PropsWithChildren) {
+    return (
+        <SchemaFormProvider
+            components={{
+                Form: FormLayout,
+                fields: {
+                    text: withRegister(TextField),
+                    checkbox: withRegister(CheckboxField),
+                },
+            }}
+        >
+            {children}
+        </SchemaFormProvider>
+    );
+};
+
+function FormLayout({ form, onSubmit, children }: SchemaFormRenderProps<RenderContext>) {
+    return (
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+            {children}
+            <input type="submit">Submit</input>
+        </form>
+    );
+};
+
+function TextField({ name, label, register, renderContext }: WithRegisterProps<RenderContext>) {
+    return (
+      <div className="field">
+        <label htmlFor={name}>{label}</label>
+        <input
+          type={renderContext.secureTextEntry ? 'password' : 'text'}
+          {...register}
+        />
+      </div>
+    );
+};
+
+function CheckboxField({ label, register }: WithRegisterProps<RenderContext>) {
+    return (
+      <div className="field">
+        <input type="checkbox" {...register} /> <label htmlFor={name}>{label}</label>
+      </div>
+    );
+};
+```
+
+Check out the [example](https://codesandbox.io/p/sandbox/55msn7) for a complete implementation.
 
 ## License
 

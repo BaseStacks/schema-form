@@ -15,7 +15,7 @@ export const getValidationProps = (field: RegisterOptions<any>) => {
 export const getValidationStats = (field: RegisterOptions<any>): ValidationStats | undefined => {
     const validationProps = getValidationProps(field);
 
-    if (!validationProps) return undefined;
+    if (!validationProps) return {};
 
     const validationStats = Object.entries(validationProps).reduce((acc, [key, rule]) => {
         if (rule instanceof RegExp) {
