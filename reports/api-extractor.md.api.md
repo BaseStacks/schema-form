@@ -18,6 +18,7 @@ import { RegisterOptions } from 'react-hook-form';
 import { Resolver } from 'react-hook-form';
 import { ResolverOptions } from 'react-hook-form';
 import { SubmitHandler } from 'react-hook-form';
+import { UseFieldArrayProps } from 'react-hook-form';
 import { UseFieldArrayReturn } from 'react-hook-form';
 import { UseFormProps } from 'react-hook-form';
 import { UseFormRegisterReturn } from 'react-hook-form';
@@ -239,7 +240,7 @@ export interface ValidationStats {
 }
 
 // @public (undocumented)
-export function withArray<TRenderContext extends RenderContext = RenderContext>(Component: React.ComponentType<WithArrayProps<TRenderContext, any, any>>): <TFieldValue extends FieldValues, TFormValue extends FieldValues>({ form, schema, name, renderContext, error }: WithArrayHocProps<TRenderContext, TFormValue, TFieldValue>) => JSX.Element;
+export function withArray<TRenderContext extends RenderContext = RenderContext>(Component: React.ComponentType<WithArrayProps<TRenderContext, any, any>>, baseRenderContext?: Partial<TRenderContext>, baseSchema?: UseFieldArrayProps<any>['rules']): <TFieldValue extends FieldValues, TFormValue extends FieldValues>({ form, schema, name, renderContext, error }: WithArrayHocProps<TRenderContext, TFormValue, TFieldValue>) => JSX.Element;
 
 // @public (undocumented)
 export interface WithArrayHocProps<TRenderContext extends RenderContext, TFormValue extends FieldValues, TFieldValue extends FieldValues> extends Omit<FieldHocProps<TRenderContext, TFormValue, TFieldValue>, 'name'> {
@@ -261,7 +262,7 @@ export type WithArrayProps<TRenderContext extends RenderContext = RenderContext,
 // Warning: (ae-forgotten-export) The symbol "WithControllerHocProps" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
-export function withController<TRenderContext extends RenderContext = RenderContext>(Component: React.ComponentType<WithControllerProps<TRenderContext, any>>): <TFormValue extends FieldValues>({ form, schema, name, error, renderContext }: WithControllerHocProps<TFormValue, TRenderContext>) => JSX.Element;
+export function withController<TRenderContext extends RenderContext = RenderContext>(Component: React.ComponentType<WithControllerProps<TRenderContext, any>>, baseRenderContext?: Partial<TRenderContext>, baseSchema?: RegisterOptions<any>): <TFormValue extends FieldValues>({ form, schema, name, error, renderContext }: WithControllerHocProps<TFormValue, TRenderContext>) => JSX.Element;
 
 // @public (undocumented)
 export type WithControllerProps<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues> = BaseFieldProps<TRenderContext> & {
@@ -277,7 +278,7 @@ export type WithControllerProps<TRenderContext extends RenderContext = RenderCon
 };
 
 // @public (undocumented)
-export function withObject<TRenderContext extends RenderContext = RenderContext>(Component: React.ComponentType<WithObjectProps<TRenderContext, any, any>>): <TFormValue extends FieldValues, TFieldValue extends FieldValues>({ name, schema, renderContext }: WithObjectHocProps<TRenderContext, TFormValue, TFieldValue>) => JSX.Element;
+export function withObject<TRenderContext extends RenderContext = RenderContext>(Component: React.ComponentType<WithObjectProps<TRenderContext, any, any>>, baseRenderContext?: TRenderContext): <TFormValue extends FieldValues, TFieldValue extends FieldValues>({ name, schema, renderContext }: WithObjectHocProps<TRenderContext, TFormValue, TFieldValue>) => JSX.Element;
 
 // @public (undocumented)
 export interface WithObjectHocProps<TRenderContext extends RenderContext, TFormValue extends FieldValues, TFieldValue extends FieldValues> extends FieldHocProps<TRenderContext, TFormValue, TFieldValue> {
@@ -292,7 +293,7 @@ export type WithObjectProps<TRenderContext extends RenderContext = RenderContext
 // Warning: (ae-forgotten-export) The symbol "WithRegisterHocProps" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
-export function withRegister<TRenderContext extends RenderContext = RenderContext>(Component: React.ComponentType<WithRegisterProps<TRenderContext>>): <TFormValue extends FieldValues>({ form, schema, name, error, renderContext }: WithRegisterHocProps<TRenderContext, TFormValue>) => JSX.Element;
+export function withRegister<TRenderContext extends RenderContext = RenderContext>(Component: React.ComponentType<WithRegisterProps<TRenderContext>>, baseRenderContext?: Partial<TRenderContext>, baseSchema?: RegisterOptions<any>): <TFormValue extends FieldValues>({ form, schema, name, error, renderContext }: WithRegisterHocProps<TRenderContext, TFormValue>) => JSX.Element;
 
 // @public (undocumented)
 export type WithRegisterProps<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues> = BaseFieldProps<TRenderContext> & {
