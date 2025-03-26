@@ -1,13 +1,44 @@
 # Schema Form
 
-A small React library for building dynamic forms.
+[![npm version](https://img.shields.io/npm/v/@basestacks/schema-form.svg)](https://www.npmjs.com/package/@basestacks/schema-form)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/basestacks/schema-form/main.yml?branch=main)](https://github.com/basestacks/schema-form/actions)
+[![Coverage Status](https://img.shields.io/codecov/c/github/basestacks/schema-form)](https://codecov.io/gh/basestacks/schema-form)
+[![License](https://img.shields.io/npm/l/@basestacks/schema-form)](https://github.com/basestacks/schema-form/blob/main/LICENSE)
+
+A React library built on top of react-hook-form that turns schema definitions into dynamic forms, reducing boilerplate and simplifying validation while maintaining full customizability.
+
+## Table of Contents
+
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Defining Form Schema](#defining-form-schema)
+  - [Customization UI](#customization-ui)
+  - [Using the Form](#using-the-form)
+- [API Reference](#api-reference)
+  - [Core Components](#core-components)
+    - [SchemaForm](#schemaform)
+    - [SchemaFormProvider](#schemaformprovider)
+    - [SchemaFormField](#schemaformfield)
+  - [Higher-Order Components (HOCs)](#higher-order-components-hocs)
+    - [withRegister](#withregister)
+    - [withController](#withcontroller)
+    - [withArray](#witharray)
+    - [withObject](#withobject)
+  - [Schema Types](#schema-types)
+  - [Validation](#validation)
+  - [RenderContext](#rendercontext)
+  - [Hooks](#hooks)
+- [License](#license)
 
 ## Features
 
-- Simplifies form creation with [react-hook-form](https://react-hook-form.com/)
-- Reduces boilerplate code for validation.
-- Easy integration with existing React projects.
-- Extensible and customizable.
+- **Schema-Driven Forms**: Define forms using TypeScript schemas with built-in type safety
+- **Streamlined Validation**: Apply validation rules directly in your schema or use external validation libraries
+- **Complex Data Support**: Handle nested objects and dynamic arrays with dedicated field components
+- **Conditional Logic**: Show/hide fields based on form values with simple conditions
+- **UI Flexibility**: Fully customize rendering with component overrides and context system
+- **React Hook Form Integration**: Built on proven form handling with optimized re-renders
 
 ## Installation
 
@@ -17,10 +48,12 @@ npm install @basestacks/schema-form
 
 ## Usage
 
-Example with a simple login form:
+Get up and running with schema-form in minutes:
+
+### Defining Form Schema
 
 ```tsx
-import { SchemaForm, FieldSchemas } from '@basestacks/schema-form';
+import { SchemaForm, FieldSchemas } from "@basestacks/schema-form";
 
 interface FormValues {
   username: string;
@@ -30,105 +63,589 @@ interface FormValues {
 
 const fields: FieldSchemas<FormValues> = {
   username: {
-    type: 'text',
-    label: 'Username',
-    placeholder: 'Enter your username',
+    type: "text",
+    title: "Username",
+    placeholder: "Enter your username",
     required: true,
     minLength: 6,
     maxLength: 32,
     pattern: {
       value: /^[a-zA-Z0-9_]+$/,
-      message: 'Username can only contain letters, numbers and underscores'
-    }
+      message: "Username can only contain letters, numbers and underscores",
+    },
   },
   password: {
-    type: 'text',
-    label: 'Password',
-    placeholder: '••••••••',
+    type: "text",
+    title: "Password",
+    placeholder: "••••••••",
     required: true,
     minLength: 6,
     renderContext: {
-      secureTextEntry: true
-    }
+      secureTextEntry: true,
+    },
   },
   rememberMe: {
-    type: 'checkbox',
-    label: 'Remember me'
-  }
+    type: "checkbox",
+    title: "Remember me",
+  },
 };
 
 export function LoginForm() {
-  const handleSubmit = (data) => {
-    console.log('Form data:', data);
+  const handleSubmit = (data: FormValues) => {
+    console.log("Form data:", data);
   };
 
   return (
-    <SchemaForm 
+    <SchemaForm
       fields={fields}
       onSubmit={handleSubmit}
+      {/** Additional props for react-hook-form */}
+      shouldUseNativeValidation={true}
     />
   );
 }
 ```
 
-## Customization UI
+That's it! The form will render with proper validation. For UI components, see the detailed section below.
+
+
+### Customization UI
+
+Create custom field components and a form layout to override the default UI:
 
 ```tsx
-import { PropsWithChildren } from 'react';
-import { WithRegisterProps, SchemaFormProvider, SchemaFormRenderProps, withRegister } from '@basestacks/schema-form';
-import React from 'react';
+import { PropsWithChildren } from "react";
+import {
+  WithRegisterProps,
+  SchemaFormProvider,
+  SchemaFormRenderProps,
+  withRegister,
+  WithArrayProps,
+  withArray,
+  WithObjectProps,
+  withObject,
+} from "@basestacks/schema-form";
 
-interface RenderContext {
+export interface RenderContext {
   readonly secureTextEntry?: boolean;
+  readonly submitLabel?: string;
 }
 
-function FormProvider({ children }: PropsWithChildren) {
-    return (
-        <SchemaFormProvider
-            components={{
-                Form: FormLayout,
-                fields: {
-                    text: withRegister(TextField),
-                    checkbox: withRegister(CheckboxField),
-                },
-            }}
-        >
-            {children}
-        </SchemaFormProvider>
-    );
-};
+export function FormProvider({ children }: PropsWithChildren) {
+  return (
+    <SchemaFormProvider
+      components={{
+        Form: FormLayout,
+        fields: {
+          array: withArray(ArrayField),
+          object: withObject(ObjectField),
+          text: withRegister(TextField),
+          checkbox: withRegister(CheckboxField),
+          select: withRegister(SelectField),
+        },
+      }}
+    >
+      {children}
+    </SchemaFormProvider>
+  );
+}
 
-function FormLayout({ form, onSubmit, children }: SchemaFormRenderProps<RenderContext>) {
-    return (
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-            {children}
-            <input type="submit">Submit</input>
-        </form>
-    );
-};
+function FormLayout({
+  form,
+  onSubmit,
+  children,
+  renderContext,
+}: SchemaFormRenderProps<RenderContext>) {
+  return (
+    <form onSubmit={form.handleSubmit(onSubmit)}>
+      {children}
+      <button type="submit">{renderContext?.submitLabel ?? "Submit"}</button>
+    </form>
+  );
+}
 
-function TextField({ name, label, register, renderContext }: WithRegisterProps<RenderContext>) {
-    return (
-      <div className="field">
-        <label htmlFor={name}>{label}</label>
-        <input
-          type={renderContext.secureTextEntry ? 'password' : 'text'}
-          {...register}
-        />
+function TextField({
+  name,
+  placeholder,
+  title,
+  register,
+  renderContext,
+}: WithRegisterProps<RenderContext>) {
+  return (
+    <div className="field">
+      <label htmlFor={name}>{title}</label>
+      <input
+        type={renderContext.secureTextEntry ? "password" : "text"}
+        placeholder={placeholder}
+        {...register}
+      />
+    </div>
+  );
+}
+
+function CheckboxField({
+  name,
+  title,
+  register,
+}: WithRegisterProps<RenderContext>) {
+  return (
+    <div className="field">
+      <div>
+        <input type="checkbox" {...register} />{" "}
+        <label htmlFor={name}>{title}</label>
       </div>
-    );
-};
+    </div>
+  );
+}
 
-function CheckboxField({ label, register }: WithRegisterProps<RenderContext>) {
-    return (
-      <div className="field">
-        <input type="checkbox" {...register} /> <label htmlFor={name}>{label}</label>
+function SelectField({
+  schema,
+  register,
+  name,
+  title,
+  placeholder,
+}: WithRegisterProps<RenderContext>) {
+  return (
+    <div className="field">
+      <label htmlFor={name}>{title}</label>
+      <select {...register}>
+        <option selected value="">
+          {placeholder}
+        </option>
+        {schema?.options?.map((o) => (
+          <option key={o.value} value={o.value}>
+            {o.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+function ObjectField({ children }: WithObjectProps) {
+  return <div className="field-object">{children}</div>;
+}
+
+function ArrayField({ title, array, renderItem }: WithArrayProps) {
+  return (
+    <div className="field-array">
+      <label>{title}</label>
+      <div className="field-array-items">
+        {array.fields.map((field, index) => (
+          <div key={field.id} className="field-array-item">
+            {renderItem(index)}
+            <button onClick={() => array.remove(index)}>x</button>
+          </div>
+        ))}
       </div>
-    );
-};
+      <button type="button" onClick={() => array.append({})}>
+        Add
+      </button>
+    </div>
+  );
+}
+```
+
+### Using the Form
+
+Wrap your form with the `FormProvider` to apply custom UI components and context data:
+
+```tsx
+<FormProvider>
+    <LoginForm />
+</FormProvider>
 ```
 
 Check out the [example](https://codesandbox.io/p/sandbox/55msn7) for a complete implementation.
+
+
+## API Reference
+
+### Core Components
+
+#### SchemaForm
+
+The main component for creating dynamic forms from a schema.
+
+```tsx
+import { SchemaForm } from '@basestacks/schema-form';
+
+<SchemaForm
+  fields={fields}
+  onSubmit={handleSubmit}
+  renderContext={{ layout: 'vertical' }}
+  {...reactHookFormProps}
+/>
+```
+
+**Props:**
+
+| Prop | Type | Required | Description |
+|------|------|:--------:|-------------|
+| `fields` | `FieldSchemas<TFormValue>` | ✓ | Schema definitions for form fields |
+| `onSubmit` | `SubmitHandler<TFormValue>` | | Form submission handler |
+| `renderContext` | `TRenderContext` | | Context data passed to field renderers |
+| `children` | `(props: SchemaFormRenderProps) => ReactNode` | | Custom render function |
+| `schema` | `ValidationSchema` | | Schema for validation |
+| `schemaOptions` | `any` | | Options for validation schema |
+| `resolverOptions` | `any` | | Options for the validation resolver |
+| `createSchema` | `CreateValidationSchema<TFormValue>` | | Function to create validation schema |
+
+#### SchemaFormProvider
+
+Global configuration provider for schema forms.
+
+```tsx
+import { SchemaFormProvider } from '@basestacks/schema-form';
+
+<SchemaFormProvider
+  components={{
+    Form: CustomFormLayout,
+    fields: {
+      text: withRegister(CustomTextField),
+      checkbox: withRegister(CustomCheckboxField),
+    }
+  }}
+  renderContext={{ theme: 'light' }}
+>
+  {children}
+</SchemaFormProvider>
+```
+
+**Props:**
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `components` | `SchemaFormComponents` | Component overrides for form and fields |
+| `renderContext` | `RenderContext` | Global render context |
+| `validationResolver` | `ResolverType<any>` | Custom validation resolver |
+| `getDefaultMessages` | `(stats: ValidationStats, options: RegisterOptions) => DefaultMessages` | Function for default validation messages |
+
+#### SchemaFormField
+
+Component for rendering individual fields based on schema.
+
+```tsx
+import { SchemaFormField } from '@basestacks/schema-form';
+
+<SchemaFormField 
+  name="fieldName" 
+  renderContext={{ customStyling: true }} 
+/>
+```
+
+**Props:**
+
+| Prop | Type | Required | Description |
+|------|------|:--------:|-------------|
+| `name` | `FieldPath<TFormValue>` | ✓ | Field name/path |
+| `renderContext` | `TRenderContext` | | Context data for this field |
+
+### Higher-Order Components (HOCs)
+
+#### withRegister
+
+HOC for field components that use react-hook-form's `register` method.
+
+```tsx
+import { withRegister } from '@basestacks/schema-form';
+
+const TextField = ({ name, title, register, error }) => (
+  <div>
+    <label htmlFor={name}>{title}</label>
+    <input {...register} />
+    {error && <span>{error.message}</span>}
+  </div>
+);
+
+const RegisteredTextField = withRegister(TextField);
+```
+
+**Props passed to wrapped component:**
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `name` | `string` | Field name |
+| `title` | `string` | Field label |
+| `description` | `string` | Field description |
+| `placeholder` | `string` | Input placeholder |
+| `register` | `UseFormRegisterReturn` | Register object from react-hook-form |
+| `error` | `FieldError` | Field error if validation fails |
+| `required` | `boolean` | Whether field is required |
+| `minLength` | `number` | Minimum length constraint |
+| `maxLength` | `number` | Maximum length constraint |
+| `min` | `number` | Minimum value constraint |
+| `max` | `number` | Maximum value constraint |
+| `pattern` | `string` | Regex pattern constraint |
+| `schema` | `GenericFieldSchema` | Complete field schema |
+| `renderContext` | `any` | Custom render context |
+
+#### withController
+
+HOC for field components that need access to field state and controller.
+
+```tsx
+import { withController } from '@basestacks/schema-form';
+
+const SelectField = ({ field, fieldState, title }) => (
+  <div>
+    <label>{title}</label>
+    <select
+      value={field.value}
+      onChange={field.onChange}
+      onBlur={field.onBlur}
+    >
+      {options.map(option => (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
+    {fieldState.error && <span>{fieldState.error.message}</span>}
+  </div>
+);
+
+const ControlledSelectField = withController(SelectField);
+```
+
+**Props passed to wrapped component:**
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `name` | `string` | Field name |
+| `title` | `string` | Field label |
+| `description` | `string` | Field description |
+| `placeholder` | `string` | Field placeholder |
+| `field` | `ControllerRenderProps` | Field controller object |
+| `fieldState` | `ControllerFieldState` | Field state including errors |
+| `formState` | `UseFormStateReturn` | Form state |
+| `error` | `FieldError` | Field error if validation fails |
+| `required` | `boolean` | Whether field is required |
+| `minLength` | `number` | Minimum length constraint |
+| `maxLength` | `number` | Maximum length constraint |
+| `min` | `number` | Minimum value constraint |
+| `max` | `number` | Maximum value constraint |
+| `pattern` | `string` | Regex pattern constraint |
+| `schema` | `GenericFieldSchema` | Complete field schema |
+| `renderContext` | `any` | Custom render context |
+
+#### withArray
+
+HOC for handling array field types with add/remove functionality.
+
+```tsx
+import { withArray } from '@basestacks/schema-form';
+
+const ArrayField = ({ title, array, renderItem, canAddItem, canRemoveItem }) => (
+  <div>
+    <label>{title}</label>
+    {array.fields.map((field, index) => (
+      <div key={field.id}>
+        {renderItem(index)}
+        {canRemoveItem && (
+          <button onClick={() => array.remove(index)}>Remove</button>
+        )}
+      </div>
+    ))}
+    {canAddItem && (
+      <button onClick={() => array.append({})}>Add Item</button>
+    )}
+  </div>
+);
+
+const ArrayFieldComponent = withArray(ArrayField);
+```
+
+**Props passed to wrapped component:**
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `name` | `string` | Field name |
+| `title` | `string` | Field label |
+| `description` | `string` | Field description |
+| `array` | `UseFieldArrayReturn` | Field array methods and state |
+| `renderItem` | `(index: number) => ReactNode` | Function to render each array item |
+| `canAddItem` | `boolean` | Whether more items can be added |
+| `canRemoveItem` | `boolean` | Whether items can be removed |
+| `minLength` | `number` | Minimum array length |
+| `maxLength` | `number` | Maximum array length |
+| `schema` | `ArrayFieldSchema` | Complete field schema |
+| `renderContext` | `any` | Custom render context |
+
+#### withObject
+
+HOC for handling nested object fields.
+
+```tsx
+import { withObject } from '@basestacks/schema-form';
+
+const ObjectField = ({ title, children }) => (
+  <fieldset>
+    <legend>{title}</legend>
+    {children}
+  </fieldset>
+);
+
+const ObjectFieldComponent = withObject(ObjectField);
+```
+
+**Props passed to wrapped component:**
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `name` | `string` | Field name |
+| `title` | `string` | Field label |
+| `description` | `string` | Field description |
+| `placeholder` | `string` | Field placeholder |
+| `children` | `ReactNode` | Child field components |
+| `schema` | `ObjectFieldSchema` | Complete field schema |
+| `renderContext` | `any` | Custom render context |
+
+### Schema Types
+
+#### FieldSchemas
+
+Definition of all form fields:
+
+```tsx
+interface FormValues {
+  username: string;
+  address: {
+    city: string;
+    zipCode: string;
+  };
+  hobbies: string[];
+}
+
+const fields: FieldSchemas<FormValues> = {
+  username: {
+    type: 'text',
+    title: 'Username',
+    required: true
+  },
+  address: {
+    type: 'object',
+    title: 'Address',
+    properties: {
+      city: { type: 'text', title: 'City' },
+      zipCode: { type: 'text', title: 'Zip Code' }
+    }
+  },
+  hobbies: {
+    type: 'array',
+    title: 'Hobbies',
+    items: {
+      type: 'text',
+      title: 'Hobby'
+    }
+  }
+}
+```
+
+#### Field Schema Properties
+
+Common properties for all field types:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `type` | `string` | Field type (e.g., 'text', 'select', 'checkbox') |
+| `title` | `string` | Field label |
+| `description` | `string` | Description or help text |
+| `placeholder` | `string` | Input placeholder |
+| `visible` | `boolean \| (values) => boolean` | Condition for field visibility |
+| `renderContext` | `any` | Custom render context for this field |
+| `required` | `boolean` | Whether the field is required |
+
+Field type-specific properties:
+
+| Field Type | Properties |
+|------------|------------|
+| `text` | `minLength`, `maxLength`, `pattern` |
+| `number` | `min`, `max`, `step` |
+| `select` | `options: SelectOption[]` |
+| `object` | `properties: ObjectFieldProperties` |
+| `array` | `items: ObjectFieldSchema`, `minLength`, `maxLength` |
+
+#### Validation
+
+Schema-form supports validation through:
+
+1. **React Hook Form's native validation**:
+   - Specify rules directly in field schema (required, min, max, etc.)
+
+2. **Custom validation resolvers**:
+   - Supports integration with validation libraries
+   - Can be specified globally or per-form
+
+```tsx
+<SchemaForm
+  fields={fields}
+  schema={yupSchema}  // Your validation schema
+  resolverOptions={{ abortEarly: false }}
+/>
+```
+
+#### RenderContext
+
+RenderContext allows passing custom data to field components:
+
+1. **Global context**: Set at the provider level
+2. **Form context**: Set at the form level
+3. **Field context**: Set at individual field level
+
+Later contexts override earlier ones when merged.
+
+```tsx
+<SchemaFormProvider renderContext={{ theme: 'dark' }}>
+  <SchemaForm
+    fields={fields}
+    renderContext={{ size: 'large' }}
+    // Field with renderContext={{ variant: 'outlined' }}
+  />
+</SchemaFormProvider>
+```
+
+### Hooks
+
+#### useSchemaForm
+
+Access the current form context.
+
+```tsx
+import { useSchemaForm } from '@basestacks/schema-form';
+
+function CustomField() {
+  const { form, fields, renderContext } = useSchemaForm();
+  // ...
+}
+```
+
+#### useFieldSchema
+
+Get the schema for a specific field.
+
+```tsx
+import { useFieldSchema } from '@basestacks/schema-form';
+
+function FieldWrapper({ name }) {
+  const schema = useFieldSchema(name);
+  // ...
+}
+```
+
+#### useFieldStatus
+
+Check if a field should be visible based on conditions.
+
+```tsx
+import { useFieldStatus } from '@basestacks/schema-form';
+
+function ConditionalField({ schema }) {
+  const { isVisible } = useFieldStatus(schema, formValues);
+  if (!isVisible) return null;
+  // ...
+}
+```
 
 ## License
 
