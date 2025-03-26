@@ -113,7 +113,7 @@ export type BaseFieldSchema<
     readonly visible?: ConditionedRule<TFormValue>;
 
     // Context and component overrides
-    readonly renderContext?: TRenderContext;
+    readonly renderContext?: Partial<TRenderContext>;
 };
 
 export type GenericFieldSchema<
