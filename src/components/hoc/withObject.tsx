@@ -1,6 +1,7 @@
 import { FieldPath, FieldValues } from 'react-hook-form';
 import { WithObjectProps, FieldHocProps, RenderContext, ObjectFieldSchema } from '../../types';
 import { SchemaFormField } from '../SchemaFormField';
+import { useMemo } from 'react';
 
 export interface WithObjectHocProps<
     TRenderContext extends RenderContext,
@@ -10,7 +11,8 @@ export interface WithObjectHocProps<
 }
 
 export function withObject<TRenderContext extends RenderContext = RenderContext>(
-    Component: React.ComponentType<WithObjectProps<TRenderContext, any, any>>
+    Component: React.ComponentType<WithObjectProps<TRenderContext, any, any>>,
+    baseRenderContext?: TRenderContext
 ) {
     return function ObjectFieldHoc<
         TFormValue extends FieldValues,
@@ -24,6 +26,8 @@ export function withObject<TRenderContext extends RenderContext = RenderContext>
 
         const { title, description, placeholder } = objectSchema;
 
+        const fieldRenderContext = useMemo(() => Object.assign({}, baseRenderContext, renderContext), [renderContext]);
+
         return (
             <Component
                 key={name}
@@ -32,7 +36,7 @@ export function withObject<TRenderContext extends RenderContext = RenderContext>
                 title={title}
                 description={description}
                 placeholder={placeholder}
-                renderContext={renderContext}
+                renderContext={fieldRenderContext}
             >
                 {Object.entries(objectSchema.properties!).map(([key]) => {
                     const childFieldName = `${name}.${key}` as FieldPath<TFormValue>;

@@ -1,4 +1,4 @@
-import { ArrayPath, FieldPath, FieldValues, useFieldArray } from 'react-hook-form';
+import { ArrayPath, FieldPath, FieldValues, useFieldArray, UseFieldArrayProps } from 'react-hook-form';
 import { WithArrayProps, FieldHocProps, RenderContext, ArrayFieldSchema } from '../../types';
 import { SchemaFormField } from '../SchemaFormField';
 import { useCallback, useMemo } from 'react';
@@ -14,7 +14,9 @@ export interface WithArrayHocProps<
 }
 
 export function withArray<TRenderContext extends RenderContext = RenderContext>(
-    Component: React.ComponentType<WithArrayProps<TRenderContext, any, any>>
+    Component: React.ComponentType<WithArrayProps<TRenderContext, any, any>>,
+    baseRenderContext?: Partial<TRenderContext>,
+    baseSchema?: UseFieldArrayProps<any>['rules']
 ) {
     return function ArrayFieldHoc<TFieldValue extends FieldValues, TFormValue extends FieldValues>({
         form,
@@ -23,8 +25,11 @@ export function withArray<TRenderContext extends RenderContext = RenderContext>(
         renderContext,
         error
     }: WithArrayHocProps<TRenderContext, TFormValue, TFieldValue>) {
+        const arraySchema = useMemo(() => ({
+            ...baseSchema,
+            ...schema
+        } as ArrayFieldSchema<TRenderContext, TFormValue, TFieldValue[]>), [schema]);
 
-        const arraySchema = schema as ArrayFieldSchema<TRenderContext, TFormValue, TFieldValue[]>;
         const rules = useFieldRules(arraySchema);
 
         // Use fieldArray from react-hook-form to manage the array items
@@ -52,6 +57,8 @@ export function withArray<TRenderContext extends RenderContext = RenderContext>(
 
         const validationStats = useMemo(() => getValidationStats(rules), [rules]);
 
+        const fieldRenderContext = useMemo(() => Object.assign({}, baseRenderContext, renderContext), [renderContext]);
+
         return (
             <Component
                 array={array}
@@ -63,7 +70,7 @@ export function withArray<TRenderContext extends RenderContext = RenderContext>(
                 canAddItem={canAddItem}
                 canRemoveItem={canRemoveItem}
                 renderItem={renderItem}
-                renderContext={renderContext}
+                renderContext={fieldRenderContext}
                 error={error}
                 required={validationStats.required}
                 minLength={minItems}
