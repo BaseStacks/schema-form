@@ -8,7 +8,7 @@ import {
 import {
     AdvanceFormProvider,
     FormSubmitBtn,
-} from '../../components/vanilla/form-advance';
+} from '../../../components/vanilla/form-advance';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import React from 'react';
@@ -83,14 +83,10 @@ export const I18n: Story = {
                 maxLength: 20,
             },
             password: {
-                type: 'text',
+                type: 'password',
                 title: 'auth.password.label',
                 placeholder: '••••••••',
-                required: true,
-                minLength: 6,
-                renderContext: {
-                    secureText: true,
-                },
+                required: true
             },
             rememberMe: {
                 type: 'checkbox',
