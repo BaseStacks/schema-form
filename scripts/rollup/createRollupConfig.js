@@ -2,8 +2,6 @@ import commonjs from '@rollup/plugin-commonjs';
 import terser from '@rollup/plugin-terser';
 import typescript from 'rollup-plugin-typescript2';
 
-import pkg from '../../package.json';
-
 /**
  *
  * @returns {import("rollup").RollupOptions}
@@ -20,12 +18,11 @@ export function createRollupConfig(options, callback) {
     output: {
       file: outputName,
       format: options.format,
-      name: 'ReactHookForm',
+      name: 'SchemaForm',
       sourcemap: false,
-      globals: { react: 'React' },
       exports: 'named',
     },
-    external: [...Object.keys(pkg.dependencies), 'react/jsx-runtime'],
+    external: ['react', 'react/jsx-runtime', 'react-hook-form'],
     plugins: [
       typescript({
         tsconfig: options.tsconfig,
@@ -33,16 +30,16 @@ export function createRollupConfig(options, callback) {
         exclude: ['**/__tests__', '**/*.test.ts', '**/__typetest__'],
       }),
       options.format === 'umd' &&
-        commonjs({
-          include: /\/node_modules\//,
-        }),
+      commonjs({
+        include: /\/node_modules\//,
+      }),
       options.format !== 'esm' &&
-        terser({
-          output: { comments: false },
-          compress: {
-            drop_console: true,
-          },
-        }),
+      terser({
+        output: { comments: false },
+        compress: {
+          drop_console: true,
+        },
+      }),
     ].filter(Boolean),
   };
 

@@ -72,7 +72,7 @@ describe('fieldUtils', () => {
 
             const result = getValidationStats(field);
 
-            expect(result).toBeUndefined();
+            expect(result).toEqual({});
         });
     });
 
