@@ -5,7 +5,7 @@
 [![Coverage Status](https://img.shields.io/codecov/c/github/basestacks/schema-form)](https://codecov.io/gh/basestacks/schema-form)
 [![License](https://img.shields.io/npm/l/@basestacks/schema-form)](https://github.com/basestacks/schema-form/blob/main/LICENSE)
 
-A React library built on top of react-hook-form that turns schema definitions into dynamic forms, reducing boilerplate and simplifying validation while maintaining full customizability.
+A React library built on top of [**react-hook-form**](https://github.com/react-hook-form/react-hook-form) that turns schema definitions into dynamic forms, reducing boilerplate and simplifying validation while maintaining full customizability.
 
 ## Table of Contents
 
@@ -29,7 +29,6 @@ A React library built on top of react-hook-form that turns schema definitions in
   - [Validation](#validation)
   - [RenderContext](#rendercontext)
   - [Hooks](#hooks)
-- [License](#license)
 
 ## Features
 
@@ -646,7 +645,3 @@ function ConditionalField({ schema }) {
   // ...
 }
 ```
-
-## License
-
-MIT
