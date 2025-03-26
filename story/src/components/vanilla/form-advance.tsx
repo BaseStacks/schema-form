@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 
 export interface FormContext {
-    readonly secureText?: boolean;
+    readonly inputType?: string;
     readonly submitLabel?: string;
     readonly options?: {
         readonly value: string;
@@ -24,6 +24,7 @@ export function AdvanceFormProvider({ children }: React.PropsWithChildren<{}>) {
                     array: withArray(ArrayField),
                     object: withObject(ObjectField),
                     text: withController(TextField),
+                    password: withController(TextField, { inputType: 'password' }, { minLength: 6 }),
                     textarea: withController(TextArea),
                     checkbox: withController(CheckboxField),
                     select: withController(SelectField),
@@ -91,7 +92,7 @@ export function TextField({ field, name, title, placeholder, required, error, re
         <FieldWrapper name={name} title={title} required={required} error={error}>
             <input
                 {...field}
-                type={renderContext.secureText ? 'password' : 'text'}
+                type={renderContext.inputType ?? 'text'}
                 name={name}
                 id={name}
                 placeholder={placeholder ? t(placeholder) : ''}
@@ -136,7 +137,7 @@ export function NumberField({ field, name, title, placeholder, required, error }
     );
 };
 
-export function CheckboxField({ field, name, title, required, error}: WithControllerProps<FormContext>) {
+export function CheckboxField({ field, name, title, required, error }: WithControllerProps<FormContext>) {
     const { t } = useTranslation();
 
     return (
