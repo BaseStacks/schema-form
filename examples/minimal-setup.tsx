@@ -4,6 +4,7 @@ import React from 'react';
 
 interface FormRenderContext {
     readonly fieldLayout: 'horizontal' | 'vertical';
+    readonly inputType: 'text' | 'password';
 }
 
 function FormProvider({ children }: PropsWithChildren<{}>) {
@@ -12,7 +13,8 @@ function FormProvider({ children }: PropsWithChildren<{}>) {
             components={{
                 Form: FormLayout,
                 fields: {
-                    text: withRegister(TextField),
+                    text: withRegister(TextField, {}, { maxLength: 256 }),
+                    password: withRegister(TextField, { inputType: 'password' }, { minLength: 6 },),
                     controlled: withController(ControlledField),
                     array: withArray(ArrayField),
                     object: withObject(ObjectField),
@@ -37,9 +39,9 @@ function FormLayout({ form, onSubmit, children }: SchemaFormRenderProps<FormRend
     );
 };
 
-function TextField({ register }: WithRegisterProps) {
+function TextField({ register, renderContext }: WithRegisterProps<FormRenderContext>) {
     return (
-        <input {...register} />
+        <input type={renderContext.inputType ?? 'text'} {...register} />
     );
 };
 
@@ -54,7 +56,7 @@ function ControlledField({ field }: WithControllerProps) {
     );
 }
 
-function ArrayField({ array, renderItem }: WithArrayProps) {
+function ArrayField({ array, renderItem }: WithArrayProps<FormRenderContext>) {
     return (
         <div>
             {array.fields.map((_field, index) => renderItem(index))}
@@ -65,7 +67,7 @@ function ArrayField({ array, renderItem }: WithArrayProps) {
     );
 }
 
-function ObjectField({ children }: WithObjectProps) {
+function ObjectField({ children }: WithObjectProps<FormRenderContext>) {
     return (
         <div>
             {children}
