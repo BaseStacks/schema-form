@@ -46,7 +46,7 @@
         "lint:fix": "pnpm lint --fix",
         "start": "cd ./story && pnpm start",
         "test": "jest --config ./scripts/jest/jest.config.ts",
-        "test:coverage": "pnpm test --coverage",
+        "test:coverage": "jest --config ./scripts/jest/jest.config.ts --coverage",
         "test:e2e": "cd ./story && pnpm test",
         "test:watch": "pnpm test--onlyChanged --watch",
         "type": "tsc --noEmit"

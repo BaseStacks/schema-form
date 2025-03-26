@@ -3,24 +3,23 @@ import type { Config } from 'jest';
 const config: Config = {
     preset: 'ts-jest',
     testEnvironment: 'jsdom',
-    moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-    roots: ['<rootDir>/../../src'],
+    moduleFileExtensions: ['ts', 'tsx', 'js'],
+    rootDir: '../../',
+    roots: ['<rootDir>/src'],
     transform: {
         '^.+\\.(ts|tsx)$': ['ts-jest', {
             tsconfig: 'tsconfig.json',
         }],
     },
     moduleNameMapper: {
-        '^src/(.*)$': '<rootDir>/../../src/$1'
+        '^src/(.*)$': '<rootDir>/src/$1'
     },
-    setupFilesAfterEnv: ['<rootDir>/jestSetup.ts'],
+    setupFilesAfterEnv: ['<rootDir>/scripts/jest/jestSetup.ts'],
     collectCoverageFrom: [
-        '**/**/*.{ts,tsx}',
-        '!**/**/*.test.{ts,tsx}',
-        '!**/src/types/**',
-        '!**/node_modules/**',
-        '!**/dist/**',
-        '!**/__tests__/**',
+        'src/**/*.{ts,tsx}',
+        '!src/**/*/*.test.ts',
+        '!src/**/index.ts',
+        '!src/types.ts',
     ],
     coverageThreshold: {
         global: {
@@ -31,6 +30,7 @@ const config: Config = {
         }
     },
     coverageReporters: [
+        'lcov',
         'json',
         'html'
     ]
