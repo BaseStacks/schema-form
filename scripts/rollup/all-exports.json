@@ -1,5 +1,9 @@
 [
     "SchemaForm",
     "SchemaFormField",
-    "SchemaFormProvider"
+    "SchemaFormProvider",
+    "withArray",
+    "withController",
+    "withObject",
+    "withRegister"
 ]

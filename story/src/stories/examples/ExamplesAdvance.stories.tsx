@@ -2,15 +2,15 @@ import type { Meta, StoryObj } from '@storybook/react';
 import {
     FieldSchemas,
     SchemaForm,
+    SchemaFormField,
     SchemaFormProps,
 } from '@basestacks/schema-form';
 import {
     AdvanceFormProvider,
     FormSubmitBtn,
-} from './components/vanilla/form-advance';
+} from '../../components/vanilla/form-advance';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SchemaFormField } from '../../src/components/SchemaFormField';
 import React from 'react';
 
 interface ContentProps extends SchemaFormProps {
@@ -28,7 +28,7 @@ function Content({ showLanguageSwitcher, ...props }: ContentProps) {
     return (
         <AdvanceFormProvider>
             <div>
-                <SchemaForm shouldUseNativeValidation={true} {...props} />
+                <SchemaForm {...props} />
                 {showLanguageSwitcher && (
                     <div className="border-t mt-4 pt-4 flex gap-2 text-sm text-gray-500">
                         <span
@@ -130,6 +130,16 @@ export const CustomLayout: Story = {
                     { value: '3', label: 'John Smith' },
                 ],
             },
+            status: {
+                type: 'select',
+                title: 'Status',
+                placeholder: 'Select status',
+                options: [
+                    { value: '1', label: 'Open' },
+                    { value: '2', label: 'In Progress' },
+                    { value: '3', label: 'Done' },
+                ],
+            }
         } satisfies FieldSchemas,
         children: ({ form, onSubmit }) => {
             return (
@@ -139,8 +149,9 @@ export const CustomLayout: Story = {
                             <SchemaFormField name="task" />
                             <SchemaFormField name="description" />
                         </div>
-                        <div className="col-span-4">
+                        <div className="col-span-4 flex flex-col gap-4">
                             <SchemaFormField name="assignee" />
+                            <SchemaFormField name="status" />
                         </div>
                     </div>
                     <FormSubmitBtn>Save</FormSubmitBtn>

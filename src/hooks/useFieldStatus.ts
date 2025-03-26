@@ -3,9 +3,7 @@ import { BaseFieldSchema } from '../types';
 import { evaluateCondition } from '../utils/conditionUtils';
 
 export type FieldStatus = {
-    isVisible: boolean;
-    isReadOnly: boolean;
-    isDisabled: boolean;
+    readonly isVisible: boolean;
 };
 
 export const useFieldStatus = <TFormValue extends FieldValues>(field: BaseFieldSchema, formValues: TFormValue): FieldStatus => {
@@ -15,19 +13,11 @@ export const useFieldStatus = <TFormValue extends FieldValues>(field: BaseFieldS
     // If not visible, return default state
     if (!isVisible) {
         return {
-            isVisible: false,
-            isReadOnly: false,
-            isDisabled: false
+            isVisible: false
         };
     }
 
-    // Only evaluate other conditions if field is visible
-    const isReadOnly = field.readOnly ? evaluateCondition(field.readOnly, formValues) : false;
-    const isDisabled = field.disabled ? evaluateCondition(field.disabled, formValues) : false;
-
     return {
-        isVisible: true,
-        isReadOnly,
-        isDisabled
+        isVisible: true
     };
 };

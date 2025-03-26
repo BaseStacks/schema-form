@@ -11,5 +11,5 @@ export const useGlobalContext = () => {
     if (!context) {
         throw new Error('useFormContext must be used within a SchemaForm');
     }
-    return context as Required<SchemaFormGlobalContextType>;
+    return context as SchemaFormGlobalContextType;
 };

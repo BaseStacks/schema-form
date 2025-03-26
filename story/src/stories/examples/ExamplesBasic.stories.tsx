@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { FormProvider } from './components/vanilla/form';
-import { SchemaForm, SchemaFormProps } from '@basestacks/schema-form';
+import { FormProvider } from '../../components/vanilla/form';
+import { FieldSchemas, RenderContext, SchemaForm, SchemaFormProps, withRegister } from '@basestacks/schema-form';
 import React from 'react';
+import { fn } from '@storybook/test';
 
-function Content(props: SchemaFormProps) {
+function Content(props: SchemaFormProps<any, RenderContext>) {
     return (
         <FormProvider>
             <SchemaForm shouldUseNativeValidation={true} {...props} />
@@ -59,71 +60,80 @@ export const GettingStarted: Story = {
         renderContext: {
             submitLabel: 'Sign in',
         },
-        onSubmit: console.log,
+        onSubmit: fn(),
     },
+};
+
+interface RegisterValues {
+    username: string;
+    password: string;
+    repeatPassword: string;
+    agreeTermAndConditions: boolean;
+}
+
+const registerSchema: FieldSchemas<RegisterValues, RenderContext> = {
+    username: {
+        type: 'text',
+        title: 'Username',
+        placeholder: 'Enter username',
+        required: true,
+        minLength: 3,
+        maxLength: 6,
+    },
+    password: {
+        type: 'text',
+        title: 'Password',
+        placeholder: '••••••••',
+        required: true,
+        minLength: 6,
+        renderContext: {
+            secureText: true,
+        },
+    },
+    repeatPassword: {
+        type: 'text',
+        title: 'Repeat password',
+        placeholder: '••••••••',
+        minLength: 6,
+        renderContext: {
+            secureText: true,
+        },
+        validate: (value, formValue) => {
+            return formValue.password === value || 'Passwords do not match';
+        },
+    },
+    agreeTermAndConditions: {
+        validate: (value) => value || 'You must agree to terms and conditions',
+        Component: withRegister(function CustomCheckboxField({ register, name }) {
+            return (
+                <div className="flex items-center col-span-12">
+                    <input
+                        {...register}
+                        type="checkbox"
+                        name={name}
+                        id={name}
+                        className="rounded text-blue-600 focus:ring-blue-500 h-4 w-4"
+                    />
+                    <label
+                        htmlFor={name}
+                        className="ml-2 block text-sm font-medium text-gray-900"
+                    >
+                        Agree to <a href="https://example.com">terms</a> and{' '}
+                        <a href="https://example.com">conditions</a>
+                    </label>
+                </div>
+            );
+        }),
+    }
 };
 
 export const CustomComponent: Story = {
     args: {
-        fields: {
-            username: {
-                type: 'text',
-                title: 'Username',
-                placeholder: 'Enter username',
-                required: true,
-                minLength: 3,
-                maxLength: 6,
-            },
-            password: {
-                type: 'text',
-                title: 'Password',
-                placeholder: '••••••••',
-                required: true,
-                minLength: 6,
-                renderContext: {
-                    secureText: true,
-                },
-            },
-            repeatPassword: {
-                type: 'text',
-                title: 'Repeat password',
-                placeholder: '••••••••',
-                minLength: 6,
-                renderContext: {
-                    secureText: true,
-                },
-                validate: (value, formValue) => {
-                    return formValue.password === value || 'Passwords do not match';
-                },
-            },
-            agreeTermAndConditions: {
-                Component: function CustomCheckboxField({ ref, name, onChange }) {
-                    return (
-                        <div className="flex items-center col-span-12">
-                            <input
-                                ref={ref}
-                                type="checkbox"
-                                name={name}
-                                id={name}
-                                onChange={onChange}
-                                className="rounded text-blue-600 focus:ring-blue-500 h-4 w-4"
-                            />
-                            <label
-                                htmlFor={name}
-                                className="ml-2 block text-sm font-medium text-gray-900"
-                            >
-                Agree to <a href="https://example.com">terms</a> and{' '}
-                                <a href="https://example.com">conditions</a>
-                            </label>
-                        </div>
-                    );
-                },
-            },
-        },
+        fields: registerSchema,
         renderContext: {
             submitLabel: 'Sign up',
         },
-        onSubmit: console.log,
+        onSubmit: fn(),
     },
 };
 
@@ -144,7 +154,7 @@ export const CustomErrorMessage: Story = {
         renderContext: {
             submitLabel: 'View content',
         },
-        onSubmit: console.log,
+        onSubmit: fn(),
     },
 };
 
@@ -198,41 +208,47 @@ export const ConditionalField: Story = {
                 },
             },
         },
-        onSubmit: console.log,
+        onSubmit: fn(),
     },
+};
+
+interface ArrayValues {
+    tags: { value: string; color: string }[];
+}
+
+const arraySchema: FieldSchemas<ArrayValues, RenderContext> = {
+    tags: {
+        type: 'array',
+        title: 'Tags',
+        placeholder: 'Add a tag',
+        required: true,
+        minLength: 2,
+        maxLength: 5,
+        items: {
+            type: 'object',
+            properties: {
+                value: {
+                    type: 'text',
+                    placeholder: 'Enter tag',
+                    required: true,
+                },
+                color: {
+                    type: 'select',
+                    placeholder: 'Select color',
+                    options: [
+                        { value: 'red', label: 'Red' },
+                        { value: 'green', label: 'Green' },
+                        { value: 'blue', label: 'Blue' },
+                    ],
+                },
+            }
+        },
+    }
 };
 
 export const ArrayField: Story = {
     args: {
-        fields: {
-            tags: {
-                type: 'array',
-                title: 'Tags',
-                placeholder: 'Add a tag',
-                required: true,
-                minLength: 2,
-                maxLength: 5,
-                items: {
-                    type: 'object',
-                    properties: {
-                        value: {
-                            type: 'text',
-                            placeholder: 'Enter tag',
-                            required: true,
-                        },
-                        color: {
-                            type: 'select',
-                            placeholder: 'Select color',
-                            options: [
-                                { value: 'red', label: 'Red' },
-                                { value: 'green', label: 'Green' },
-                                { value: 'blue', label: 'Blue' },
-                            ],
-                        },
-                    },
-                },
-            },
-        },
-        onSubmit: console.log,
-    },
+        fields: arraySchema,
+        onSubmit: fn(),
+    }
 };
