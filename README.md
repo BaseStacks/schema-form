@@ -29,6 +29,7 @@ A React library built on top of [**react-hook-form**](https://github.com/react-h
   - [Validation](#validation)
   - [RenderContext](#rendercontext)
   - [Hooks](#hooks)
+- [Contributing](#contributing)
 
 ## Features
 
@@ -645,3 +646,14 @@ function ConditionalField({ schema }) {
   // ...
 }
 ```
+
+## Contributing
+
+We welcome contributions to make `@basestacks/schema-form` even better! Whether you're fixing bugs, improving documentation, or adding new features, your help is appreciated.
+
+### Development Requirements
+
+- Node.js 20
+- pnpm v9
+
+For detailed contribution guidelines, please read our [CONTRIBUTING.md](./CONTRIBUTING.md) document.
