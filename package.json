@@ -1,6 +1,6 @@
 {
     "name": "@basestacks/schema-form",
-    "version": "0.1.1-dev.11",
+    "version": "0.1.1-dev.12",
     "description": "A small React library for building dynamic forms using JSON schemas",
     "homepage": "https://github.com/BaseStacks/schema-form",
     "repository": {
