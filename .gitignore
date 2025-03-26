@@ -30,9 +30,6 @@ coverage
 # Typescript
 *.tsbuildinfo
 
-# Editor
-.vscode
-
 # Api Extractor
 temp
 
