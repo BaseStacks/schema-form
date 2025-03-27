@@ -59,7 +59,6 @@ export function withArray<TRenderContext extends RenderContext = RenderContext>(
 
 
         const fieldRenderContext = useMemo(() => Object.assign({}, baseRenderContext, renderContext), [renderContext]);
-        console.log(error);
         
         return (
             <Component
