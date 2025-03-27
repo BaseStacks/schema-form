@@ -1,7 +1,16 @@
 {
     "name": "@basestacks/schema-form",
     "version": "0.1.1",
-    "description": "A small React library for building dynamic forms using JSON schemas",
+    "description": "A React library built on top of react-hook-form that turns schema definitions into dynamic forms, reducing boilerplate and simplifying validation while maintaining full customizability.",
+    "keywords": [
+        "react",
+        "react-hook-form",
+        "form",
+        "forms",
+        "form-builder",
+        "dynamic-form",
+        "schema-form"
+    ],
     "homepage": "https://github.com/BaseStacks/schema-form",
     "repository": {
         "type": "git",
@@ -42,13 +51,13 @@
         "build:modern": "rollup --bundleConfigAsCjs -c ./scripts/rollup/rollup.config.js",
         "build:watch": "pnpm build:modern -w",
         "clean": "rimraf dist",
+        "e2e": "cypress run",
         "lint": "eslint **/*.{ts,tsx}",
         "lint:fix": "pnpm lint --fix",
         "start": "pnpm build:esm && cd ./examples && pnpm install && pnpm start",
         "test": "jest --config ./scripts/jest/jest.config.ts",
         "test:coverage": "pnpm test --coverage",
         "test:watch": "pnpm test--onlyChanged --watch",
-        "e2e": "cypress run",
         "type": "tsc --noEmit"
     },
     "dependencies": {
