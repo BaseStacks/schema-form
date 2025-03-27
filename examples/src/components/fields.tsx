@@ -28,9 +28,9 @@ export function InputField({
                 id={name}
                 type={renderContext.inputType ?? 'text'}
                 placeholder={placeholder}
-                data-error={error?.message}
                 {...register}
             />
+            {error?.message && <div className="field-error">{error?.message}</div>}
         </div>
     );
 }
@@ -39,6 +39,7 @@ export function CheckboxField({
     name,
     title,
     register,
+    error
 }: WithRegisterProps<FormRenderContext>) {
     return (
         <div className="field">
@@ -46,6 +47,7 @@ export function CheckboxField({
                 <input type="checkbox" id={name} {...register} />{' '}
                 <label htmlFor={name}>{title}</label>
             </div>
+            {error?.message && <div className="field-error">{error?.message}</div>}
         </div>
     );
 }
@@ -56,6 +58,7 @@ export function SelectField({
     name,
     title,
     placeholder,
+    error,
 }: WithRegisterProps<FormRenderContext>) {
     return (
         <div className="field">
@@ -70,6 +73,7 @@ export function SelectField({
                     </option>
                 ))}
             </select>
+            {error?.message && <div className="field-error">{error?.message}</div>}
         </div>
     );
 }
@@ -78,10 +82,13 @@ export function ObjectField({ children }: WithObjectProps) {
     return <div className="field-object">{children}</div>;
 }
 
-export function ArrayField({ title, array, renderItem }: WithArrayProps) {
+export function ArrayField({ title, array, error, renderItem }: WithArrayProps) {
     return (
         <div className="field-array">
-            <label>{title}</label>
+            <div>
+                <label>{title}</label>
+                {error?.root?.message && <div className="field-error">{error?.root?.message}</div>}
+            </div>
             <div className="field-array-items">
                 {array.fields.map((field, index) => (
                     <div key={field.id} className="field-array-item">
@@ -96,4 +103,3 @@ export function ArrayField({ title, array, renderItem }: WithArrayProps) {
         </div>
     );
 }
-

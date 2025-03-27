@@ -72,7 +72,7 @@ export interface SchemaFormGlobalContextType {
     /** Resolver type to use for schema validation */
     readonly validationResolver?: ResolverType<any>;
     /** Function to get default validation messages */
-    readonly getDefaultMessages?: (validationStats: ValidationStats, options: RegisterOptions<any>) => DefaultMessages;
+    readonly getDefaultMessages?: (validationStats: ValidationStats, options: FieldSchemaType<any>) => DefaultMessages;
 }
 
 /**
@@ -168,6 +168,14 @@ export type FieldSchemas<
         | ObjectFieldSchema<TRenderContext, TFormValue, TFormValue[K] extends FieldValues ? TFormValue[K] : any>
         | ArrayFieldSchema<TRenderContext, TFormValue, TFormValue[K] extends FieldValues ? TFormValue[K] : any>;
     };
+
+export type FieldSchemaType<
+    TFormValue extends FieldValues = FieldValues,
+    TRenderContext extends RenderContext = RenderContext
+> = | CustomFieldSchema<TRenderContext, TFormValue>
+    | GenericFieldSchema<TRenderContext, TFormValue>
+    | ObjectFieldSchema<TRenderContext, TFormValue, any>
+    | ArrayFieldSchema<TRenderContext, TFormValue, any>;
 
 export interface BaseFieldProps<
     TRenderContext extends RenderContext = RenderContext

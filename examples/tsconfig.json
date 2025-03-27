@@ -3,11 +3,6 @@
         "./src/**/*"
     ],
     "compilerOptions": {
-        "paths": {
-            "@basestacks/schema-form": [
-                "../src"
-            ]
-        },
         "strict": true,
         "esModuleInterop": true,
         "lib": [

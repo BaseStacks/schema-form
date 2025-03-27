@@ -44,7 +44,7 @@
         "clean": "rimraf dist",
         "lint": "eslint **/*.{js,ts,tsx}",
         "lint:fix": "pnpm lint --fix",
-        "start": "cd ./examples && pnpm start",
+        "start": "pnpm build:esm && cd ./examples && pnpm install && pnpm start",
         "test": "jest --config ./scripts/jest/jest.config.ts",
         "test:coverage": "pnpm test --coverage",
         "test:e2e": "cd ./story && pnpm test",

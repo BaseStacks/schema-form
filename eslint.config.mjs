@@ -23,24 +23,20 @@ export default tsEslint.config(
             'only-warn': onlyWarn,
         },
         rules: {
-            ...reactHooks.configs.recommended.rules,
-            "@typescript-eslint/no-unused-vars": [
-                'warn',
-                {
-                    "argsIgnorePattern": "^_",
-                }
-            ],
-            '@typescript-eslint/no-empty-object-type': 'off',
-            "@typescript-eslint/no-explicit-any": "off",
-            'react-refresh/only-export-components': [
-                'warn',
-                { allowConstantExport: true },
-            ],
+            // Common rules
+            "no-console": ["warn", { allow: ["warn", "error"] }],
             'semi': "warn",
             'indent': ['warn', 4, { "SwitchCase": 1 }],
             'quotes': ['warn', 'single'],
             'jsx-quotes': ['warn', 'prefer-double'],
-            'eol-last': ['warn', 'always']
+            'eol-last': ['warn', 'always'],
+            // Typescript
+            "@typescript-eslint/no-unused-vars": ['warn', { "argsIgnorePattern": "^_", }],
+            '@typescript-eslint/no-empty-object-type': 'off',
+            "@typescript-eslint/no-explicit-any": "off",
+            // React
+            'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+            ...reactHooks.configs.recommended.rules,
         },
     },
 )
