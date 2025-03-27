@@ -1,55 +1,71 @@
-import { RegisterOptions } from 'react-hook-form';
-import { DefaultMessages, ValidationRules, ValidationStats } from '../types';
+import { DefaultMessages, FieldSchemaType, ValidationRules, ValidationStats } from '../types';
 
-const validationKeys: (keyof ValidationRules)[] = ['required', 'minLength', 'maxLength', 'pattern', 'min', 'max'];
+const validationKeys: (keyof ValidationRules)[] = ['required', 'minLength', 'maxLength', 'pattern', 'min', 'max', 'validate'];
 
-export const getValidationProps = (field: RegisterOptions<any>) => {
-    const validationProps = Object.keys(field).filter(key => (validationKeys as string[]).includes(key));
-    if (!validationProps.length) return undefined;
-    return validationProps.reduce((acc, key) => {
-        acc[key] = field[key];
+export const getValidationProps = (field: FieldSchemaType<any>) => {
+    const validationPropKeys = Object.keys(field).filter(key => (validationKeys as string[]).includes(key));
+    if (!validationPropKeys.length) return undefined;
+    return validationPropKeys.reduce((acc, key) => {
+        acc[key] = field[key as keyof FieldSchemaType<any>];
         return acc;
-    }, {} as ValidationRules);
+    }, {} as Record<string, any>);
 };
 
-export const getValidationStats = (field: RegisterOptions<any>): ValidationStats | undefined => {
+export const getValidationStats = (field: FieldSchemaType<any>): ValidationStats | undefined => {
+    if (!field) return undefined;
+    
     const validationProps = getValidationProps(field);
 
-    if (!validationProps) return {};
+    if (!validationProps) return undefined;
 
     const validationStats = Object.entries(validationProps).reduce((acc, [key, rule]) => {
         if (rule instanceof RegExp) {
-            acc.set(key, rule);
+            acc[key] = rule;
         }
         else if (typeof rule === 'object') {
-            acc.set(key, rule.value);
-        }
-        else if (key === 'required') {
-            acc[key] = !!rule;
+            acc[key] = rule.value;
         }
         else {
             acc[key] = rule;
         }
         return acc;
-    }, new Map<string, any>());
+    }, {} as Record<string, any>);
 
-    return Object.fromEntries(validationStats) as ValidationStats;
+    return validationStats;
 };
 
-export const getValidationRules = (field: RegisterOptions<any>, defaultMessages?: DefaultMessages) => {
-    const validationRules: ValidationRules = {};
+export const getValidationRules = (field: FieldSchemaType<any>, defaultMessages?: DefaultMessages) => {
+    const validationRules: Record<string, any> = {};
 
     const validationProps = getValidationProps(field);
-    for (const [key, value] of Object.entries(validationProps ?? {})) {
-        if (typeof value == 'object') {
-            validationRules[key] = value;
-        }
-        else if (value !== null || value !== undefined) {
-            validationRules[key] = {
-                value,
-                message: defaultMessages?.[key]
-            };
+
+    if (validationProps) {
+        for (const [key, rule] of Object.entries(validationProps ?? {})) {
+            if (rule === null || rule === undefined) {
+                continue;
+            }
+
+            if (key === 'validate') {
+                validationRules[key] = rule;
+            }
+            else if (key === 'required') {
+                const message = typeof rule === 'boolean'
+                    ? defaultMessages?.required
+                    : rule;
+
+                validationRules[key] = message;
+            }
+            else if (typeof rule == 'object') {
+                validationRules[key] = rule;
+            }
+            else {
+                validationRules[key] = {
+                    value: rule,
+                    message: defaultMessages?.[key as keyof DefaultMessages]
+                };
+            }
         }
     }
-    return validationRules;
+
+    return validationRules as ValidationRules;
 };

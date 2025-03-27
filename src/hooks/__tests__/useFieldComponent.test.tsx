@@ -35,4 +35,9 @@ describe('useFieldComponent', () => {
         const { result } = renderHook(() => useFieldComponent('unknown'));
         expect(result.current).toBeUndefined();
     });
+
+    it('should return undefined for missing field types', () => {
+        const { result } = renderHook(() => useFieldComponent(undefined));
+        expect(result.current).toBeNull();
+    });
 });

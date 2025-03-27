@@ -74,6 +74,82 @@ describe('fieldUtils', () => {
 
             expect(result).toBeUndefined();
         });
+
+        test('extracts required validation rule correctly', () => {
+            const rules = { required: 'This field is required' };
+            const stats = getValidationStats(rules);
+            
+            expect(stats).toHaveProperty('required', 'This field is required');
+        });
+    
+        test('extracts min validation rule correctly', () => {
+            const rules = { min: 5 };
+            const stats = getValidationStats(rules);
+            
+            expect(stats).toHaveProperty('min', 5);
+        });
+    
+        test('extracts max validation rule correctly', () => {
+            const rules = { max: 100 };
+            const stats = getValidationStats(rules);
+            
+            expect(stats).toHaveProperty('max', 100);
+        });
+    
+        test('extracts minLength validation rule correctly', () => {
+            const rules = { minLength: 3 };
+            const stats = getValidationStats(rules);
+            
+            expect(stats).toHaveProperty('minLength', 3);
+        });
+    
+        test('extracts maxLength validation rule correctly', () => {
+            const rules = { maxLength: 50 };
+            const stats = getValidationStats(rules);
+            
+            expect(stats).toHaveProperty('maxLength', 50);
+        });
+    
+        test('extracts pattern validation rule correctly', () => {
+            const pattern = /^[A-Z]+$/;
+            const rules = { pattern };
+            const stats = getValidationStats(rules);
+            
+            expect(stats).toHaveProperty('pattern', pattern);
+        });
+    
+        test('handles multiple validation rules correctly', () => {
+            const pattern = /^[0-9]+$/;
+            const rules = { 
+                required: true, 
+                min: 1, 
+                max: 100, 
+                minLength: 1, 
+                maxLength: 10,
+                pattern
+            };
+            
+            const stats = getValidationStats(rules);
+            
+            expect(stats).toEqual({
+                required: true,
+                min: 1,
+                max: 100,
+                minLength: 1,
+                maxLength: 10,
+                pattern
+            });
+        });
+    
+        test('returns empty object for undefined rules', () => {
+            const stats = getValidationStats(undefined!);
+            expect(stats).toEqual(undefined);
+        });
+    
+        test('returns empty object for empty rules', () => {
+            const stats = getValidationStats({});
+            expect(stats).toEqual(undefined);
+        });
     });
 
     describe('getValidationOptions', () => {
@@ -93,7 +169,7 @@ describe('fieldUtils', () => {
             const result = getValidationRules(field, defaultMessages);
 
             expect(result).toEqual({
-                required: { value: true, message: 'This field is required' },
+                required: 'This field is required',
                 minLength: { value: 5, message: 'Minimum length not met' },
                 maxLength: { value: 10, message: 'Maximum length exceeded' }
             });
@@ -104,7 +180,7 @@ describe('fieldUtils', () => {
             const pattern = /[a-z]+/;
 
             const field: RegisterOptions<any> = {
-                required: { value: true, message: 'Required field' },
+                required: 'Required field',
                 pattern: { value: pattern, message: customMessage }
             };
 
@@ -116,7 +192,7 @@ describe('fieldUtils', () => {
             const result = getValidationRules(field, defaultMessages);
 
             expect(result).toEqual({
-                required: { value: true, message: 'Required field' },
+                required: 'Required field',
                 pattern: { value: pattern, message: customMessage }
             });
         });

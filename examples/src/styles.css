@@ -1,0 +1,52 @@
+.App {
+  font-family: sans-serif;
+}
+
+form {
+  max-width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+nav {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+a {
+  cursor: pointer;
+}
+
+a.active {
+  color: blue;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.field-array-items {
+  margin-bottom: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field-array-item {
+  width: 100%;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.field-object {
+  width: 100%;
+}
+
+.field-error {
+  color: red;
+  font-size: small;
+}

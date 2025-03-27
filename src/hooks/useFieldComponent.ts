@@ -5,8 +5,13 @@ import { useGlobalContext } from './useGlobalContext';
  * Custom hook to get the appropriate field component for a schema
  * This follows React Hook naming conventions and rules
  */
-export const useFieldComponent = (type: string) => {
+export const useFieldComponent = (type?: string) => {
     // Get custom fields from form context
     const { components: { fields } } = useGlobalContext();
+
+    if (!type) {
+        return null;
+    }
+
     return fields[type];
 };

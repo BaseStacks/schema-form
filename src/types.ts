@@ -4,7 +4,7 @@ export type RenderContext = any;
 
 export type ValidationSchema = unknown;
 
-export type ValidationRules = Pick<RegisterOptions<any>, 'required' | 'minLength' | 'maxLength' | 'pattern' | 'min' | 'max'>;
+export type ValidationRules = Pick<RegisterOptions<any>, 'required' | 'minLength' | 'maxLength' | 'pattern' | 'min' | 'max' | 'validate'>;
 
 export type ResolverType<T extends FieldValues = FieldValues> = (schema: any, schemaOptions?: any, resolverOptions?: any) => Resolver<T>;
 
@@ -24,7 +24,7 @@ export type SchemaFormRenderProps<TRenderContext extends RenderContext = RenderC
 };
 
 export interface ValidationStats {
-    readonly required?: boolean;
+    readonly required?: boolean | string;
     readonly minLength?: number;
     readonly maxLength?: number;
     readonly pattern?: string;
@@ -45,20 +45,11 @@ export type DefaultMessages = {
 
 export interface SchemaFormComponents<TRenderContext extends RenderContext = RenderContext> {
     /** Form component used to render the form */
-    readonly Form: React.ComponentType<SchemaFormRenderProps<TRenderContext>>;
+    readonly Form: React.ComponentType<SchemaFormRenderProps<TRenderContext, any>>;
     /** Map of field components by field type */
     readonly fields: {
         readonly [key: string]: React.ComponentType<FieldHocProps<TRenderContext, any>>;
     };
-}
-
-export interface ValidationStats {
-    readonly required?: boolean;
-    readonly minLength?: number;
-    readonly maxLength?: number;
-    readonly pattern?: string;
-    readonly min?: number;
-    readonly max?: number;
 }
 
 /**
@@ -66,25 +57,23 @@ export interface ValidationStats {
  */
 export interface SchemaFormGlobalContextType {
     /** Component overrides for form and fields */
-    readonly components?: SchemaFormComponents;
+    readonly components: SchemaFormComponents;
     /** Global render context */
     readonly renderContext?: RenderContext;
-    /** Resolver type to use for schema validation */
-    readonly validationResolver?: ResolverType<any>;
     /** Function to get default validation messages */
-    readonly getDefaultMessages?: (validationStats: ValidationStats, options: RegisterOptions<any>) => DefaultMessages;
+    readonly getDefaultMessages?: (validationStats: ValidationStats, options: FieldSchemaType<any>) => DefaultMessages;
 }
 
 /**
  * Context type for a specific JSON form instance
  */
-export interface SchemaFormContextType<TFormValue extends FieldValues = FieldValues> {
+export interface SchemaFormContextType<TFormValue extends FieldValues = FieldValues, TRenderContext extends RenderContext = RenderContext> {
     /** Form control object */
     readonly form: UseFormReturn<TFormValue>;
     /** Field schema definitions */
-    readonly fields: FieldSchemas;
+    readonly fields: FieldSchemas<TFormValue, TRenderContext>;
     /** Render context */
-    readonly renderContext: unknown;
+    readonly renderContext: TRenderContext;
 }
 
 /**
@@ -113,7 +102,7 @@ export type BaseFieldSchema<
     readonly visible?: ConditionedRule<TFormValue>;
 
     // Context and component overrides
-    readonly renderContext?: TRenderContext;
+    readonly renderContext?: Partial<TRenderContext>;
 };
 
 export type GenericFieldSchema<
@@ -168,6 +157,14 @@ export type FieldSchemas<
         | ObjectFieldSchema<TRenderContext, TFormValue, TFormValue[K] extends FieldValues ? TFormValue[K] : any>
         | ArrayFieldSchema<TRenderContext, TFormValue, TFormValue[K] extends FieldValues ? TFormValue[K] : any>;
     };
+
+export type FieldSchemaType<
+    TFormValue extends FieldValues = FieldValues,
+    TRenderContext extends RenderContext = RenderContext
+> = | CustomFieldSchema<TRenderContext, TFormValue>
+    | GenericFieldSchema<TRenderContext, TFormValue>
+    | ObjectFieldSchema<TRenderContext, TFormValue, any>
+    | ArrayFieldSchema<TRenderContext, TFormValue, any>;
 
 export interface BaseFieldProps<
     TRenderContext extends RenderContext = RenderContext

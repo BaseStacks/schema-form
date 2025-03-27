@@ -286,10 +286,7 @@ import { SchemaForm } from '@basestacks/schema-form';
 | `onSubmit` | `SubmitHandler<TFormValue>` | | Form submission handler |
 | `renderContext` | `TRenderContext` | | Context data passed to field renderers |
 | `children` | `(props: SchemaFormRenderProps) => ReactNode` | | Custom render function |
-| `schema` | `ValidationSchema` | | Schema for validation |
-| `schemaOptions` | `any` | | Options for validation schema |
-| `resolverOptions` | `any` | | Options for the validation resolver |
-| `createSchema` | `CreateValidationSchema<TFormValue>` | | Function to create validation schema |
+schema |
 
 #### SchemaFormProvider
 
@@ -361,6 +358,24 @@ const TextField = ({ name, title, register, error }) => (
 const RegisteredTextField = withRegister(TextField);
 ```
 
+**Function Signature:**
+
+```tsx
+withRegister<TRenderContext>(
+  Component: React.ComponentType<WithRegisterProps<TRenderContext>>,
+  baseRenderContext?: Partial<TRenderContext>,
+  baseSchema?: RegisterOptions<any>
+)
+```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `Component` | `React.ComponentType<WithRegisterProps<TRenderContext>>` | Component to wrap |
+| `baseRenderContext` | `Partial<TRenderContext>` | Default render context to apply to all instances |
+| `baseSchema` | `RegisterOptions<any>` | Default schema options to apply to all instances |
+
 **Props passed to wrapped component:**
 
 | Prop | Type | Description |
@@ -407,6 +422,24 @@ const SelectField = ({ field, fieldState, title }) => (
 
 const ControlledSelectField = withController(SelectField);
 ```
+
+**Function Signature:**
+
+```tsx
+withController<TRenderContext>(
+  Component: React.ComponentType<WithControllerProps<TRenderContext>>,
+  baseRenderContext?: Partial<TRenderContext>,
+  baseSchema?: RegisterOptions<any>
+)
+```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `Component` | `React.ComponentType<WithControllerProps<TRenderContext>>` | Component to wrap |
+| `baseRenderContext` | `Partial<TRenderContext>` | Default render context to apply to all instances |
+| `baseSchema` | `RegisterOptions<any>` | Default schema options to apply to all instances |
 
 **Props passed to wrapped component:**
 
@@ -456,6 +489,24 @@ const ArrayField = ({ title, array, renderItem, canAddItem, canRemoveItem }) => 
 const ArrayFieldComponent = withArray(ArrayField);
 ```
 
+**Function Signature:**
+
+```tsx
+withArray<TRenderContext>(
+  Component: React.ComponentType<WithArrayProps<TRenderContext, any, any>>,
+  baseRenderContext?: Partial<TRenderContext>,
+  baseSchema?: UseFieldArrayProps<any>['rules']
+)
+```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `Component` | `React.ComponentType<WithArrayProps<TRenderContext, any, any>>` | Component to wrap |
+| `baseRenderContext` | `Partial<TRenderContext>` | Default render context to apply to all instances |
+| `baseSchema` | `UseFieldArrayProps<any>['rules']` | Default validation rules to apply to all array instances |
+
 **Props passed to wrapped component:**
 
 | Prop | Type | Description |
@@ -488,6 +539,22 @@ const ObjectField = ({ title, children }) => (
 
 const ObjectFieldComponent = withObject(ObjectField);
 ```
+
+**Function Signature:**
+
+```tsx
+withObject<TRenderContext>(
+  Component: React.ComponentType<WithObjectProps<TRenderContext, any, any>>,
+  baseRenderContext?: TRenderContext
+)
+```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `Component` | `React.ComponentType<WithObjectProps<TRenderContext, any, any>>` | Component to wrap |
+| `baseRenderContext` | `TRenderContext` | Default render context to apply to all instances |
 
 **Props passed to wrapped component:**
 
@@ -565,6 +632,22 @@ Field type-specific properties:
 | `select` | `options: SelectOption[]` |
 | `object` | `properties: ObjectFieldProperties` |
 | `array` | `items: ObjectFieldSchema`, `minLength`, `maxLength` |
+
+#### SchemaFormRenderProps
+
+The `SchemaFormRenderProps` type provides the structure for the props passed to the `SchemaForm` component's children or custom form layouts.
+
+**Properties:**
+
+| Property       | Type                          | Description                                                                 |
+|----------------|-------------------------------|-----------------------------------------------------------------------------|
+| `form`         | `UseFormReturn<TFormValue>`   | The form instance from `react-hook-form`.                                  |
+| `fields`       | `FieldSchemas<TFormValue>`    | The schema definitions for all form fields.                                |
+| `onSubmit`     | `SubmitHandler<TFormValue>`   | The function to handle form submission.                                    |
+| `renderContext`| `TRenderContext`              | The merged render context for the form.                                    |
+| `children`     | `React.ReactNode`             | The rendered child components of the form.                                 |
+
+This type is useful for creating custom form layouts or accessing form-level properties in a structured way.
 
 #### Validation
 

@@ -5,7 +5,6 @@ import { BaseFieldSchema, RenderContext } from '../types';
 
 interface PathItem {
     readonly name: string;
-    readonly isArrayItem?: boolean;
 }
 
 export const useFieldSchema = <
@@ -36,7 +35,7 @@ export const useFieldSchema = <
             }
             else {
                 const parent = pathItems[pathItems.length - 1];
-                if (parent && parent.isArrayItem) {
+                if (parent) {
                     name += 'properties.';
                 }
 
@@ -44,8 +43,7 @@ export const useFieldSchema = <
             }
 
             pathItems.push({
-                name,
-                isArrayItem
+                name
             });
         }
 

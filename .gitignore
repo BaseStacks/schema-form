@@ -30,11 +30,10 @@ coverage
 # Typescript
 *.tsbuildinfo
 
-# Editor
-.vscode
-
 # Api Extractor
 temp
 
-# Storybook
-storybook-static
+# Cypress
+cypress/screenshots
+cypress/videos
+
