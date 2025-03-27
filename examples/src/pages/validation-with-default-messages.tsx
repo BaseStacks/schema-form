@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { FieldSchemas, SchemaForm, SchemaFormProvider, withArray, withObject, withRegister } from '@basestacks/schema-form';
+import { FieldSchemas, SchemaForm, SchemaFormProvider } from '@basestacks/schema-form';
 import { ExampleFormProps, withExample } from '../components/hoc/withExample';
 import { ArrayField, CheckboxField, FormLayout, FormRenderContext, InputField, ObjectField, SelectField } from '../components/fields';
 
@@ -9,11 +9,11 @@ function FormProvider({ children }: PropsWithChildren) {
             components={{
                 Form: FormLayout,
                 fields: {
-                    text: withRegister(InputField),
-                    checkbox: withRegister(CheckboxField),
-                    select: withRegister(SelectField),
-                    array: withArray(ArrayField),
-                    object: withObject(ObjectField)
+                    text: InputField,
+                    checkbox: CheckboxField,
+                    select: SelectField,
+                    array: ArrayField,
+                    object: ObjectField
                 },
             }}
             getDefaultMessages={(validations, schema) => {

@@ -1,6 +1,8 @@
 import React from 'react';
-import { SchemaFormContextType, SchemaFormGlobalContextType } from './types';
+import { SchemaFieldContextType, SchemaFormContextType, SchemaFormGlobalContextType } from './types';
 
 export const SchemaFormGlobalContext = React.createContext<SchemaFormGlobalContextType>(null!);
 
 export const SchemaFormContext = React.createContext<SchemaFormContextType<any>>(null!);
+
+export const SchemaFieldContext = React.createContext<SchemaFieldContextType<any, any>>(null!);
