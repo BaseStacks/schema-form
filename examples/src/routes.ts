@@ -1,11 +1,11 @@
 import React from 'react';
 
 export const routes = [{
-    path: '/basic',
-    title: 'Basic',
-    Component: React.lazy(() => import('./pages/basic')),
+    path: '/validation',
+    title: 'Validation',
+    Component: React.lazy(() => import('./pages/validation')),
 }, {
-    path: '/basic-with-default-messages',
-    title: 'Basic (with default messages)',
-    Component: React.lazy(() => import('./pages/basic-with-default-messages')),
+    path: '/validation-with-default-messages',
+    title: 'Validation (with default messages)',
+    Component: React.lazy(() => import('./pages/validation-with-default-messages')),
 }];
