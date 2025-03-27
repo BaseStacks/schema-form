@@ -72,7 +72,7 @@ describe('fieldUtils', () => {
 
             const result = getValidationStats(field);
 
-            expect(result).toEqual({});
+            expect(result).toBeUndefined();
         });
     });
 
@@ -93,7 +93,7 @@ describe('fieldUtils', () => {
             const result = getValidationRules(field, defaultMessages);
 
             expect(result).toEqual({
-                required: { value: true, message: 'This field is required' },
+                required: 'This field is required',
                 minLength: { value: 5, message: 'Minimum length not met' },
                 maxLength: { value: 10, message: 'Maximum length exceeded' }
             });
@@ -104,7 +104,7 @@ describe('fieldUtils', () => {
             const pattern = /[a-z]+/;
 
             const field: RegisterOptions<any> = {
-                required: { value: true, message: 'Required field' },
+                required: 'Required field',
                 pattern: { value: pattern, message: customMessage }
             };
 
@@ -116,7 +116,7 @@ describe('fieldUtils', () => {
             const result = getValidationRules(field, defaultMessages);
 
             expect(result).toEqual({
-                required: { value: true, message: 'Required field' },
+                required: 'Required field',
                 pattern: { value: pattern, message: customMessage }
             });
         });

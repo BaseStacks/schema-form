@@ -60,8 +60,6 @@ export interface SchemaFormGlobalContextType {
     readonly components: SchemaFormComponents;
     /** Global render context */
     readonly renderContext?: RenderContext;
-    /** Resolver type to use for schema validation */
-    readonly validationResolver?: ResolverType<any>;
     /** Function to get default validation messages */
     readonly getDefaultMessages?: (validationStats: ValidationStats, options: FieldSchemaType<any>) => DefaultMessages;
 }

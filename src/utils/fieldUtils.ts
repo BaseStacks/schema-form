@@ -36,10 +36,10 @@ export const getValidationRules = (field: FieldSchemaType<any>, defaultMessages?
     const validationRules: Record<string, any> = {};
 
     const validationProps = getValidationProps(field);
-
+    
     if (validationProps) {
         for (const [key, rule] of Object.entries(validationProps ?? {})) {
-            if (rule !== null || rule !== undefined) {
+            if (rule === null || rule === undefined) {
                 continue;
             }
 

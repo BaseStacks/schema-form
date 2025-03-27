@@ -2,7 +2,6 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { useForm } from 'react-hook-form';
 import { SchemaForm } from '../SchemaForm';
 import { useGlobalContext } from '../../hooks/useGlobalContext';
-import { createResolver } from '../../utils/resolverUtils';
 import { FieldSchemas, SchemaFormRenderProps } from '../../types';
 import { SchemaFormField } from '../SchemaFormField';
 
@@ -17,17 +16,8 @@ jest.mock('../../hooks/useGlobalContext', () => ({
     useGlobalContext: jest.fn(),
 }));
 
-jest.mock('../../utils/resolverUtils', () => ({
-    createResolver: jest.fn(),
-}));
-
 jest.mock('../SchemaFormField', () => ({
     SchemaFormField: jest.fn(({ name }) => <div data-testid={`field-${name}`}>{name}</div>),
-}));
-
-jest.mock('deepmerge', () => ({
-    __esModule: true,
-    default: jest.fn((a, b) => ({ ...a, ...b })),
 }));
 
 describe('SchemaForm', () => {
@@ -44,8 +34,6 @@ describe('SchemaForm', () => {
     };
 
     const mockOnSubmit = jest.fn();
-
-    const mockResolver = jest.fn();
 
     const mockInnerForm = jest.fn(({ children, onSubmit, form }: SchemaFormRenderProps) => (
         <form data-testid="default-form" onSubmit={form.handleSubmit(onSubmit)}>
@@ -68,7 +56,6 @@ describe('SchemaForm', () => {
             components: mockComponents,
             validationResolver: 'ajv',
         });
-        (createResolver as jest.Mock).mockReturnValue(mockResolver);
     });
 
     test('renders fields based on schema', () => {
@@ -110,40 +97,6 @@ describe('SchemaForm', () => {
         expect(mockInnerForm).toHaveBeenCalled();
     });
 
-    test('creates resolver when not provided', () => {
-        render(
-            <SchemaForm
-                fields={mockFields}
-                onSubmit={mockOnSubmit}
-                schema={{ type: 'object' }}
-            />
-        );
-
-        expect(createResolver).toHaveBeenCalledWith(
-            expect.objectContaining({
-                resolverType: 'ajv',
-                schema: { type: 'object' },
-            })
-        );
-    });
-
-    test('uses provided resolver when available', () => {
-        const customResolver = jest.fn();
-
-        render(
-            <SchemaForm
-                onSubmit={mockOnSubmit}
-                fields={mockFields}
-                schema={{}}
-                resolver={customResolver}
-            />
-        );
-
-        expect(useForm).toHaveBeenCalledWith(expect.objectContaining({
-            resolver: customResolver,
-        }));
-        expect(createResolver).not.toHaveBeenCalled();
-    });
 
     test('merges context from global and user context', () => {
         const globalContext = { theme: 'light' };
