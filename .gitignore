@@ -33,5 +33,7 @@ coverage
 # Api Extractor
 temp
 
-# Storybook
-storybook-static
+# Cypress
+cypress/screenshots
+cypress/videos
+

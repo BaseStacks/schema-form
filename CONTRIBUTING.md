@@ -37,7 +37,8 @@ Pay attention that we use pnpm v9 along with Node.js 20.
    ```shellscript
    pnpm start
    # In another terminal, while 'start' runs:
-   pnpm test:e2e
+   # You may need to install cypress to your system via: `npx cypress install`
+   pnpm e2e
    ```
 
 8. Ensure build passes.

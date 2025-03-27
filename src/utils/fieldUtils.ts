@@ -23,9 +23,6 @@ export const getValidationStats = (field: FieldSchemaType<any>): ValidationStats
         else if (typeof rule === 'object') {
             acc[key] = rule.value;
         }
-        else if (key === 'required') {
-            acc[key] = !!rule;
-        }
         else {
             acc[key] = rule;
         }
@@ -41,13 +38,24 @@ export const getValidationRules = (field: FieldSchemaType<any>, defaultMessages?
     const validationProps = getValidationProps(field);
 
     if (validationProps) {
-        for (const [key, value] of Object.entries(validationProps ?? {})) {
-            if (typeof value == 'object') {
-                validationRules[key] = value;
+        for (const [key, rule] of Object.entries(validationProps ?? {})) {
+            if (rule !== null || rule !== undefined) {
+                continue;
             }
-            else if (value !== null || value !== undefined) {
+
+            if (key === 'required') {
+                const message = typeof rule === 'boolean'
+                    ? defaultMessages?.required
+                    : rule;
+
+                validationRules[key] = message;
+            }
+            else if (typeof rule == 'object') {
+                validationRules[key] = rule;
+            }
+            else {
                 validationRules[key] = {
-                    value,
+                    value: rule,
                     message: defaultMessages?.[key as keyof DefaultMessages]
                 };
             }

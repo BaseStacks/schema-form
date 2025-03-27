@@ -4,9 +4,17 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import tsEslint from 'typescript-eslint'
 import onlyWarn from 'eslint-plugin-only-warn'
+import pluginCypress from 'eslint-plugin-cypress/flat';
 
 export default tsEslint.config(
-    { ignores: ['dist', 'build'] },
+    {
+        ignores: [
+            'dist',
+            'node_modules',
+            'coverage'
+        ]
+    },
+    pluginCypress.configs.recommended,
     {
         extends: [
             js.configs.recommended,
@@ -20,7 +28,7 @@ export default tsEslint.config(
         plugins: {
             'react-hooks': reactHooks,
             'react-refresh': reactRefresh,
-            'only-warn': onlyWarn,
+            'only-warn': onlyWarn
         },
         rules: {
             // Common rules

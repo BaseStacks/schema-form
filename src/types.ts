@@ -24,7 +24,7 @@ export type SchemaFormRenderProps<TRenderContext extends RenderContext = RenderC
 };
 
 export interface ValidationStats {
-    readonly required?: boolean;
+    readonly required?: boolean | string;
     readonly minLength?: number;
     readonly maxLength?: number;
     readonly pattern?: string;
@@ -50,15 +50,6 @@ export interface SchemaFormComponents<TRenderContext extends RenderContext = Ren
     readonly fields: {
         readonly [key: string]: React.ComponentType<FieldHocProps<TRenderContext, any>>;
     };
-}
-
-export interface ValidationStats {
-    readonly required?: boolean;
-    readonly minLength?: number;
-    readonly maxLength?: number;
-    readonly pattern?: string;
-    readonly min?: number;
-    readonly max?: number;
 }
 
 /**

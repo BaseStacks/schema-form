@@ -73,7 +73,7 @@ export function withArray<TRenderContext extends RenderContext = RenderContext>(
                 renderItem={renderItem}
                 renderContext={fieldRenderContext}
                 error={error}
-                required={validationStats?.required}
+                required={!!validationStats?.required}
                 minLength={minItems}
                 maxLength={maxItems}
             />

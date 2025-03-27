@@ -8,7 +8,7 @@ export function FormLayout({ form, onSubmit, children }: SchemaFormRenderProps<F
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>
             {children}
-            <input type="submit" />
+            <button type="submit">Submit</button>
         </form>
     );
 };
