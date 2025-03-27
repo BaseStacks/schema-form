@@ -1,6 +1,6 @@
 import { DefaultMessages, FieldSchemaType, ValidationRules, ValidationStats } from '../types';
 
-const validationKeys: (keyof ValidationRules)[] = ['required', 'minLength', 'maxLength', 'pattern', 'min', 'max'];
+const validationKeys: (keyof ValidationRules)[] = ['required', 'minLength', 'maxLength', 'pattern', 'min', 'max', 'validate'];
 
 export const getValidationProps = (field: FieldSchemaType<any>) => {
     const validationPropKeys = Object.keys(field).filter(key => (validationKeys as string[]).includes(key));
@@ -12,6 +12,8 @@ export const getValidationProps = (field: FieldSchemaType<any>) => {
 };
 
 export const getValidationStats = (field: FieldSchemaType<any>): ValidationStats | undefined => {
+    if (!field) return undefined;
+    
     const validationProps = getValidationProps(field);
 
     if (!validationProps) return undefined;
@@ -36,14 +38,17 @@ export const getValidationRules = (field: FieldSchemaType<any>, defaultMessages?
     const validationRules: Record<string, any> = {};
 
     const validationProps = getValidationProps(field);
-    
+
     if (validationProps) {
         for (const [key, rule] of Object.entries(validationProps ?? {})) {
             if (rule === null || rule === undefined) {
                 continue;
             }
 
-            if (key === 'required') {
+            if (key === 'validate') {
+                validationRules[key] = rule;
+            }
+            else if (key === 'required') {
                 const message = typeof rule === 'boolean'
                     ? defaultMessages?.required
                     : rule;

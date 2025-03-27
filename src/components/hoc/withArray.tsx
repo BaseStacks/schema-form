@@ -19,7 +19,6 @@ export function withArray<TRenderContext extends RenderContext = RenderContext>(
     baseSchema?: UseFieldArrayProps<any>['rules']
 ) {
     return function ArrayFieldHoc<TFieldValue extends FieldValues, TFormValue extends FieldValues>({
-        form,
         schema,
         name,
         renderContext,
@@ -33,11 +32,7 @@ export function withArray<TRenderContext extends RenderContext = RenderContext>(
         const rules = useFieldRules(arraySchema);
 
         // Use fieldArray from react-hook-form to manage the array items
-        const array = useFieldArray({
-            name,
-            control: form.control,
-            rules
-        });
+        const array = useFieldArray({ name, rules });
 
         const validationStats = useMemo(() => getValidationStats(rules), [rules]);
 
@@ -59,7 +54,7 @@ export function withArray<TRenderContext extends RenderContext = RenderContext>(
 
 
         const fieldRenderContext = useMemo(() => Object.assign({}, baseRenderContext, renderContext), [renderContext]);
-        
+
         return (
             <Component
                 array={array}

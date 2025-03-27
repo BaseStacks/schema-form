@@ -1,4 +1,4 @@
-import { Controller, FieldValues, RegisterOptions } from 'react-hook-form';
+import { FieldValues, RegisterOptions, useController } from 'react-hook-form';
 import { WithControllerProps, FieldHocProps, RenderContext, GenericFieldSchema } from '../../types';
 import { useFieldRules } from '../../hooks/useFieldRules';
 import { useMemo } from 'react';
@@ -13,7 +13,6 @@ export function withController<TRenderContext extends RenderContext = RenderCont
     baseSchema?: RegisterOptions<any>
 ) {
     return function ControllerFieldHoc<TFormValue extends FieldValues>({
-        form,
         schema,
         name,
         error,
@@ -31,33 +30,31 @@ export function withController<TRenderContext extends RenderContext = RenderCont
 
         const fieldRenderContext = useMemo(() => Object.assign({}, baseRenderContext, renderContext), [renderContext]);
 
+        const { field, fieldState, formState } = useController({
+            name,
+            rules,
+            shouldUnregister: genericSchema.shouldUnregister,
+            defaultValue: genericSchema.value
+        });
+
         return (
-            <Controller
+            <Component
+                schema={schema}
+                field={field}
+                fieldState={fieldState}
+                formState={formState}
                 name={name}
-                control={form.control}
-                rules={rules}
-                shouldUnregister={genericSchema.shouldUnregister}
-                defaultValue={genericSchema.value}
-                render={(controller) => (
-                    <Component
-                        schema={schema}
-                        field={controller.field}
-                        fieldState={controller.fieldState}
-                        formState={controller.formState}
-                        name={name}
-                        title={title}
-                        description={description}
-                        placeholder={placeholder}
-                        renderContext={fieldRenderContext}
-                        error={error}
-                        required={!!validationStats?.required}
-                        min={validationStats?.min}
-                        max={validationStats?.max}
-                        minLength={validationStats?.minLength}
-                        maxLength={validationStats?.maxLength}
-                        pattern={validationStats?.pattern}
-                    />
-                )}
+                title={title}
+                description={description}
+                placeholder={placeholder}
+                renderContext={fieldRenderContext}
+                error={error}
+                required={!!validationStats?.required}
+                min={validationStats?.min}
+                max={validationStats?.max}
+                minLength={validationStats?.minLength}
+                maxLength={validationStats?.maxLength}
+                pattern={validationStats?.pattern}
             />
         );
     };
