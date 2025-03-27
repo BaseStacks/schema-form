@@ -8,7 +8,7 @@ interface WithRegisterHocProps<TRenderContext extends RenderContext, TFormValue 
 }
 
 export function withRegister<TRenderContext extends RenderContext = RenderContext>(
-    Component: React.ComponentType<WithRegisterProps<TRenderContext>>,
+    Component: React.ComponentType<WithRegisterProps<TRenderContext, any>>,
     baseRenderContext?: Partial<TRenderContext>,
     baseSchema?: RegisterOptions<any>
 ) {
@@ -38,7 +38,7 @@ export function withRegister<TRenderContext extends RenderContext = RenderContex
 
         return (
             <Component
-                schema={schema}
+                schema={genericSchema}
                 register={register}
                 name={name}
                 title={title}
@@ -46,12 +46,12 @@ export function withRegister<TRenderContext extends RenderContext = RenderContex
                 placeholder={placeholder}
                 renderContext={fieldRenderContext}
                 error={error}
-                required={validationStats.required}
-                min={validationStats.min}
-                max={validationStats.max}
-                minLength={validationStats.minLength}
-                maxLength={validationStats.maxLength}
-                pattern={validationStats.pattern}
+                required={validationStats?.required}
+                min={validationStats?.min}
+                max={validationStats?.max}
+                minLength={validationStats?.minLength}
+                maxLength={validationStats?.maxLength}
+                pattern={validationStats?.pattern}
             />
         );
     };

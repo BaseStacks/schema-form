@@ -19,7 +19,7 @@ describe('useFieldSchema', () => {
         };
 
         // Arrange
-        const wrapper = ({ children }) => (
+        const wrapper = ({ children }: React.PropsWithChildren) => (
             <SchemaFormContext.Provider value={value}>
                 {children}
             </SchemaFormContext.Provider>

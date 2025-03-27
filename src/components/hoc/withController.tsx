@@ -50,12 +50,12 @@ export function withController<TRenderContext extends RenderContext = RenderCont
                         placeholder={placeholder}
                         renderContext={fieldRenderContext}
                         error={error}
-                        required={validationStats.required}
-                        min={validationStats.min}
-                        max={validationStats.max}
-                        minLength={validationStats.minLength}
-                        maxLength={validationStats.maxLength}
-                        pattern={validationStats.pattern}
+                        required={validationStats?.required}
+                        min={validationStats?.min}
+                        max={validationStats?.max}
+                        minLength={validationStats?.minLength}
+                        maxLength={validationStats?.maxLength}
+                        pattern={validationStats?.pattern}
                     />
                 )}
             />

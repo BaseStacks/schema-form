@@ -8,7 +8,7 @@
                 "../src"
             ]
         },
-        "strict": false,
+        "strict": true,
         "esModuleInterop": true,
         "lib": [
             "dom",

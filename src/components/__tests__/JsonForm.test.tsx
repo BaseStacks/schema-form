@@ -35,7 +35,7 @@ describe('SchemaForm', () => {
     const mockForm = {
         control: {},
         getValues: mockGetValues,
-        handleSubmit: jest.fn(fn => (event) => fn(mockGetValues(), event)),
+        handleSubmit: jest.fn(fn => (event: any) => fn(mockGetValues(), event)),
     };
 
     const mockFields: FieldSchemas<any> = {

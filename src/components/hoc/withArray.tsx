@@ -39,23 +39,24 @@ export function withArray<TRenderContext extends RenderContext = RenderContext>(
             rules
         });
 
+        const validationStats = useMemo(() => getValidationStats(rules), [rules]);
+
         const { fields } = array;
 
         // Get min/max items constraints from field
-        const minItems = typeof rules.minLength === 'number' ? rules.minLength : rules.minLength?.value;
-        const maxItems = typeof rules.maxLength === 'number' ? rules.maxLength : isNaN(rules.maxLength?.value) ? Infinity : rules.maxLength.value;
+        const minItems = validationStats?.minLength;
+        const maxItems = validationStats?.maxLength;
 
         // Check if we can add more items
         const canAddItem = !maxItems || fields.length < maxItems;
         // Check if we can remove items
-        const canRemoveItem = fields.length > minItems;
+        const canRemoveItem = minItems ? fields.length > minItems : true;
 
         const renderItem = useCallback((index: number) => {
             const key = `${name}[${index}]` as FieldPath<TFormValue>;
             return <SchemaFormField key={key} name={key} renderContext={renderContext} />;
         }, [name, renderContext]); // Add fields as dependency
 
-        const validationStats = useMemo(() => getValidationStats(rules), [rules]);
 
         const fieldRenderContext = useMemo(() => Object.assign({}, baseRenderContext, renderContext), [renderContext]);
 
@@ -72,7 +73,7 @@ export function withArray<TRenderContext extends RenderContext = RenderContext>(
                 renderItem={renderItem}
                 renderContext={fieldRenderContext}
                 error={error}
-                required={validationStats.required}
+                required={validationStats?.required}
                 minLength={minItems}
                 maxLength={maxItems}
             />

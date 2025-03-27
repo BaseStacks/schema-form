@@ -11,9 +11,10 @@ export type SchemaFormProps<TFormValue extends FieldValues = FieldValues, TRende
     readonly schemaOptions?: any;
     readonly resolverOptions?: any;
     readonly createSchema?: CreateValidationSchema<TFormValue>;
-    readonly fields: FieldSchemas<TFormValue>;
-    readonly onSubmit?: SubmitHandler<TFormValue>;
+
+    readonly fields: FieldSchemas<TFormValue, TRenderContext>;
     readonly renderContext?: TRenderContext;
+    readonly onSubmit?: SubmitHandler<TFormValue>;
     readonly children?: (innerProps: SchemaFormRenderProps<TRenderContext, TFormValue>) => React.ReactNode;
 };
 
@@ -31,8 +32,11 @@ export function SchemaForm<TFormValue extends FieldValues = FieldValues, TRender
     onSubmit,
     ...formProps
 }: SchemaFormProps<TFormValue, TRenderContext>) {
-
-    const { validationResolver: resolverType, components, renderContext: globalRenderContext, } = useGlobalContext();
+    const {
+        components,
+        validationResolver: globalResolverType,
+        renderContext: globalRenderContext,
+    } = useGlobalContext();
 
     const resolver = useMemo(() => {
         if (formProps.resolver) {
@@ -40,13 +44,13 @@ export function SchemaForm<TFormValue extends FieldValues = FieldValues, TRender
         }
 
         return createResolver<TFormValue>({
-            resolverType,
+            resolverType: globalResolverType,
             resolverOptions,
             schema,
             schemaOptions,
             createSchema
         });
-    }, [formProps.resolver, resolverType, resolverOptions, schema, schemaOptions, createSchema]);
+    }, [formProps.resolver, globalResolverType, resolverOptions, schema, schemaOptions, createSchema]);
 
     // Initialize form with Ajv resolver for direct JSON Schema validation
     const form = useForm({
@@ -64,14 +68,13 @@ export function SchemaForm<TFormValue extends FieldValues = FieldValues, TRender
         ));
     }, [fields]);
 
-    const handleSubmit = useCallback((data: TFormValue, event: React.BaseSyntheticEvent) => {
+    const handleSubmit = useCallback((data: TFormValue, event?: React.BaseSyntheticEvent): unknown | Promise<unknown> => {
         if (onSubmit) {
             return onSubmit(data, event);
         }
-
     }, [onSubmit]);
 
-    const innerProps: SchemaFormRenderProps<TRenderContext, any> = {
+    const innerProps: SchemaFormRenderProps<TRenderContext, TFormValue> = {
         form,
         fields,
         onSubmit: handleSubmit,
@@ -79,7 +82,7 @@ export function SchemaForm<TFormValue extends FieldValues = FieldValues, TRender
         renderContext: mergedRenderContext
     };
 
-    const schemaForm: SchemaFormContextType<TFormValue> = {
+    const schemaForm: SchemaFormContextType<TFormValue, TRenderContext> = {
         form,
         fields,
         renderContext: mergedRenderContext,

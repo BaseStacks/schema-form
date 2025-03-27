@@ -45,7 +45,7 @@ export type DefaultMessages = {
 
 export interface SchemaFormComponents<TRenderContext extends RenderContext = RenderContext> {
     /** Form component used to render the form */
-    readonly Form: React.ComponentType<SchemaFormRenderProps<TRenderContext>>;
+    readonly Form: React.ComponentType<SchemaFormRenderProps<TRenderContext, any>>;
     /** Map of field components by field type */
     readonly fields: {
         readonly [key: string]: React.ComponentType<FieldHocProps<TRenderContext, any>>;
@@ -66,7 +66,7 @@ export interface ValidationStats {
  */
 export interface SchemaFormGlobalContextType {
     /** Component overrides for form and fields */
-    readonly components?: SchemaFormComponents;
+    readonly components: SchemaFormComponents;
     /** Global render context */
     readonly renderContext?: RenderContext;
     /** Resolver type to use for schema validation */
@@ -78,13 +78,13 @@ export interface SchemaFormGlobalContextType {
 /**
  * Context type for a specific JSON form instance
  */
-export interface SchemaFormContextType<TFormValue extends FieldValues = FieldValues> {
+export interface SchemaFormContextType<TFormValue extends FieldValues = FieldValues, TRenderContext extends RenderContext = RenderContext> {
     /** Form control object */
     readonly form: UseFormReturn<TFormValue>;
     /** Field schema definitions */
-    readonly fields: FieldSchemas;
+    readonly fields: FieldSchemas<TFormValue, TRenderContext>;
     /** Render context */
-    readonly renderContext: unknown;
+    readonly renderContext: TRenderContext;
 }
 
 /**

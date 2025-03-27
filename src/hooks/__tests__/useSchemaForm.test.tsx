@@ -19,7 +19,7 @@ describe('useSchemaForm', () => {
             renderContext: { theme: 'light' },
         };
 
-        const wrapper = ({ children }) => (
+        const wrapper = ({ children }: React.PropsWithChildren) => (
             <SchemaFormContext.Provider value={mockContext}>
                 {children}
             </SchemaFormContext.Provider>

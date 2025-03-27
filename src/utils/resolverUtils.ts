@@ -2,7 +2,7 @@ import { FieldValues, Resolver } from 'react-hook-form';
 import { CreateValidationSchema, ResolverType, ValidationSchema } from '../types';
 
 interface CreateResolverOptions<T extends FieldValues> {
-    readonly resolverType: ResolverType<T>;
+    readonly resolverType?: ResolverType<T>;
     readonly resolverOptions?: any;
     readonly schema?: ValidationSchema;
     readonly schemaOptions?: any;
