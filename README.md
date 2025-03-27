@@ -1,7 +1,7 @@
 # Schema Form
 
 [![npm version](https://img.shields.io/npm/v/@basestacks/schema-form.svg)](https://www.npmjs.com/package/@basestacks/schema-form)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/basestacks/schema-form/main.yml?branch=main)](https://github.com/basestacks/schema-form/actions)
+[![Test](https://github.com/BaseStacks/schema-form/actions/workflows/test.yml/badge.svg)](https://github.com/BaseStacks/schema-form/actions/workflows/test.yml)
 [![Coverage Status](https://img.shields.io/codecov/c/github/basestacks/schema-form)](https://codecov.io/gh/basestacks/schema-form)
 [![License](https://img.shields.io/npm/l/@basestacks/schema-form)](https://github.com/basestacks/schema-form/blob/main/LICENSE)
 
