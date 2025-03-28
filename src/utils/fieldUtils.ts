@@ -34,41 +34,46 @@ export const getValidationStats = (field: FieldSchemaType<any, any>): Validation
     return validationStats;
 };
 
+const processValidationRule = (key: string, rule: any, defaultMessages?: DefaultMessages) => {
+    if (rule === null || rule === undefined) {
+        return null;
+    }
+    
+    if (key === 'validate') {
+        return rule;
+    }
+    
+    if (key === 'required') {
+        return typeof rule === 'boolean' ? defaultMessages?.required : rule;
+    }
+    
+    if (typeof rule === 'object') {
+        return rule;
+    }
+    
+    return {
+        value: rule,
+        message: defaultMessages?.[key as keyof DefaultMessages]
+    };
+};
+
 export const getValidationRules = (field: FieldSchemaType<any, any>, defaultMessages?: DefaultMessages) => {
     const validationRules: Record<string, any> = {};
-
     const validationProps = getValidationProps(field);
-
-    if (validationProps) {
-        for (const [key, rule] of Object.entries(validationProps ?? {})) {
-            if (rule === null || rule === undefined) {
-                continue;
-            }
-
-            if (key === 'validate') {
-                validationRules[key] = rule;
-            }
-            else if (key === 'required') {
-                const message = typeof rule === 'boolean'
-                    ? defaultMessages?.required
-                    : rule;
-
-                validationRules[key] = message;
-            }
-            else if (typeof rule == 'object') {
-                validationRules[key] = rule;
-            }
-            else {
-                validationRules[key] = {
-                    value: rule,
-                    message: defaultMessages?.[key as keyof DefaultMessages]
-                };
-            }
-        }
+    
+    if (!validationProps) {
+        return { stats: {} } as ValidationRules;
     }
-
+    
+    Object.entries(validationProps).forEach(([key, rule]) => {
+        const processedRule = processValidationRule(key, rule, defaultMessages);
+        if (processedRule !== null) {
+            validationRules[key] = processedRule;
+        }
+    });
+    
     const stats = getValidationStats(field);
-
+    
     return {
         ...validationRules,
         stats,
@@ -79,31 +84,17 @@ export const getValidationRules = (field: FieldSchemaType<any, any>, defaultMess
 export const resolveSchemaPath = (pathParts: string[]): string => {
     const pathItems: string[] = [];
 
-    for (const pathPart of pathParts) {
-        let name = '';
-
+    pathParts.forEach((pathPart) => {
         const isArrayItem = pathPart.endsWith(']');
-        const parent = pathItems[pathItems.length - 1];
+        const arrayName = isArrayItem ? pathPart.split('[')[0] : pathPart;
+        const parentPrefix = pathItems.length > 0 ? 'properties.' : '';
 
-        if (isArrayItem) {
-            const arrayName = isArrayItem ? pathPart.split('[')[0] : pathPart;
-
-            if (parent) {
-                name += 'properties.';
-            }
-
-            name += isArrayItem ? `${arrayName}.items` : pathPart;
-        }
-        else {
-            if (parent) {
-                name += 'properties.';
-            }
-
-            name += pathPart;
-        }
+        const name = isArrayItem 
+            ? `${parentPrefix}${arrayName}.items` 
+            : `${parentPrefix}${pathPart}`;
 
         pathItems.push(name);
-    }
+    });
 
-    return pathItems.map((part) => part).join('.');
+    return pathItems.join('.');
 };

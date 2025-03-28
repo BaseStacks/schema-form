@@ -41,7 +41,7 @@ export function SchemaForm<TFormValue extends FieldValues = FieldValues, TRender
     const mergedRenderContext = useMemo(() => ({
         ...(globalRenderContext ?? {}),
         ...(renderContext ?? {}),
-    }), [globalRenderContext, renderContext]);
+    } as TRenderContext), [globalRenderContext, renderContext]);
 
     const childrenElements = useMemo(() => {
         return Object.entries(fields).map(([fieldName]) => (
@@ -49,7 +49,7 @@ export function SchemaForm<TFormValue extends FieldValues = FieldValues, TRender
         ));
     }, [fields]);
 
-    const handleSubmit = useCallback((data: TFormValue, event?: React.BaseSyntheticEvent): unknown | Promise<unknown> => {
+    const handleSubmit = useCallback((data: TFormValue, event?: React.BaseSyntheticEvent): unknown => {
         if (onSubmit) {
             return onSubmit(data, event);
         }

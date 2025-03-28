@@ -217,7 +217,7 @@ describe('fieldUtils', () => {
 
             const result = getValidationRules(field, defaultMessages);
 
-            expect(result).toEqual({});
+            expect(result).toEqual({stats: {}});
         });
 
         describe('resolveSchemaPath', () => {

@@ -1,6 +1,6 @@
-import { FieldArrayPath, FieldError, FieldPath, FieldValues, RegisterOptions, SubmitHandler, UseFormReturn } from 'react-hook-form';
+import { FieldArrayPath, FieldErrors, FieldPath, FieldValues, Path, RegisterOptions, SubmitHandler, UseFormReturn } from 'react-hook-form';
 
-export type RenderContext = any;
+export type RenderContext = Record<any, any>;
 
 export type ValidationRules = Pick<RegisterOptions<any>, 'required' | 'minLength' | 'maxLength' | 'pattern' | 'min' | 'max' | 'validate'> & {
     readonly stats: ValidationStats;
@@ -82,7 +82,7 @@ export interface SchemaFieldContextType<
     | ObjectFieldSchema<TRenderContext, TFormValue, any>;
     readonly name: FieldPath<TFormValue> | FieldArrayPath<TFormValue>;
     readonly rules: ValidationRules;
-    readonly error?: FieldError;
+    readonly error?: FieldErrors<TFormValue>[Path<TFormValue>];
     readonly renderContext: TRenderContext;
 }
 
@@ -118,8 +118,7 @@ export type BaseFieldSchema<
 export type GenericFieldSchema<
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues
-> = BaseFieldSchema<TRenderContext, TFormValue> & RegisterOptions<TFormValue> & FieldSchemaWithOption & FieldSchemaWithFormat & {
-};
+> = BaseFieldSchema<TRenderContext, TFormValue> & RegisterOptions<TFormValue> & FieldSchemaWithOption & FieldSchemaWithFormat;
 
 export type CustomFieldSchema<
     TRenderContext extends RenderContext = RenderContext,

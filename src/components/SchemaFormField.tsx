@@ -1,4 +1,4 @@
-import { FieldError, FieldPath, FieldValues } from 'react-hook-form';
+import { FieldPath, FieldValues } from 'react-hook-form';
 import { BaseFieldSchema, RenderContext, SchemaFieldContextType } from '../types';
 import { useFieldStatus } from '../hooks/useFieldStatus';
 import { useFieldSchema } from '../hooks/useFieldSchema';
@@ -47,9 +47,9 @@ export function SchemaFormField<
 
     const fieldStatus = useFieldStatus(schema as BaseFieldSchema, formValues);
 
-    const error = form.formState.errors[name] as FieldError | undefined;
+    const error = form.formState.errors[name];
 
-    const fieldContext: SchemaFieldContextType<TRenderContext, TFormValue> = useMemo(() => ({
+    const fieldContext = useMemo((): SchemaFieldContextType<TRenderContext, TFormValue> => ({
         form,
         name,
         error,
@@ -61,7 +61,6 @@ export function SchemaFormField<
     if (!fieldStatus.isVisible) {
         return null;
     }
-
 
     return (
         <SchemaFieldContext.Provider value={fieldContext}>
