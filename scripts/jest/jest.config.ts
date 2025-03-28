@@ -4,13 +4,14 @@ const config: Config = {
     preset: 'ts-jest',
     testEnvironment: 'jsdom',
     moduleFileExtensions: ['ts', 'tsx', 'js'],
-    rootDir: '../../',
+    rootDir: '../..',
     roots: ['<rootDir>/src'],
     transform: {
         '^.+\\.(ts|tsx)$': ['ts-jest', {
             tsconfig: 'tsconfig.json',
         }],
     },
+    transformIgnorePatterns: ['[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$'],
     moduleNameMapper: {
         '^src/(.*)$': '<rootDir>/src/$1'
     },
