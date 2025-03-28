@@ -119,7 +119,7 @@ describe('fieldUtils', () => {
         });
 
         test('handles multiple validation rules correctly', () => {
-            const pattern = /^[0-9]+$/;
+            const pattern = /^\d+$/;
             const rules = {
                 required: true,
                 min: 1,

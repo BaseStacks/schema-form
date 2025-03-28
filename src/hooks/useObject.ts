@@ -43,7 +43,7 @@ export const useObject = <
             return [];
         }
         
-        return Object.keys(objectSchema.properties!).map((key) => {
+        return Object.keys(objectSchema.properties).map((key) => {
             return `${name}.${key}` as FieldPath<TFormValue>;
         });
     }, [name, objectSchema.properties]);

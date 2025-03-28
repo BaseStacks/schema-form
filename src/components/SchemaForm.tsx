@@ -38,7 +38,10 @@ export function SchemaForm<TFormValue extends FieldValues = FieldValues, TRender
 
     useWatch({ control: form.control });
 
-    const mergedRenderContext = useMemo(() => Object.assign({}, globalRenderContext, renderContext), [globalRenderContext, renderContext]);
+    const mergedRenderContext = useMemo(() => ({
+        ...(globalRenderContext ?? {}),
+        ...(renderContext ?? {}),
+    }), [globalRenderContext, renderContext]);
 
     const childrenElements = useMemo(() => {
         return Object.entries(fields).map(([fieldName]) => (
@@ -60,11 +63,11 @@ export function SchemaForm<TFormValue extends FieldValues = FieldValues, TRender
         renderContext: mergedRenderContext
     };
 
-    const schemaForm: SchemaFormContextType<TFormValue, TRenderContext> = {
+    const schemaForm: SchemaFormContextType<TRenderContext, TFormValue> = useMemo(() => ({
         form,
         fields,
         renderContext: mergedRenderContext,
-    };
+    }), [form, fields, mergedRenderContext]);
 
     return (
         <SchemaFormContext.Provider value={schemaForm}>

@@ -29,35 +29,39 @@ export function SchemaFormField<
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues
 >({ name, renderContext }: SchemaFormFieldProps<TRenderContext, TFormValue>) {
-    const { form, renderContext: formRenderContext } = useSchemaForm<TFormValue>();
+    const { form, renderContext: formRenderContext } = useSchemaForm<TRenderContext, TFormValue>();
     const formValues = form.getValues();
 
     const schema = useFieldSchema<TFormValue, TRenderContext>(name);
     const rules = useFieldRules(schema);
 
     const FieldComponent = useFieldComponent(schema);
-
     const fieldRenderContext = useMemo(
-        () => Object.assign({}, formRenderContext, schema.renderContext, renderContext),
+        () => ({
+            ...(formRenderContext ?? {}),
+            ...(schema.renderContext ?? {}),
+            ...(renderContext ?? {}),
+        } as TRenderContext),
         [renderContext, schema.renderContext, formRenderContext]
     );
 
     const fieldStatus = useFieldStatus(schema as BaseFieldSchema, formValues);
 
-    if (!fieldStatus.isVisible) {
-        return null;
-    }
-
     const error = form.formState.errors[name] as FieldError | undefined;
 
-    const fieldContext: SchemaFieldContextType<TRenderContext, TFormValue> = {
+    const fieldContext: SchemaFieldContextType<TRenderContext, TFormValue> = useMemo(() => ({
         form,
         name,
         error,
         schema,
         rules,
         renderContext: fieldRenderContext
-    };
+    }), [form, name, error, schema, rules, fieldRenderContext]);
+
+    if (!fieldStatus.isVisible) {
+        return null;
+    }
+
 
     return (
         <SchemaFieldContext.Provider value={fieldContext}>

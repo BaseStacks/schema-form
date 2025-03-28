@@ -1,8 +1,6 @@
-import { FieldArrayPath, FieldError, FieldPath, FieldValues, RegisterOptions, Resolver, ResolverOptions, SubmitHandler, UseFormReturn } from 'react-hook-form';
+import { FieldArrayPath, FieldError, FieldPath, FieldValues, RegisterOptions, SubmitHandler, UseFormReturn } from 'react-hook-form';
 
 export type RenderContext = any;
-
-export type ValidationSchema = unknown;
 
 export type ValidationRules = Pick<RegisterOptions<any>, 'required' | 'minLength' | 'maxLength' | 'pattern' | 'min' | 'max' | 'validate'> & {
     readonly stats: ValidationStats;
@@ -16,10 +14,6 @@ export interface ValidationStats {
     readonly min?: number;
     readonly max?: number;
 }
-
-export type ResolverType<T extends FieldValues = FieldValues> = (schema: any, schemaOptions?: any, resolverOptions?: any) => Resolver<T>;
-
-export type CreateValidationSchema<T extends FieldValues = FieldValues> = (values: T, renderContext: RenderContext, options: ResolverOptions<T>) => ValidationSchema;
 
 export type SelectOption<TValue = any, TRenderContext = Record<string, any>> = TRenderContext & {
     readonly value: TValue;
@@ -69,7 +63,7 @@ export interface SchemaFormGlobalContextType {
 /**
  * Context type for a specific JSON form instance
  */
-export interface SchemaFormContextType<TFormValue extends FieldValues = FieldValues, TRenderContext extends RenderContext = RenderContext> {
+export interface SchemaFormContextType<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues> {
     /** Form control object */
     readonly form: UseFormReturn<TFormValue>;
     /** Field schema definitions */

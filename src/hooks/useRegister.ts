@@ -58,7 +58,8 @@ export const useRegister = <
     const { title, description, placeholder } = genericSchema;
 
     const register = useMemo(() => {
-        return form.register(name as FieldPath<TFormValue>, Object.assign(genericSchema, rules));
+        const registerOptions = { ...genericSchema, ...rules } as RegisterOptions<TFormValue>;
+        return form.register(name as FieldPath<TFormValue>, registerOptions);
     }, [form, name, rules, genericSchema]);
 
     return {

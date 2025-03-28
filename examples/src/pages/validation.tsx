@@ -40,7 +40,7 @@ const fields: FieldSchemas<FormValues, FormRenderContext> = {
             message: 'Username must be at most 20 characters',
         },
         pattern: {
-            value: /^[a-zA-Z0-9_]+$/,
+            value: /^\w+$/,
             message: 'Username can only contain letters, numbers and underscores',
         },
     },

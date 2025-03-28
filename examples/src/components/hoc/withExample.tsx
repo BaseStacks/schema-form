@@ -6,7 +6,7 @@ export interface ExampleFormProps {
 
 export function withExample(Provider: React.ComponentType<React.PropsWithChildren>, Form: React.ComponentType<ExampleFormProps>) {
     return function Example() {
-        const [formValues, setFormValues] = React.useState<any | null>(null);
+        const [formValues, setFormValues] = React.useState<any>(null);
 
         return (
             <Provider>

@@ -76,7 +76,7 @@ const fields: FieldSchemas<FormValues> = {
     minLength: 6,
     maxLength: 32,
     pattern: {
-      value: /^[a-zA-Z0-9_]+$/,
+      value: /^\w+$/,
       message: "Username can only contain letters, numbers and underscores",
     },
   },

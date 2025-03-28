@@ -1,4 +1,4 @@
-import { SchemaFormField, SchemaFormRenderProps, useArray, useController, useObject, useRegister } from '@basestacks/schema-form';
+import { SchemaFormField, SchemaFormRenderProps, useArray, useObject, useRegister } from '@basestacks/schema-form';
 
 export interface FormRenderContext {
     readonly inputType: string;
