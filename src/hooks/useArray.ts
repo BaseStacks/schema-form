@@ -24,6 +24,34 @@ export interface UseArrayReturn<
     readonly maxLength?: number;
 }
 
+/**
+ * A custom hook for managing array fields in a form using `react-hook-form`.
+ * This hook provides utilities for handling array-based form fields, including
+ * schema merging, validation rules, and dynamic item management.
+ *
+ * @template TRenderContext - The type of the render context.
+ * @template TFormValue - The type of the form values.
+ * @template TFieldValue - The type of the field values within the array.
+ *
+ * @param {UseFieldArrayProps<any>['rules']} [baseSchema] - Optional base schema
+ * for the array field, which will be merged with the schema from the field context.
+ *
+ * @returns {UseArrayReturn<TRenderContext, TFormValue, TFieldValue>} An {@link UseArrayReturn} object containing:
+ * - `array`: The `useFieldArray` instance for managing array items.
+ * - `schema`: The merged schema for the array field.
+ * - `name`: The name of the array field.
+ * - `title`: The title of the array field from the schema.
+ * - `description`: The description of the array field from the schema.
+ * - `placeholder`: The placeholder for the array field from the schema.
+ * - `canAddItem`: A boolean indicating if more items can be added to the array.
+ * - `canRemoveItem`: A boolean indicating if items can be removed from the array.
+ * - `getItemName`: A function to get the name of an item in the array by index.
+ * - `renderContext`: The render context for the field.
+ * - `error`: The error state of the field.
+ * - `required`: A boolean indicating if the field is required.
+ * - `minLength`: The minimum number of items allowed in the array.
+ * - `maxLength`: The maximum number of items allowed in the array.
+ */
 export const useArray = <
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues,

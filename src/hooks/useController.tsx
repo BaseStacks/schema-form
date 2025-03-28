@@ -25,6 +25,32 @@ interface UseControllerReturn<
     readonly pattern?: RegExp;
 }
 
+/**
+ * A custom hook that provides a controller for managing form fields with schema-based validation.
+ *
+ * @template TRenderContext - The type of the render context, extending `RenderContext`.
+ * @template TFormValue - The type of the form values, extending `FieldValues`.
+ *
+ * @param {RegisterOptions<TFormValue>} [baseSchema] - Optional base schema for the field, which can include validation rules and other properties.
+ *
+ * @returns {UseControllerReturn<TRenderContext, TFormValue>} An {@link UseControllerReturn} object containing the field controller, schema, and various field-related properties:
+ * - `field`: The field's input props and methods for managing its state.
+ * - `fieldState`: The state of the field, including validation errors.
+ * - `formState`: The state of the entire form.
+ * - `schema`: The merged schema combining `baseSchema` and the schema from the field context.
+ * - `name`: The name of the field.
+ * - `title`: The title of the field, derived from the schema.
+ * - `description`: The description of the field, derived from the schema.
+ * - `placeholder`: The placeholder text for the field, derived from the schema.
+ * - `renderContext`: The render context for the field.
+ * - `error`: The error message for the field, if any.
+ * - `required`: Whether the field is required, derived from the validation rules.
+ * - `min`: The minimum value for the field, derived from the validation rules.
+ * - `max`: The maximum value for the field, derived from the validation rules.
+ * - `minLength`: The minimum length for the field, derived from the validation rules.
+ * - `maxLength`: The maximum length for the field, derived from the validation rules.
+ * - `pattern`: The regex pattern for the field, derived from the validation rules.
+ */
 export const useController = <
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues

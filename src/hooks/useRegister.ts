@@ -20,6 +20,31 @@ export interface WithRegisterReturn<TRenderContext extends RenderContext = Rende
     readonly pattern?: RegExp;
 }
 
+/**
+ * A hook that registers a field with the form and provides access to field properties and validation rules.
+ * 
+ * This hook combines the base schema provided as a parameter with the schema from the field context,
+ * and uses it to register the field with React Hook Form.
+ * 
+ * @template TRenderContext - The render context type, extends RenderContext
+ * @template TFormValue - The form values type, extends FieldValues
+ * 
+ * @param {RegisterOptions<TFormValue>} [baseSchema] - Optional base schema to override or extend the context schema
+ * 
+ * @returns {WithRegisterReturn<TRenderContext, TFormValue>} An {@link WithRegisterReturn} object containing:
+ *   - register: The React Hook Form register function result
+ *   - schema: The combined field schema
+ *   - name: The field name
+ *   - title: The field title
+ *   - description: The field description
+ *   - placeholder: The field placeholder
+ *   - renderContext: The render context
+ *   - error: Any validation error
+ *   - required: Whether the field is required
+ *   - min/max: Minimum and maximum numeric values
+ *   - minLength/maxLength: Minimum and maximum string lengths
+ *   - pattern: Validation pattern
+ */
 export const useRegister = <
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues

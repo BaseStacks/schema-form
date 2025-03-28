@@ -3,7 +3,7 @@ import { FieldPath, FieldValues } from 'react-hook-form';
 import { ObjectFieldSchema, RenderContext } from '../types';
 import { useFieldContext } from './useFieldContext';
 
-export interface WithObjectReturn<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues, TFieldValue extends FieldValues = FieldValues> {
+export interface UseObjectReturn<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues, TFieldValue extends FieldValues = FieldValues> {
     readonly schema: ObjectFieldSchema<TRenderContext, TFormValue, TFieldValue>;
     readonly name: string;
     readonly title?: string | null;
@@ -13,11 +13,29 @@ export interface WithObjectReturn<TRenderContext extends RenderContext = RenderC
     readonly fields: FieldPath<TFormValue>[];
 }
 
+/**
+ * A custom hook that provides utilities for working with an object field schema
+ * in a form context. This hook extracts schema details, field names, and other
+ * metadata for rendering and managing object fields.
+ *
+ * @template TRenderContext - The type of the render context, extending `RenderContext`.
+ * @template TFormValue - The type of the form values, extending `FieldValues`.
+ * @template TFieldValue - The type of the field values, extending `FieldValues`.
+ *
+ * @returns {UseObjectReturn<TRenderContext, TFormValue, TFieldValue>} An {@link UseObjectReturn} object containing:
+ * - `schema`: The object field schema.
+ * - `name`: The name of the field.
+ * - `title`: The title of the object field.
+ * - `description`: The description of the object field.
+ * - `placeholder`: The placeholder for the object field.
+ * - `renderContext`: The render context for the field.
+ * - `fields`: An array of field paths for the properties of the object field.
+ */
 export const useObject = <
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues,
     TFieldValue extends FieldValues = FieldValues
->(): WithObjectReturn<TRenderContext, TFormValue, TFieldValue> => {
+>(): UseObjectReturn<TRenderContext, TFormValue, TFieldValue> => {
     const { schema, name, renderContext } = useFieldContext<TRenderContext, TFormValue>();
 
     const objectSchema = schema as ObjectFieldSchema<TRenderContext, TFormValue, TFieldValue>;

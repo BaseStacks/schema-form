@@ -16,6 +16,15 @@ export interface SchemaFormFieldProps<
     readonly renderContext?: TRenderContext;
 }
 
+/**
+ * A React component that renders a schema-based form field. This component is designed to work
+ * with a schema-driven form system, where the field's behavior, validation, and rendering are
+ * determined by its schema definition.
+ *
+ * @param {SchemaFormFieldProps<TRenderContext, TFormValue>} props - {@link SchemaFormFieldProps}
+ *
+ * @returns {JSX.Element | null} The rendered field component, or `null` if the field is not visible.
+ */
 export function SchemaFormField<
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues
