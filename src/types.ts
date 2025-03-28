@@ -4,7 +4,18 @@ export type RenderContext = any;
 
 export type ValidationSchema = unknown;
 
-export type ValidationRules = Pick<RegisterOptions<any>, 'required' | 'minLength' | 'maxLength' | 'pattern' | 'min' | 'max' | 'validate'>;
+export type ValidationRules = Pick<RegisterOptions<any>, 'required' | 'minLength' | 'maxLength' | 'pattern' | 'min' | 'max' | 'validate'> & {
+    readonly stats: ValidationStats;
+};
+
+export interface ValidationStats {
+    readonly required?: boolean;
+    readonly minLength?: number;
+    readonly maxLength?: number;
+    readonly pattern?: RegExp;
+    readonly min?: number;
+    readonly max?: number;
+}
 
 export type ResolverType<T extends FieldValues = FieldValues> = (schema: any, schemaOptions?: any, resolverOptions?: any) => Resolver<T>;
 
@@ -22,15 +33,6 @@ export type SchemaFormRenderProps<TRenderContext extends RenderContext = RenderC
     readonly renderContext: TRenderContext;
     readonly children: React.ReactNode;
 };
-
-export interface ValidationStats {
-    readonly required?: boolean | string;
-    readonly minLength?: number;
-    readonly maxLength?: number;
-    readonly pattern?: RegExp;
-    readonly min?: number;
-    readonly max?: number;
-}
 
 export type Message = string | React.ReactNode;
 
@@ -61,7 +63,7 @@ export interface SchemaFormGlobalContextType {
     /** Global render context */
     readonly renderContext?: RenderContext;
     /** Function to get default validation messages */
-    readonly getDefaultMessages?: (validationStats: ValidationStats, options: FieldSchemaType<any>) => DefaultMessages;
+    readonly getDefaultMessages?: (validationStats: ValidationStats, options: FieldSchemaType<any, any>) => DefaultMessages;
 }
 
 /**
@@ -85,6 +87,7 @@ export interface SchemaFieldContextType<
     | ArrayFieldSchema<TRenderContext, TFormValue, any[]>
     | ObjectFieldSchema<TRenderContext, TFormValue, any>;
     readonly name: FieldPath<TFormValue> | FieldArrayPath<TFormValue>;
+    readonly rules: ValidationRules;
     readonly error?: FieldError;
     readonly renderContext: TRenderContext;
 }
@@ -172,8 +175,8 @@ export type FieldSchemas<
     };
 
 export type FieldSchemaType<
-    TFormValue extends FieldValues = FieldValues,
-    TRenderContext extends RenderContext = RenderContext
+    TRenderContext extends RenderContext = RenderContext,
+    TFormValue extends FieldValues = FieldValues
 > = | CustomFieldSchema<TRenderContext, TFormValue>
     | GenericFieldSchema<TRenderContext, TFormValue>
     | ObjectFieldSchema<TRenderContext, TFormValue, any>

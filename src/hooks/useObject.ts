@@ -1,7 +1,7 @@
-import { useMemo } from "react";
-import { FieldPath, FieldValues } from "react-hook-form";
-import { ObjectFieldSchema, RenderContext } from "../types";
-import { useFieldContext } from "./useFieldContext";
+import { useMemo } from 'react';
+import { FieldPath, FieldValues } from 'react-hook-form';
+import { ObjectFieldSchema, RenderContext } from '../types';
+import { useFieldContext } from './useFieldContext';
 
 export interface WithObjectReturn<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues, TFieldValue extends FieldValues = FieldValues> {
     readonly schema: ObjectFieldSchema<TRenderContext, TFormValue, TFieldValue>;
@@ -28,7 +28,7 @@ export const useObject = <
         return Object.keys(objectSchema.properties!).map((key) => {
             return `${name}.${key}` as FieldPath<TFormValue>;
         });
-    }, [objectSchema]);
+    }, [name, objectSchema.properties]);
 
     return {
         schema: objectSchema,
@@ -38,5 +38,5 @@ export const useObject = <
         placeholder,
         renderContext,
         fields,
-    }
-}
+    };
+};

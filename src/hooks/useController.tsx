@@ -1,9 +1,7 @@
-import { useMemo } from "react";
-import { ControllerFieldState, ControllerRenderProps, FieldPath, FieldValues, RegisterOptions, UseFormStateReturn, useController as _useController } from "react-hook-form";
-import { GenericFieldSchema, RenderContext } from "../types";
-import { getValidationStats } from "../utils/fieldUtils";
-import { useFieldContext } from "./useFieldContext";
-import { useFieldRules } from "./useFieldRules";
+import { useMemo } from 'react';
+import { ControllerFieldState, ControllerRenderProps, FieldPath, FieldValues, RegisterOptions, UseFormStateReturn, useController as _useController } from 'react-hook-form';
+import { GenericFieldSchema, RenderContext } from '../types';
+import { useFieldContext } from './useFieldContext';
 
 interface UseControllerReturn<
     TRenderContext extends RenderContext = RenderContext,
@@ -31,20 +29,16 @@ export const useController = <
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues
 >(
-    baseSchema?: RegisterOptions<TFormValue>
-): UseControllerReturn<TRenderContext, TFormValue> => {
-    const { schema, name, renderContext, error } = useFieldContext<TRenderContext, TFormValue>();
+        baseSchema?: RegisterOptions<TFormValue>
+    ): UseControllerReturn<TRenderContext, TFormValue> => {
+    const { schema, name, rules, renderContext, error } = useFieldContext<TRenderContext, TFormValue>();
 
     const genericSchema = useMemo(() => ({
         ...baseSchema,
         ...schema
-    } as GenericFieldSchema<TRenderContext, TFormValue>), [schema]);
+    } as GenericFieldSchema<TRenderContext, TFormValue>), [baseSchema, schema]);
 
     const { title, description, placeholder } = genericSchema;
-
-    const rules = useFieldRules(genericSchema);
-    const validationStats = useMemo(() => getValidationStats(rules), [rules]);
-
 
     const { field, fieldState, formState } = _useController({
         name: name as FieldPath<TFormValue>,
@@ -64,11 +58,11 @@ export const useController = <
         placeholder,
         renderContext,
         error,
-        required: !!validationStats?.required,
-        min: validationStats?.min,
-        max: validationStats?.max,
-        minLength: validationStats?.minLength,
-        maxLength: validationStats?.maxLength,
-        pattern: validationStats?.pattern
-    }
-}
+        required: rules.stats.required,
+        min: rules.stats.min,
+        max: rules.stats.max,
+        minLength: rules.stats.minLength,
+        maxLength: rules.stats.maxLength,
+        pattern: rules.stats.pattern
+    };
+};

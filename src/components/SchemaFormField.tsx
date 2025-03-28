@@ -1,11 +1,12 @@
 import { FieldError, FieldPath, FieldValues } from 'react-hook-form';
-import { BaseFieldSchema, CustomFieldSchema, RenderContext, SchemaFieldContextType } from '../types';
+import { BaseFieldSchema, RenderContext, SchemaFieldContextType } from '../types';
 import { useFieldStatus } from '../hooks/useFieldStatus';
 import { useFieldSchema } from '../hooks/useFieldSchema';
 import { useSchemaForm } from '../hooks/useSchemaForm';
 import { useMemo } from 'react';
 import { useFieldComponent } from '../hooks/useFieldComponent';
 import { SchemaFieldContext } from '../contexts';
+import { useFieldRules } from '../hooks/useFieldRules';
 
 export interface SchemaFormFieldProps<
     TRenderContext extends RenderContext = RenderContext,
@@ -23,14 +24,16 @@ export function SchemaFormField<
     const formValues = form.getValues();
 
     const schema = useFieldSchema<TFormValue, TRenderContext>(name);
+    const rules = useFieldRules(schema);
 
-    const FieldComponent = useFieldComponent(schema?.type);
+    const FieldComponent = useFieldComponent(schema);
 
-    const fieldStatus = useFieldStatus(schema as BaseFieldSchema, formValues);
     const fieldRenderContext = useMemo(
         () => Object.assign({}, formRenderContext, schema.renderContext, renderContext),
         [renderContext, schema.renderContext, formRenderContext]
     );
+
+    const fieldStatus = useFieldStatus(schema as BaseFieldSchema, formValues);
 
     if (!fieldStatus.isVisible) {
         return null;
@@ -43,30 +46,13 @@ export function SchemaFormField<
         name,
         error,
         schema,
+        rules,
         renderContext: fieldRenderContext
-    };
-
-    const renderField = () => {
-        if (!schema.type) {
-            const { Component } = schema as CustomFieldSchema<RenderContext, TFormValue>;
-
-            return (
-                <Component />
-            );
-        }
-
-        if (!FieldComponent) {
-            throw new Error(`No field component found for type: ${schema.type}`);
-        }
-
-        return (
-            <FieldComponent />
-        );
     };
 
     return (
         <SchemaFieldContext.Provider value={fieldContext}>
-            {renderField()}
+            <FieldComponent />
         </SchemaFieldContext.Provider>
     );
 }

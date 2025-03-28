@@ -1,9 +1,7 @@
-import { useMemo } from "react";
-import { FieldPath, FieldValues, RegisterOptions, UseFormRegisterReturn, useController as _useController } from "react-hook-form";
-import { GenericFieldSchema, RenderContext } from "../types";
-import { getValidationStats } from "../utils/fieldUtils";
-import { useFieldContext } from "./useFieldContext";
-import { useFieldRules } from "./useFieldRules";
+import { useMemo } from 'react';
+import { FieldPath, FieldValues, RegisterOptions, UseFormRegisterReturn } from 'react-hook-form';
+import { GenericFieldSchema, RenderContext } from '../types';
+import { useFieldContext } from './useFieldContext';
 
 export interface WithRegisterReturn<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues> {
     readonly register: UseFormRegisterReturn;
@@ -26,24 +24,20 @@ export const useRegister = <
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues
 >(
-    baseSchema?: RegisterOptions<TFormValue>
-): WithRegisterReturn<TRenderContext, TFormValue> => {
-    const { form, schema, name, renderContext, error } = useFieldContext<TRenderContext, TFormValue>();
+        baseSchema?: RegisterOptions<TFormValue>
+    ): WithRegisterReturn<TRenderContext, TFormValue> => {
+    const { form, schema, name, rules, renderContext, error } = useFieldContext<TRenderContext, TFormValue>();
 
     const genericSchema = useMemo(() => ({
         ...baseSchema,
         ...schema
-    } as GenericFieldSchema<TRenderContext, TFormValue>), [schema]);
+    } as GenericFieldSchema<TRenderContext, TFormValue>), [baseSchema, schema]);
 
     const { title, description, placeholder } = genericSchema;
-
-    const rules = useFieldRules(genericSchema);
 
     const register = useMemo(() => {
         return form.register(name as FieldPath<TFormValue>, Object.assign(genericSchema, rules));
     }, [form, name, rules, genericSchema]);
-
-    const validationStats = useMemo(() => getValidationStats(rules), [rules]);
 
     return {
         register,
@@ -54,11 +48,11 @@ export const useRegister = <
         placeholder,
         renderContext,
         error,
-        required: !!validationStats?.required,
-        min: validationStats?.min,
-        max: validationStats?.max,
-        minLength: validationStats?.minLength,
-        maxLength: validationStats?.maxLength,
-        pattern: validationStats?.pattern
-    }
-}
+        required: !!rules?.required,
+        min: rules.stats.min,
+        max: rules.stats.max,
+        minLength: rules.stats.minLength,
+        maxLength: rules.stats.maxLength,
+        pattern: rules.stats.pattern
+    };
+};

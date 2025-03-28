@@ -1,9 +1,7 @@
-import { useMemo, useCallback } from "react";
-import { FieldValues, FieldPath, useFieldArray, FieldArrayPath, UseFieldArrayProps, UseFieldArrayReturn } from "react-hook-form";
-import { ArrayFieldSchema, RenderContext } from "../types";
-import { getValidationStats } from "../utils/fieldUtils";
-import { useFieldContext } from "./useFieldContext";
-import { useFieldRules } from "./useFieldRules";
+import { useMemo, useCallback } from 'react';
+import { FieldValues, FieldPath, useFieldArray, FieldArrayPath, UseFieldArrayProps, UseFieldArrayReturn } from 'react-hook-form';
+import { ArrayFieldSchema, RenderContext } from '../types';
+import { useFieldContext } from './useFieldContext';
 
 export interface UseArrayReturn<
     TRenderContext extends RenderContext = RenderContext,
@@ -30,17 +28,13 @@ export const useArray = <
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues,
     TFieldValue extends FieldValues = FieldValues
->(
-    baseSchema?: UseFieldArrayProps<any>['rules'],
-): UseArrayReturn<TRenderContext, TFormValue, TFieldValue> => {
-    const { schema, name, renderContext, error } = useFieldContext<TRenderContext, TFormValue>();
+>(baseSchema?: UseFieldArrayProps<any>['rules']): UseArrayReturn<TRenderContext, TFormValue, TFieldValue> => {
+    const { schema, name, rules, renderContext, error } = useFieldContext<TRenderContext, TFormValue>();
 
     const arraySchema = useMemo(() => ({
         ...baseSchema,
         ...schema
-    } as ArrayFieldSchema<TRenderContext, TFormValue, TFieldValue[]>), [schema]);
-
-    const rules = useFieldRules(arraySchema);
+    } as ArrayFieldSchema<TRenderContext, TFormValue, TFieldValue[]>), [baseSchema, schema]);
 
     // Use fieldArray from react-hook-form to manage the array items
     const array = useFieldArray<TFormValue>({
@@ -48,13 +42,11 @@ export const useArray = <
         rules
     });
 
-    const validationStats = useMemo(() => getValidationStats(rules), [rules]);
-
     const { fields } = array;
 
     // Get min/max items constraints from field
-    const minItems = validationStats?.minLength;
-    const maxItems = validationStats?.maxLength;
+    const minItems = rules.stats?.minLength;
+    const maxItems = rules.stats?.maxLength;
 
     // Check if we can add more items
     const canAddItem = !maxItems || fields.length < maxItems;
@@ -77,8 +69,8 @@ export const useArray = <
         getItemName,
         renderContext,
         error,
-        required: !!validationStats?.required,
+        required: rules.stats?.required,
         minLength: minItems,
         maxLength: maxItems
-    }
-}
+    };
+};

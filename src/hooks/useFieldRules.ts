@@ -2,17 +2,20 @@ import { FieldValues } from 'react-hook-form';
 import { useMemo } from 'react';
 import { useGlobalContext } from './useGlobalContext';
 import { getValidationRules, getValidationStats } from '../utils/fieldUtils';
-import { FieldSchemaType } from '../types';
+import { FieldSchemaType, RenderContext, ValidationRules } from '../types';
 
-export const useFieldRules = <TFormValue extends FieldValues>(
-    schema: FieldSchemaType<TFormValue>
-) => {
+export const useFieldRules = <
+    TRenderContext extends RenderContext = RenderContext,
+    TFormValue extends FieldValues = FieldValues
+>(schema: FieldSchemaType<TRenderContext, TFormValue>) => {
     const { getDefaultMessages } = useGlobalContext();
 
-    const rules = useMemo(() => {
+    const rules = useMemo((): ValidationRules => {
         const validationStats = getValidationStats(schema);
         if (!validationStats) {
-            return {};
+            return {
+                stats: {},
+            };
         }
 
         const defaultMessages = getDefaultMessages?.(validationStats, schema);
