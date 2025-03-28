@@ -17,7 +17,7 @@ export type SchemaFormProps<TFormValue extends FieldValues = FieldValues, TRende
  * based on a schema definition. It integrates with React Hook Form for form state management
  * and supports custom rendering through a render context.
  *
- * @param {SchemaFormProps<TFormValue, TRenderContext>} props - {@link SchemaFormProps}.
+ * @param props - {@link SchemaFormProps}.
  */
 export function SchemaForm<TFormValue extends FieldValues = FieldValues, TRenderContext extends RenderContext = RenderContext>({
     fields,

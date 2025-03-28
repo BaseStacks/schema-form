@@ -18,11 +18,7 @@ export interface UseObjectReturn<TRenderContext extends RenderContext = RenderCo
  * in a form context. This hook extracts schema details, field names, and other
  * metadata for rendering and managing object fields.
  *
- * @template TRenderContext - The type of the render context, extending `RenderContext`.
- * @template TFormValue - The type of the form values, extending `FieldValues`.
- * @template TFieldValue - The type of the field values, extending `FieldValues`.
- *
- * @returns {UseObjectReturn<TRenderContext, TFormValue, TFieldValue>} An {@link UseObjectReturn} object containing:
+ * @returns An {@link UseObjectReturn} object containing:
  * - `schema`: The object field schema.
  * - `name`: The name of the field.
  * - `title`: The title of the object field.

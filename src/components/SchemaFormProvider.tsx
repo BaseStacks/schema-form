@@ -9,7 +9,7 @@ import { SchemaFormGlobalContextType } from '../types';
  * This component wraps its children with a `SchemaFormGlobalContext.Provider`
  * and passes the provided props as the context value.
  * 
- * @param {PropsWithChildren<SchemaFormGlobalContextType>} props - {@link SchemaFormGlobalContextType}
+ * @param props - {@link SchemaFormGlobalContextType}
  */
 export function SchemaFormProvider({ children, ...props }: PropsWithChildren<SchemaFormGlobalContextType>) {
     return (

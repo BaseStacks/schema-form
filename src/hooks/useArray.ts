@@ -6,10 +6,10 @@ import { useFieldContext } from './useFieldContext';
 export interface UseArrayReturn<
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues,
-    TFieldValue extends FieldValues = FieldValues
+    TItem extends FieldValues = FieldValues
 > {
     readonly array: UseFieldArrayReturn<TFormValue>;
-    readonly schema: ArrayFieldSchema<TRenderContext, TFormValue, TFieldValue[]>;
+    readonly schema: ArrayFieldSchema<TRenderContext, TFormValue, TItem[]>;
     readonly name: string;
     readonly title?: string | null;
     readonly description?: string;
@@ -29,14 +29,10 @@ export interface UseArrayReturn<
  * This hook provides utilities for handling array-based form fields, including
  * schema merging, validation rules, and dynamic item management.
  *
- * @template TRenderContext - The type of the render context.
- * @template TFormValue - The type of the form values.
- * @template TFieldValue - The type of the field values within the array.
- *
- * @param {UseFieldArrayProps<any>['rules']} [baseSchema] - Optional base schema
+ * @param baseSchema - Optional object that contains validation rules
  * for the array field, which will be merged with the schema from the field context.
  *
- * @returns {UseArrayReturn<TRenderContext, TFormValue, TFieldValue>} An {@link UseArrayReturn} object containing:
+ * @returns An {@link UseArrayReturn} object containing:
  * - `array`: The `useFieldArray` instance for managing array items.
  * - `schema`: The merged schema for the array field.
  * - `name`: The name of the array field.
@@ -55,14 +51,14 @@ export interface UseArrayReturn<
 export const useArray = <
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues,
-    TFieldValue extends FieldValues = FieldValues
->(baseSchema?: UseFieldArrayProps<any>['rules']): UseArrayReturn<TRenderContext, TFormValue, TFieldValue> => {
+    TItem extends FieldValues = FieldValues
+>(baseSchema?: UseFieldArrayProps<any>['rules']): UseArrayReturn<TRenderContext, TFormValue, TItem> => {
     const { schema, name, rules, renderContext, error } = useFieldContext<TRenderContext, TFormValue>();
 
     const arraySchema = useMemo(() => ({
         ...baseSchema,
         ...schema
-    } as ArrayFieldSchema<TRenderContext, TFormValue, TFieldValue[]>), [baseSchema, schema]);
+    } as ArrayFieldSchema<TRenderContext, TFormValue, TItem[]>), [baseSchema, schema]);
 
     // Use fieldArray from react-hook-form to manage the array items
     const array = useFieldArray<TFormValue>({

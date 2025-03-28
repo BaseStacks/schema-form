@@ -3,7 +3,7 @@ import { FieldPath, FieldValues, RegisterOptions, UseFormRegisterReturn } from '
 import { GenericFieldSchema, RenderContext } from '../types';
 import { useFieldContext } from './useFieldContext';
 
-export interface WithRegisterReturn<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues> {
+export interface UseRegisterReturn<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues> {
     readonly register: UseFormRegisterReturn;
     readonly schema: GenericFieldSchema<TRenderContext, TFormValue>;
     readonly name: string;
@@ -26,12 +26,9 @@ export interface WithRegisterReturn<TRenderContext extends RenderContext = Rende
  * This hook combines the base schema provided as a parameter with the schema from the field context,
  * and uses it to register the field with React Hook Form.
  * 
- * @template TRenderContext - The render context type, extends RenderContext
- * @template TFormValue - The form values type, extends FieldValues
+ * @param baseSchema - Optional, which can include validation rules and other properties.
  * 
- * @param {RegisterOptions<TFormValue>} [baseSchema] - Optional base schema to override or extend the context schema
- * 
- * @returns {WithRegisterReturn<TRenderContext, TFormValue>} An {@link WithRegisterReturn} object containing:
+ * @returns An {@link UseRegisterReturn} object containing:
  *   - register: The React Hook Form register function result
  *   - schema: The combined field schema
  *   - name: The field name
@@ -50,7 +47,7 @@ export const useRegister = <
     TFormValue extends FieldValues = FieldValues
 >(
         baseSchema?: RegisterOptions<TFormValue>
-    ): WithRegisterReturn<TRenderContext, TFormValue> => {
+    ): UseRegisterReturn<TRenderContext, TFormValue> => {
     const { form, schema, name, rules, renderContext, error } = useFieldContext<TRenderContext, TFormValue>();
 
     const genericSchema = useMemo(() => ({

@@ -3,7 +3,7 @@ import { ControllerFieldState, ControllerRenderProps, FieldPath, FieldValues, Re
 import { GenericFieldSchema, RenderContext } from '../types';
 import { useFieldContext } from './useFieldContext';
 
-interface UseControllerReturn<
+export interface UseControllerReturn<
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues
 > {
@@ -28,12 +28,9 @@ interface UseControllerReturn<
 /**
  * A custom hook that provides a controller for managing form fields with schema-based validation.
  *
- * @template TRenderContext - The type of the render context, extending `RenderContext`.
- * @template TFormValue - The type of the form values, extending `FieldValues`.
+ * @param baseSchema - Optional, which can include validation rules and other properties.
  *
- * @param {RegisterOptions<TFormValue>} [baseSchema] - Optional base schema for the field, which can include validation rules and other properties.
- *
- * @returns {UseControllerReturn<TRenderContext, TFormValue>} An {@link UseControllerReturn} object containing the field controller, schema, and various field-related properties:
+ * @returns An {@link UseControllerReturn} object containing the field controller, schema, and various field-related properties:
  * - `field`: The field's input props and methods for managing its state.
  * - `fieldState`: The state of the field, including validation errors.
  * - `formState`: The state of the entire form.
