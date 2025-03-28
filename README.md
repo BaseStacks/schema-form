@@ -7,18 +7,28 @@
 
 A React library built on top of [**react-hook-form**](https://github.com/react-hook-form/react-hook-form) that turns schema definitions into dynamic forms, reducing boilerplate and simplifying validation while maintaining full customizability.
 
-## Features
+> **⚠️ CAUTION: This project is under active development. The API may change without notice.**
 
-- 📝 **Schema-Driven Forms** - Define your entire form structure with a simple JavaScript object
-- 🔄 **React Hook Form Integration** - Built on top of react-hook-form for robust form handling
-- ✅ **Built-in Validation** - Form validation based on your schema definition
-- 🧩 **Extensible Components** - Easily customize the rendering of any field type
-- 🧰 **Complex Field Types** - Support for nested objects, arrays, and conditional fields
-- 🎨 **Context-Based Styling** - Pass styling and rendering hints through context
+## Introduction
+
+While **React Hook Form** provides an excellent foundation for handling forms in React applications with uncontrolled components and high performance, it comes with certain limitations:
+- Requires repetitive code for defining fields and validation rules
+- Complex forms with nested structures become verbose and harder to maintain
+- Form structure is tightly coupled with UI components
+- No standardized way to define form schemas separate from UI
+
+**Schema Form** addresses these limitations by:
+
+1. **Separating Concerns** - Define your form structure and validation rules in one place as a schema, keeping them separate from UI components
+2. **Reducing Boilerplate** - Convert concise schema definitions into fully functional forms without repetitive code
+3. **Enhancing Type Safety** - Leverage TypeScript to ensure your form data structure matches your schema definition
+4. **Maintaining Flexibility** - Access all the power of React Hook Form while adding schema-driven development
+5. **Simplifying Complex Forms** - Handle nested objects, arrays, and conditional fields with structured schemas rather than imperative code
+
+**Schema Form** doesn't replace React Hook Form - it enhances it with a declarative, schema-driven approach while preserving all its performance benefits.
 
 ## Table of Contents
 
-- [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
   - [Defining Form Schema](#defining-form-schema)
@@ -46,8 +56,6 @@ npm install @basestacks/schema-form
 ```
 
 ## Usage
-
-Get up and running with schema-form in minutes:
 
 ### Defining Form Schema
 
@@ -115,8 +123,6 @@ Create custom field components and a form layout to override the default UI:
 import { PropsWithChildren } from "react";
 import {
   useRegister,
-  useArray,
-  useObject,
   useController,
   SchemaFormProvider,
   SchemaFormRenderProps,
@@ -133,11 +139,8 @@ export function FormProvider({ children }: PropsWithChildren) {
       components={{
         Form: FormLayout,
         fields: {
-          array: ArrayField,
-          object: ObjectField,
           text: TextField,
-          checkbox: CheckboxField,
-          select: SelectField,
+          checkbox: CheckboxField
         },
       }}
     >
@@ -160,8 +163,8 @@ function FormLayout({
   );
 }
 
-function TextField({ name, placeholder, title, renderContext }: any) {
-  const { register } = useRegister();
+function TextField() {
+  const { register, name, placeholder, title, renderContext } = useRegister();
   return (
     <div className="field">
       <label htmlFor={name}>{title}</label>
@@ -174,8 +177,8 @@ function TextField({ name, placeholder, title, renderContext }: any) {
   );
 }
 
-function CheckboxField({ name, title }: any) {
-  const { register } = useRegister();
+function CheckboxField() {
+  const { register, name, title } = useRegister();
   return (
     <div className="field">
       <div>
@@ -184,53 +187,7 @@ function CheckboxField({ name, title }: any) {
       </div>
     </div>
   );
-}
 
-function SelectField({ schema, name, title, placeholder }: any) {
-  const { register } = useRegister();
-  return (
-    <div className="field">
-      <label htmlFor={name}>{title}</label>
-      <select {...register}>
-        <option selected value="">
-          {placeholder}
-        </option>
-        {schema?.options?.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-}
-
-function ObjectField({ children }: any) {
-  const { schema } = useObject();
-  return <div className="field-object">{children}</div>;
-}
-
-function ArrayField({ title }: any) {
-  const { array, canAddItem, canRemoveItem, renderItem } = useArray();
-  return (
-    <div className="field-array">
-      <label>{title}</label>
-      <div className="field-array-items">
-        {array.fields.map((field, index) => (
-          <div key={field.id} className="field-array-item">
-            {renderItem(index)}
-            {canRemoveItem && <button onClick={() => array.remove(index)}>x</button>}
-          </div>
-        ))}
-      </div>
-      {canAddItem && (
-        <button type="button" onClick={() => array.append({})}>
-          Add
-        </button>
-      )}
-    </div>
-  );
-}
 ```
 
 ### Using the Form
@@ -466,7 +423,6 @@ function ContactsArray() {
       {array.fields.map((field, index) => (
         <div key={field.id} className="array-item">
           <SchemaFormField name={getItemName(index)} />
-          
           {canRemoveItem && (
             <button 
               type="button" 
