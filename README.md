@@ -2,6 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/@basestacks/schema-form.svg)](https://www.npmjs.com/package/@basestacks/schema-form)
 [![Coverage Status](https://img.shields.io/codecov/c/github/basestacks/schema-form)](https://codecov.io/gh/basestacks/schema-form)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=BaseStacks_schema-form&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=BaseStacks_schema-form)
 [![License](https://img.shields.io/npm/l/@basestacks/schema-form)](https://github.com/basestacks/schema-form/blob/main/LICENSE)
 
 A React library built on top of [**react-hook-form**](https://github.com/react-hook-form/react-hook-form) that turns schema definitions into dynamic forms, reducing boilerplate and simplifying validation while maintaining full customizability.
