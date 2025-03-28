@@ -1,6 +1,6 @@
 describe('validation', () => {
     it('should validate the form', () => {
-        cy.visit('http://localhost:3000/basic');
+        cy.visit('http://localhost:3000/validation');
         cy.get('button[type="submit"]').click();
 
         cy.get('.field-error').should('have.length', 2);
