@@ -7,6 +7,15 @@
 
 A React library built on top of [**react-hook-form**](https://github.com/react-hook-form/react-hook-form) that turns schema definitions into dynamic forms, reducing boilerplate and simplifying validation while maintaining full customizability.
 
+## Features
+
+- 📝 **Schema-Driven Forms** - Define your entire form structure with a simple JavaScript object
+- 🔄 **React Hook Form Integration** - Built on top of react-hook-form for robust form handling
+- ✅ **Built-in Validation** - Form validation based on your schema definition
+- 🧩 **Extensible Components** - Easily customize the rendering of any field type
+- 🧰 **Complex Field Types** - Support for nested objects, arrays, and conditional fields
+- 🎨 **Context-Based Styling** - Pass styling and rendering hints through context
+
 ## Table of Contents
 
 - [Features](#features)
@@ -20,25 +29,15 @@ A React library built on top of [**react-hook-form**](https://github.com/react-h
     - [SchemaForm](#schemaform)
     - [SchemaFormProvider](#schemaformprovider)
     - [SchemaFormField](#schemaformfield)
-  - [Higher-Order Components (HOCs)](#higher-order-components-hocs)
-    - [withRegister](#withregister)
-    - [withController](#withcontroller)
-    - [withArray](#witharray)
-    - [withObject](#withobject)
+  - [Hooks](#hooks)
+    - [useRegister](#useregister)
+    - [useController](#usecontroller)
+    - [useArray](#usearray)
+    - [useObject](#useobject)
   - [Schema Types](#schema-types)
   - [Validation](#validation)
   - [RenderContext](#rendercontext)
-  - [Hooks](#hooks)
 - [Contributing](#contributing)
-
-## Features
-
-- **Schema-Driven Forms**: Define forms using TypeScript schemas with built-in type safety
-- **Streamlined Validation**: Apply validation rules directly in your schema or use external validation libraries
-- **Complex Data Support**: Handle nested objects and dynamic arrays with dedicated field components
-- **Conditional Logic**: Show/hide fields based on form values with simple conditions
-- **UI Flexibility**: Fully customize rendering with component overrides and context system
-- **React Hook Form Integration**: Built on proven form handling with optimized re-renders
 
 ## Installation
 
@@ -108,7 +107,6 @@ export function LoginForm() {
 
 That's it! The form will render with proper validation. For UI components, see the detailed section below.
 
-
 ### Customization UI
 
 Create custom field components and a form layout to override the default UI:
@@ -116,14 +114,12 @@ Create custom field components and a form layout to override the default UI:
 ```tsx
 import { PropsWithChildren } from "react";
 import {
-  WithRegisterProps,
+  useRegister,
+  useArray,
+  useObject,
+  useController,
   SchemaFormProvider,
   SchemaFormRenderProps,
-  withRegister,
-  WithArrayProps,
-  withArray,
-  WithObjectProps,
-  withObject,
 } from "@basestacks/schema-form";
 
 export interface RenderContext {
@@ -137,11 +133,11 @@ export function FormProvider({ children }: PropsWithChildren) {
       components={{
         Form: FormLayout,
         fields: {
-          array: withArray(ArrayField),
-          object: withObject(ObjectField),
-          text: withRegister(TextField),
-          checkbox: withRegister(CheckboxField),
-          select: withRegister(SelectField),
+          array: ArrayField,
+          object: ObjectField,
+          text: TextField,
+          checkbox: CheckboxField,
+          select: SelectField,
         },
       }}
     >
@@ -164,13 +160,8 @@ function FormLayout({
   );
 }
 
-function TextField({
-  name,
-  placeholder,
-  title,
-  register,
-  renderContext,
-}: WithRegisterProps<RenderContext>) {
+function TextField({ name, placeholder, title, renderContext }: any) {
+  const { register } = useRegister();
   return (
     <div className="field">
       <label htmlFor={name}>{title}</label>
@@ -183,11 +174,8 @@ function TextField({
   );
 }
 
-function CheckboxField({
-  name,
-  title,
-  register,
-}: WithRegisterProps<RenderContext>) {
+function CheckboxField({ name, title }: any) {
+  const { register } = useRegister();
   return (
     <div className="field">
       <div>
@@ -198,13 +186,8 @@ function CheckboxField({
   );
 }
 
-function SelectField({
-  schema,
-  register,
-  name,
-  title,
-  placeholder,
-}: WithRegisterProps<RenderContext>) {
+function SelectField({ schema, name, title, placeholder }: any) {
+  const { register } = useRegister();
   return (
     <div className="field">
       <label htmlFor={name}>{title}</label>
@@ -222,11 +205,13 @@ function SelectField({
   );
 }
 
-function ObjectField({ children }: WithObjectProps) {
+function ObjectField({ children }: any) {
+  const { schema } = useObject();
   return <div className="field-object">{children}</div>;
 }
 
-function ArrayField({ title, array, renderItem }: WithArrayProps) {
+function ArrayField({ title }: any) {
+  const { array, canAddItem, canRemoveItem, renderItem } = useArray();
   return (
     <div className="field-array">
       <label>{title}</label>
@@ -234,13 +219,15 @@ function ArrayField({ title, array, renderItem }: WithArrayProps) {
         {array.fields.map((field, index) => (
           <div key={field.id} className="field-array-item">
             {renderItem(index)}
-            <button onClick={() => array.remove(index)}>x</button>
+            {canRemoveItem && <button onClick={() => array.remove(index)}>x</button>}
           </div>
         ))}
       </div>
-      <button type="button" onClick={() => array.append({})}>
-        Add
-      </button>
+      {canAddItem && (
+        <button type="button" onClick={() => array.append({})}>
+          Add
+        </button>
+      )}
     </div>
   );
 }
@@ -257,7 +244,6 @@ Wrap your form with the `FormProvider` to apply custom UI components and context
 ```
 
 Check out the [example](https://codesandbox.io/p/sandbox/55msn7) for a complete implementation.
-
 
 ## API Reference
 
@@ -299,8 +285,8 @@ import { SchemaFormProvider } from '@basestacks/schema-form';
   components={{
     Form: CustomFormLayout,
     fields: {
-      text: withRegister(CustomTextField),
-      checkbox: withRegister(CustomCheckboxField),
+      text: CustomTextField,
+      checkbox: CustomCheckboxField,
     }
   }}
   renderContext={{ theme: 'light' }}
@@ -338,235 +324,214 @@ import { SchemaFormField } from '@basestacks/schema-form';
 | `name` | `FieldPath<TFormValue>` | ✓ | Field name/path |
 | `renderContext` | `TRenderContext` | | Context data for this field |
 
-### Higher-Order Components (HOCs)
+### Hooks
 
-#### withRegister
+#### useRegister
 
-HOC for field components that use react-hook-form's `register` method.
+A hook that registers a field with the form and provides access to field properties and validation rules.
 
-```tsx
-import { withRegister } from '@basestacks/schema-form';
-
-const TextField = ({ name, title, register, error }) => (
-  <div>
-    <label htmlFor={name}>{title}</label>
-    <input {...register} />
-    {error && <span>{error.message}</span>}
-  </div>
-);
-
-const RegisteredTextField = withRegister(TextField);
-```
-
-**Function Signature:**
-
-```tsx
-withRegister<TRenderContext>(
-  Component: React.ComponentType<WithRegisterProps<TRenderContext>>,
-  baseRenderContext?: Partial<TRenderContext>,
-  baseSchema?: RegisterOptions<any>
-)
-```
+**Type Parameters:**
+- `TRenderContext` - The render context type, extends RenderContext
+- `TFormValue` - The form values type, extends FieldValues
 
 **Parameters:**
+- `baseSchema?: RegisterOptions<TFormValue>` - Optional base schema to override or extend the context schema
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `Component` | `React.ComponentType<WithRegisterProps<TRenderContext>>` | Component to wrap |
-| `baseRenderContext` | `Partial<TRenderContext>` | Default render context to apply to all instances |
-| `baseSchema` | `RegisterOptions<any>` | Default schema options to apply to all instances |
+**Returns:** `WithRegisterReturn<TRenderContext, TFormValue>` object containing:
+- `register` - The React Hook Form register function result
+- `schema` - The combined field schema
+- `name` - The field name
+- `title` - The field title
+- `description` - The field description
+- `placeholder` - The field placeholder
+- `renderContext` - The render context
+- `error` - Any validation error
+- `required` - Whether the field is required
+- `min`/`max` - Minimum and maximum numeric values
+- `minLength`/`maxLength` - Minimum and maximum string lengths
+- `pattern` - Validation pattern
 
-**Props passed to wrapped component:**
-
-| Prop | Type | Description |
-|------|------|-------------|
-| `name` | `string` | Field name |
-| `title` | `string` | Field label |
-| `description` | `string` | Field description |
-| `placeholder` | `string` | Input placeholder |
-| `register` | `UseFormRegisterReturn` | Register object from react-hook-form |
-| `error` | `FieldError` | Field error if validation fails |
-| `required` | `boolean` | Whether field is required |
-| `minLength` | `number` | Minimum length constraint |
-| `maxLength` | `number` | Maximum length constraint |
-| `min` | `number` | Minimum value constraint |
-| `max` | `number` | Maximum value constraint |
-| `pattern` | `string` | Regex pattern constraint |
-| `schema` | `GenericFieldSchema` | Complete field schema |
-| `renderContext` | `any` | Custom render context |
-
-#### withController
-
-HOC for field components that need access to field state and controller.
-
+**Example Usage:**
 ```tsx
-import { withController } from '@basestacks/schema-form';
-
-const SelectField = ({ field, fieldState, title }) => (
-  <div>
-    <label>{title}</label>
-    <select
-      value={field.value}
-      onChange={field.onChange}
-      onBlur={field.onBlur}
-    >
-      {options.map(option => (
-        <option key={option.value} value={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </select>
-    {fieldState.error && <span>{fieldState.error.message}</span>}
-  </div>
-);
-
-const ControlledSelectField = withController(SelectField);
+function TextField({ name, title, placeholder }: FieldProps) {
+  const { register, error, required } = useRegister();
+  
+  return (
+    <div className="field">
+      <label htmlFor={name}>{title} {required && <span className="required">*</span>}</label>
+      <input type="text" placeholder={placeholder} {...register} />
+      {error && <div className="error">{error.message}</div>}
+    </div>
+  );
+}
 ```
 
-**Function Signature:**
+#### useController
 
-```tsx
-withController<TRenderContext>(
-  Component: React.ComponentType<WithControllerProps<TRenderContext>>,
-  baseRenderContext?: Partial<TRenderContext>,
-  baseSchema?: RegisterOptions<any>
-)
-```
+A custom hook that provides a controller for managing form fields with schema-based validation.
+
+**Type Parameters:**
+- `TRenderContext` - The type of the render context, extending `RenderContext`
+- `TFormValue` - The type of the form values, extending `FieldValues`
 
 **Parameters:**
+- `baseSchema?: RegisterOptions<TFormValue>` - Optional base schema for the field, which can include validation rules and other properties
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `Component` | `React.ComponentType<WithControllerProps<TRenderContext>>` | Component to wrap |
-| `baseRenderContext` | `Partial<TRenderContext>` | Default render context to apply to all instances |
-| `baseSchema` | `RegisterOptions<any>` | Default schema options to apply to all instances |
+**Returns:** `UseControllerReturn<TRenderContext, TFormValue>` object containing:
+- `field` - The field's input props and methods for managing its state
+- `fieldState` - The state of the field, including validation errors
+- `formState` - The state of the entire form
+- `schema` - The merged schema
+- `name` - The field name
+- `title` - The field title
+- `description` - The field description
+- `placeholder` - The field placeholder
+- `renderContext` - The render context
+- `error` - Any validation error
+- `required` - Whether the field is required
+- `min`/`max` - Minimum and maximum numeric values
+- `minLength`/`maxLength` - Minimum and maximum string lengths
+- `pattern` - Validation pattern
 
-**Props passed to wrapped component:**
-
-| Prop | Type | Description |
-|------|------|-------------|
-| `name` | `string` | Field name |
-| `title` | `string` | Field label |
-| `description` | `string` | Field description |
-| `placeholder` | `string` | Field placeholder |
-| `field` | `ControllerRenderProps` | Field controller object |
-| `fieldState` | `ControllerFieldState` | Field state including errors |
-| `formState` | `UseFormStateReturn` | Form state |
-| `error` | `FieldError` | Field error if validation fails |
-| `required` | `boolean` | Whether field is required |
-| `minLength` | `number` | Minimum length constraint |
-| `maxLength` | `number` | Maximum length constraint |
-| `min` | `number` | Minimum value constraint |
-| `max` | `number` | Maximum value constraint |
-| `pattern` | `string` | Regex pattern constraint |
-| `schema` | `GenericFieldSchema` | Complete field schema |
-| `renderContext` | `any` | Custom render context |
-
-#### withArray
-
-HOC for handling array field types with add/remove functionality.
-
+**Example Usage:**
 ```tsx
-import { withArray } from '@basestacks/schema-form';
-
-const ArrayField = ({ title, array, renderItem, canAddItem, canRemoveItem }) => (
-  <div>
-    <label>{title}</label>
-    {array.fields.map((field, index) => (
-      <div key={field.id}>
-        {renderItem(index)}
-        {canRemoveItem && (
-          <button onClick={() => array.remove(index)}>Remove</button>
-        )}
+function RadioGroup({ options, title }: RadioGroupProps) {
+  const { field, error, required } = useController();
+  
+  return (
+    <div className="radio-group">
+      <label>{title} {required && <span className="required">*</span>}</label>
+      <div className="options">
+        {options.map((option) => (
+          <label key={option.value} className="radio-option">
+            <input
+              type="radio"
+              value={option.value}
+              checked={field.value === option.value}
+              onChange={() => field.onChange(option.value)}
+            />
+            {option.label}
+          </label>
+        ))}
       </div>
-    ))}
-    {canAddItem && (
-      <button onClick={() => array.append({})}>Add Item</button>
-    )}
-  </div>
-);
-
-const ArrayFieldComponent = withArray(ArrayField);
+      {error && <div className="error">{error.message}</div>}
+    </div>
+  );
+}
 ```
 
-**Function Signature:**
+#### useArray
 
-```tsx
-withArray<TRenderContext>(
-  Component: React.ComponentType<WithArrayProps<TRenderContext, any, any>>,
-  baseRenderContext?: Partial<TRenderContext>,
-  baseSchema?: UseFieldArrayProps<any>['rules']
-)
-```
+A custom hook for managing array fields in a form using `react-hook-form`.
+
+**Type Parameters:**
+- `TRenderContext` - The type of the render context
+- `TFormValue` - The type of the form values
+- `TFieldValue` - The type of the field values within the array
 
 **Parameters:**
+- `baseSchema?: UseFieldArrayProps<any>['rules']` - Optional base schema for the array field, which will be merged with the schema from the field context
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `Component` | `React.ComponentType<WithArrayProps<TRenderContext, any, any>>` | Component to wrap |
-| `baseRenderContext` | `Partial<TRenderContext>` | Default render context to apply to all instances |
-| `baseSchema` | `UseFieldArrayProps<any>['rules']` | Default validation rules to apply to all array instances |
+**Returns:** `UseArrayReturn<TRenderContext, TFormValue, TFieldValue>` object containing:
+- `array` - The `useFieldArray` instance for managing array items
+- `schema` - The merged schema for the array field
+- `name` - The name of the array field
+- `title` - The title of the array field from the schema
+- `description` - The description of the array field from the schema
+- `placeholder` - The placeholder for the array field from the schema
+- `canAddItem` - A boolean indicating if more items can be added to the array
+- `canRemoveItem` - A boolean indicating if items can be removed from the array
+- `getItemName` - A function to get the name of an item in the array by index
+- `renderContext` - The render context for the field
+- `error` - The error state of the field
+- `required` - A boolean indicating if the field is required
+- `minLength` - The minimum number of items allowed in the array
+- `maxLength` - The maximum number of items allowed in the array
 
-**Props passed to wrapped component:**
-
-| Prop | Type | Description |
-|------|------|-------------|
-| `name` | `string` | Field name |
-| `title` | `string` | Field label |
-| `description` | `string` | Field description |
-| `array` | `UseFieldArrayReturn` | Field array methods and state |
-| `renderItem` | `(index: number) => ReactNode` | Function to render each array item |
-| `canAddItem` | `boolean` | Whether more items can be added |
-| `canRemoveItem` | `boolean` | Whether items can be removed |
-| `minLength` | `number` | Minimum array length |
-| `maxLength` | `number` | Maximum array length |
-| `schema` | `ArrayFieldSchema` | Complete field schema |
-| `renderContext` | `any` | Custom render context |
-
-#### withObject
-
-HOC for handling nested object fields.
-
+**Example Usage:**
 ```tsx
-import { withObject } from '@basestacks/schema-form';
-
-const ObjectField = ({ title, children }) => (
-  <fieldset>
-    <legend>{title}</legend>
-    {children}
-  </fieldset>
-);
-
-const ObjectFieldComponent = withObject(ObjectField);
+function ContactsArray() {
+  const { 
+    array, 
+    title, 
+    canAddItem, 
+    canRemoveItem, 
+    getItemName 
+  } = useArray();
+  
+  return (
+    <div className="array-field">
+      <h3>{title}</h3>
+      
+      {array.fields.map((field, index) => (
+        <div key={field.id} className="array-item">
+          <SchemaFormField name={getItemName(index)} />
+          
+          {canRemoveItem && (
+            <button 
+              type="button" 
+              onClick={() => array.remove(index)}
+              className="remove-btn"
+            >
+              Remove
+            </button>
+          )}
+        </div>
+      ))}
+      
+      {canAddItem && (
+        <button 
+          type="button" 
+          onClick={() => array.append({})} 
+          className="add-btn"
+        >
+          Add Contact
+        </button>
+      )}
+    </div>
+  );
+}
 ```
 
-**Function Signature:**
+#### useObject
 
-```tsx
-withObject<TRenderContext>(
-  Component: React.ComponentType<WithObjectProps<TRenderContext, any, any>>,
-  baseRenderContext?: TRenderContext
-)
-```
+A custom hook that provides utilities for working with an object field schema in a form context.
+
+**Type Parameters:**
+- `TRenderContext` - The type of the render context, extending `RenderContext`
+- `TFormValue` - The type of the form values, extending `FieldValues`
+- `TFieldValue` - The type of the field values, extending `FieldValues`
 
 **Parameters:**
+- None
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `Component` | `React.ComponentType<WithObjectProps<TRenderContext, any, any>>` | Component to wrap |
-| `baseRenderContext` | `TRenderContext` | Default render context to apply to all instances |
+**Returns:** `UseObjectReturn<TRenderContext, TFormValue, TFieldValue>` object containing:
+- `schema` - The object field schema
+- `name` - The name of the field
+- `title` - The title of the object field
+- `description` - The description of the object field
+- `placeholder` - The placeholder for the object field
+- `renderContext` - The render context for the field
+- `fields` - An array of field paths for the properties of the object field
 
-**Props passed to wrapped component:**
-
-| Prop | Type | Description |
-|------|------|-------------|
-| `name` | `string` | Field name |
-| `title` | `string` | Field label |
-| `description` | `string` | Field description |
-| `placeholder` | `string` | Field placeholder |
-| `children` | `ReactNode` | Child field components |
-| `schema` | `ObjectFieldSchema` | Complete field schema |
-| `renderContext` | `any` | Custom render context |
+**Example Usage:**
+```tsx
+function AddressField() {
+  const { title, fields, renderContext } = useObject();
+  
+  return (
+    <fieldset className={`object-field ${renderContext.variant || 'default'}`}>
+      <legend>{title}</legend>
+      
+      <div className="object-fields-container">
+        {fields.map(fieldName => (
+          <SchemaFormField key={fieldName} name={fieldName} />
+        ))}
+      </div>
+    </fieldset>
+  );
+}
+```
 
 ### Schema Types
 
@@ -686,48 +651,6 @@ Later contexts override earlier ones when merged.
     // Field with renderContext={{ variant: 'outlined' }}
   />
 </SchemaFormProvider>
-```
-
-### Hooks
-
-#### useSchemaForm
-
-Access the current form context.
-
-```tsx
-import { useSchemaForm } from '@basestacks/schema-form';
-
-function CustomField() {
-  const { form, fields, renderContext } = useSchemaForm();
-  // ...
-}
-```
-
-#### useFieldSchema
-
-Get the schema for a specific field.
-
-```tsx
-import { useFieldSchema } from '@basestacks/schema-form';
-
-function FieldWrapper({ name }) {
-  const schema = useFieldSchema(name);
-  // ...
-}
-```
-
-#### useFieldStatus
-
-Check if a field should be visible based on conditions.
-
-```tsx
-import { useFieldStatus } from '@basestacks/schema-form';
-
-function ConditionalField({ schema }) {
-  const { isVisible } = useFieldStatus(schema, formValues);
-  if (!isVisible) return null;
-  // ...
-}
 ```
 
 ## Contributing
