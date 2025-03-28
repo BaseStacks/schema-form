@@ -1,4 +1,4 @@
-name: API Extrator
+name: API Extractor
 
 on: [pull_request]
 
