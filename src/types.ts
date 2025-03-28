@@ -1,10 +1,21 @@
-import { ControllerFieldState, ControllerRenderProps, FieldArrayPath, FieldError, FieldPath, FieldValues, RegisterOptions, Resolver, ResolverOptions, SubmitHandler, UseFieldArrayReturn, UseFormRegisterReturn, UseFormReturn, UseFormStateReturn } from 'react-hook-form';
+import { FieldArrayPath, FieldError, FieldPath, FieldValues, RegisterOptions, Resolver, ResolverOptions, SubmitHandler, UseFormReturn } from 'react-hook-form';
 
 export type RenderContext = any;
 
 export type ValidationSchema = unknown;
 
-export type ValidationRules = Pick<RegisterOptions<any>, 'required' | 'minLength' | 'maxLength' | 'pattern' | 'min' | 'max' | 'validate'>;
+export type ValidationRules = Pick<RegisterOptions<any>, 'required' | 'minLength' | 'maxLength' | 'pattern' | 'min' | 'max' | 'validate'> & {
+    readonly stats: ValidationStats;
+};
+
+export interface ValidationStats {
+    readonly required?: boolean;
+    readonly minLength?: number;
+    readonly maxLength?: number;
+    readonly pattern?: RegExp;
+    readonly min?: number;
+    readonly max?: number;
+}
 
 export type ResolverType<T extends FieldValues = FieldValues> = (schema: any, schemaOptions?: any, resolverOptions?: any) => Resolver<T>;
 
@@ -23,15 +34,6 @@ export type SchemaFormRenderProps<TRenderContext extends RenderContext = RenderC
     readonly children: React.ReactNode;
 };
 
-export interface ValidationStats {
-    readonly required?: boolean | string;
-    readonly minLength?: number;
-    readonly maxLength?: number;
-    readonly pattern?: string;
-    readonly min?: number;
-    readonly max?: number;
-}
-
 export type Message = string | React.ReactNode;
 
 export type DefaultMessages = {
@@ -48,7 +50,7 @@ export interface SchemaFormComponents<TRenderContext extends RenderContext = Ren
     readonly Form: React.ComponentType<SchemaFormRenderProps<TRenderContext, any>>;
     /** Map of field components by field type */
     readonly fields: {
-        readonly [key: string]: React.ComponentType<FieldHocProps<TRenderContext, any>>;
+        readonly [key: string]: React.ComponentType;
     };
 }
 
@@ -61,7 +63,7 @@ export interface SchemaFormGlobalContextType {
     /** Global render context */
     readonly renderContext?: RenderContext;
     /** Function to get default validation messages */
-    readonly getDefaultMessages?: (validationStats: ValidationStats, options: FieldSchemaType<any>) => DefaultMessages;
+    readonly getDefaultMessages?: (validationStats: ValidationStats, options: FieldSchemaType<any, any>) => DefaultMessages;
 }
 
 /**
@@ -73,6 +75,20 @@ export interface SchemaFormContextType<TFormValue extends FieldValues = FieldVal
     /** Field schema definitions */
     readonly fields: FieldSchemas<TFormValue, TRenderContext>;
     /** Render context */
+    readonly renderContext: TRenderContext;
+}
+
+export interface SchemaFieldContextType<
+    TRenderContext extends RenderContext = RenderContext,
+    TFormValue extends FieldValues = FieldValues
+> {
+    readonly form: UseFormReturn<TFormValue>;
+    readonly schema: GenericFieldSchema<TRenderContext, TFormValue>
+    | ArrayFieldSchema<TRenderContext, TFormValue, any[]>
+    | ObjectFieldSchema<TRenderContext, TFormValue, any>;
+    readonly name: FieldPath<TFormValue> | FieldArrayPath<TFormValue>;
+    readonly rules: ValidationRules;
+    readonly error?: FieldError;
     readonly renderContext: TRenderContext;
 }
 
@@ -159,80 +175,12 @@ export type FieldSchemas<
     };
 
 export type FieldSchemaType<
-    TFormValue extends FieldValues = FieldValues,
-    TRenderContext extends RenderContext = RenderContext
+    TRenderContext extends RenderContext = RenderContext,
+    TFormValue extends FieldValues = FieldValues
 > = | CustomFieldSchema<TRenderContext, TFormValue>
     | GenericFieldSchema<TRenderContext, TFormValue>
     | ObjectFieldSchema<TRenderContext, TFormValue, any>
     | ArrayFieldSchema<TRenderContext, TFormValue, any>;
-
-export interface BaseFieldProps<
-    TRenderContext extends RenderContext = RenderContext
-> {
-    readonly name: string;
-    readonly title?: string | null;
-    readonly description?: string;
-    readonly placeholder?: string;
-    readonly required?: boolean;
-    readonly error?: FieldError;
-    readonly renderContext: TRenderContext;
-};
-
-export type WithRegisterProps<
-    TRenderContext extends RenderContext = RenderContext,
-    TFormValue extends FieldValues = FieldValues
-> = BaseFieldProps<TRenderContext> & {
-    readonly schema: GenericFieldSchema<TRenderContext, TFormValue>;
-    readonly register: UseFormRegisterReturn<FieldPath<TFormValue>>;
-    readonly minLength?: number;
-    readonly maxLength?: number;
-    readonly min?: number;
-    readonly max?: number;
-    readonly pattern?: string;
-};
-
-export type WithControllerProps<
-    TRenderContext extends RenderContext = RenderContext,
-    TFormValue extends FieldValues = FieldValues
-> = BaseFieldProps<TRenderContext> & {
-    readonly schema: GenericFieldSchema<TRenderContext, TFormValue>;
-    readonly field: ControllerRenderProps<TFormValue>;
-    readonly fieldState: ControllerFieldState;
-    readonly formState: UseFormStateReturn<TFormValue>;
-    readonly minLength?: number;
-    readonly maxLength?: number;
-    readonly min?: number;
-    readonly max?: number;
-    readonly pattern?: string;
-};
-
-export type WithArrayProps<
-    TRenderContext extends RenderContext = RenderContext,
-    TFieldValue extends FieldValues = FieldValues,
-    TFormValue extends FieldValues = FieldValues,
-    TFieldPath extends FieldArrayPath<TFormValue> = FieldArrayPath<TFormValue>,
-    TFieldKey extends string = 'id',
-> = BaseFieldProps<TRenderContext>
-    & {
-        readonly schema: ArrayFieldSchema<TRenderContext, TFormValue, TFieldValue[]>;
-        readonly array: UseFieldArrayReturn<TFormValue, TFieldPath, TFieldKey>;
-        readonly canRemoveItem: boolean;
-        readonly canAddItem: boolean;
-        readonly minLength?: number;
-        readonly maxLength?: number;
-        readonly renderItem: (index: number) => React.ReactNode;
-    };
-
-export type WithObjectProps<
-    TRenderContext extends RenderContext = RenderContext,
-    TFieldValue extends FieldValues = FieldValues,
-    TFormValue extends FieldValues = FieldValues,
-> = BaseFieldProps<TRenderContext>
-    & {
-        readonly schema: ObjectFieldSchema<TRenderContext, TFormValue, TFieldValue>;
-        /** Child elements to render within the object field */
-        readonly children: React.ReactNode;
-    };
 
 /**
  * Condition for when a field should be displayed
@@ -241,17 +189,3 @@ export type ConditionedRule<T extends FieldValues = FieldValues> =
     | ((formValues: T) => boolean)
     | boolean
     | string;
-
-export interface FieldHocProps<
-    TRenderContext extends RenderContext,
-    TFormValue extends FieldValues,
-    TFieldValues extends FieldValues = FieldValues
-> {
-    readonly form: UseFormReturn<TFormValue>;
-    readonly schema: GenericFieldSchema<TRenderContext, TFormValue>
-    | ArrayFieldSchema<TRenderContext, TFormValue, TFieldValues[]>
-    | ObjectFieldSchema<TRenderContext, TFormValue, TFieldValues>;
-    readonly name: FieldPath<TFormValue>;
-    readonly error?: FieldError;
-    readonly renderContext: TRenderContext;
-};

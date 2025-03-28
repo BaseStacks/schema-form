@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { FieldSchemas, SchemaForm, SchemaFormProvider, withRegister } from '@basestacks/schema-form';
+import { FieldSchemas, SchemaForm, SchemaFormProvider } from '@basestacks/schema-form';
 import { ExampleFormProps, withExample } from '../components/hoc/withExample';
 import { CheckboxField, FormLayout, FormRenderContext, InputField } from '../components/fields';
 
@@ -9,8 +9,8 @@ function FormProvider({ children }: PropsWithChildren) {
             components={{
                 Form: FormLayout,
                 fields: {
-                    text: withRegister(InputField),
-                    checkbox: withRegister(CheckboxField),
+                    text: InputField,
+                    checkbox: CheckboxField,
                 },
             }}
         >

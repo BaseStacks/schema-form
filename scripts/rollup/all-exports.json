@@ -2,8 +2,8 @@
     "SchemaForm",
     "SchemaFormField",
     "SchemaFormProvider",
-    "withArray",
-    "withController",
-    "withObject",
-    "withRegister"
+    "useArray",
+    "useController",
+    "useObject",
+    "useRegister"
 ]

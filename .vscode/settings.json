@@ -1,8 +1,13 @@
 {
     "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": "explicit"
+        "source.fixAll.eslint": "always"
     },
     "typescript.tsdk": "node_modules/typescript/lib",
     "jest.jestCommandLine": "pnpm test",
-    "jest.runMode": "deferred"
+    "jest.runMode": {
+        "runAllTestsOnStartup": true,
+        "deferred": true,
+        "type": "on-save",
+        "testFileOnly": true
+    },
 }

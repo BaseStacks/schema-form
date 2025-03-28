@@ -1,10 +1,12 @@
 import { FieldError, FieldPath, FieldValues } from 'react-hook-form';
-import { BaseFieldSchema, CustomFieldSchema, FieldHocProps, RenderContext } from '../types';
+import { BaseFieldSchema, RenderContext, SchemaFieldContextType } from '../types';
 import { useFieldStatus } from '../hooks/useFieldStatus';
 import { useFieldSchema } from '../hooks/useFieldSchema';
 import { useSchemaForm } from '../hooks/useSchemaForm';
 import { useMemo } from 'react';
 import { useFieldComponent } from '../hooks/useFieldComponent';
+import { SchemaFieldContext } from '../contexts';
+import { useFieldRules } from '../hooks/useFieldRules';
 
 export interface SchemaFormFieldProps<
     TRenderContext extends RenderContext = RenderContext,
@@ -14,6 +16,15 @@ export interface SchemaFormFieldProps<
     readonly renderContext?: TRenderContext;
 }
 
+/**
+ * A React component that renders a schema-based form field. This component is designed to work
+ * with a schema-driven form system, where the field's behavior, validation, and rendering are
+ * determined by its schema definition.
+ *
+ * @param props - {@link SchemaFormFieldProps}
+ *
+ * @returns The rendered field component, or `null` if the field is not visible.
+ */
 export function SchemaFormField<
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues
@@ -22,14 +33,16 @@ export function SchemaFormField<
     const formValues = form.getValues();
 
     const schema = useFieldSchema<TFormValue, TRenderContext>(name);
+    const rules = useFieldRules(schema);
 
-    const FieldComponent = useFieldComponent(schema?.type);
+    const FieldComponent = useFieldComponent(schema);
 
-    const fieldStatus = useFieldStatus(schema as BaseFieldSchema, formValues);
     const fieldRenderContext = useMemo(
         () => Object.assign({}, formRenderContext, schema.renderContext, renderContext),
         [renderContext, schema.renderContext, formRenderContext]
     );
+
+    const fieldStatus = useFieldStatus(schema as BaseFieldSchema, formValues);
 
     if (!fieldStatus.isVisible) {
         return null;
@@ -37,27 +50,18 @@ export function SchemaFormField<
 
     const error = form.formState.errors[name] as FieldError | undefined;
 
-    const commonProps: FieldHocProps<TRenderContext, TFormValue> = {
+    const fieldContext: SchemaFieldContextType<TRenderContext, TFormValue> = {
         form,
         name,
         error,
         schema,
+        rules,
         renderContext: fieldRenderContext
     };
 
-    if (!schema.type) {
-        const { Component } = schema as CustomFieldSchema<RenderContext, TFormValue>;
-
-        return (
-            <Component {...commonProps} />
-        );
-    }
-
-    if(!FieldComponent) {
-        throw new Error(`No field component found for type: ${schema.type}`);
-    }
-
     return (
-        <FieldComponent {...commonProps} />
+        <SchemaFieldContext.Provider value={fieldContext}>
+            <FieldComponent />
+        </SchemaFieldContext.Provider>
     );
 }

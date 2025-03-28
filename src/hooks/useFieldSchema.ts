@@ -2,10 +2,7 @@ import { useContext, useMemo } from 'react';
 import { FieldPath, FieldValues, get } from 'react-hook-form';
 import { SchemaFormContext } from '../contexts';
 import { BaseFieldSchema, RenderContext } from '../types';
-
-interface PathItem {
-    readonly name: string;
-}
+import { resolveSchemaPath } from '../utils/fieldUtils';
 
 export const useFieldSchema = <
     TFormValue extends FieldValues,
@@ -22,35 +19,8 @@ export const useFieldSchema = <
 
     const field = useMemo(() => {
         const pathParts = name.split('.');
-
-        const pathItems: PathItem[] = [];
-
-        for (const pathPart of pathParts) {
-            let name = '';
-
-            const isArrayItem = pathPart.endsWith(']');
-            if (isArrayItem) {
-                const arrayName = isArrayItem ? pathPart.split('[')[0] : pathPart;
-                name += isArrayItem ? `${arrayName}.items` : pathPart;
-            }
-            else {
-                const parent = pathItems[pathItems.length - 1];
-                if (parent) {
-                    name += 'properties.';
-                }
-
-                name += pathPart;
-            }
-
-            pathItems.push({
-                name
-            });
-        }
-
-        const path = pathItems.map((part) => part.name).join('.');
-
-        const field = get(fields, path);
-        return field;
+        const path = resolveSchemaPath(pathParts);
+        return get(fields, path);
     }, [fields, name]);
 
     return field as TSchema;

@@ -1,10 +1,10 @@
 import { renderHook } from '@testing-library/react';
-import { useFieldStatus } from './useFieldStatus';
-import { evaluateCondition } from '../utils/conditionUtils';
-import { BaseFieldSchema } from '../types';
+import { useFieldStatus } from '../useFieldStatus';
+import { evaluateCondition } from '../../utils/conditionUtils';
+import { BaseFieldSchema } from '../../types';
 
 // Mock the evaluateCondition utility function
-jest.mock('../utils/conditionUtils', () => ({
+jest.mock('../../utils/conditionUtils', () => ({
     evaluateCondition: jest.fn(),
 }));
 

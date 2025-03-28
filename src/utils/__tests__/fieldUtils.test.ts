@@ -1,4 +1,4 @@
-import { getValidationProps, getValidationStats, getValidationRules } from '../fieldUtils';
+import { getValidationProps, getValidationStats, getValidationRules, resolveSchemaPath } from '../fieldUtils';
 import { RegisterOptions } from 'react-hook-form';
 import { DefaultMessages } from '../../types';
 
@@ -78,59 +78,59 @@ describe('fieldUtils', () => {
         test('extracts required validation rule correctly', () => {
             const rules = { required: 'This field is required' };
             const stats = getValidationStats(rules);
-            
+
             expect(stats).toHaveProperty('required', 'This field is required');
         });
-    
+
         test('extracts min validation rule correctly', () => {
             const rules = { min: 5 };
             const stats = getValidationStats(rules);
-            
+
             expect(stats).toHaveProperty('min', 5);
         });
-    
+
         test('extracts max validation rule correctly', () => {
             const rules = { max: 100 };
             const stats = getValidationStats(rules);
-            
+
             expect(stats).toHaveProperty('max', 100);
         });
-    
+
         test('extracts minLength validation rule correctly', () => {
             const rules = { minLength: 3 };
             const stats = getValidationStats(rules);
-            
+
             expect(stats).toHaveProperty('minLength', 3);
         });
-    
+
         test('extracts maxLength validation rule correctly', () => {
             const rules = { maxLength: 50 };
             const stats = getValidationStats(rules);
-            
+
             expect(stats).toHaveProperty('maxLength', 50);
         });
-    
+
         test('extracts pattern validation rule correctly', () => {
             const pattern = /^[A-Z]+$/;
             const rules = { pattern };
             const stats = getValidationStats(rules);
-            
+
             expect(stats).toHaveProperty('pattern', pattern);
         });
-    
+
         test('handles multiple validation rules correctly', () => {
             const pattern = /^[0-9]+$/;
-            const rules = { 
-                required: true, 
-                min: 1, 
-                max: 100, 
-                minLength: 1, 
+            const rules = {
+                required: true,
+                min: 1,
+                max: 100,
+                minLength: 1,
                 maxLength: 10,
                 pattern
             };
-            
+
             const stats = getValidationStats(rules);
-            
+
             expect(stats).toEqual({
                 required: true,
                 min: 1,
@@ -140,12 +140,12 @@ describe('fieldUtils', () => {
                 pattern
             });
         });
-    
+
         test('returns empty object for undefined rules', () => {
             const stats = getValidationStats(undefined!);
             expect(stats).toEqual(undefined);
         });
-    
+
         test('returns empty object for empty rules', () => {
             const stats = getValidationStats({});
             expect(stats).toEqual(undefined);
@@ -171,7 +171,12 @@ describe('fieldUtils', () => {
             expect(result).toEqual({
                 required: 'This field is required',
                 minLength: { value: 5, message: 'Minimum length not met' },
-                maxLength: { value: 10, message: 'Maximum length exceeded' }
+                maxLength: { value: 10, message: 'Maximum length exceeded' },
+                stats: {
+                    required: true,
+                    minLength: 5,
+                    maxLength: 10
+                }
             });
         });
 
@@ -193,7 +198,11 @@ describe('fieldUtils', () => {
 
             expect(result).toEqual({
                 required: 'Required field',
-                pattern: { value: pattern, message: customMessage }
+                pattern: { value: pattern, message: customMessage },
+                stats: {
+                    pattern: /[a-z]+/,
+                    required: 'Required field',
+                },
             });
         });
 
@@ -209,6 +218,28 @@ describe('fieldUtils', () => {
             const result = getValidationRules(field, defaultMessages);
 
             expect(result).toEqual({});
+        });
+
+        describe('resolveSchemaPath', () => {
+            it('should resolve a simple path with no arrays', () => {
+                expect(resolveSchemaPath(['user', 'name'])).toEqual('user.properties.name');
+            });
+
+            it('should resolve a path with an array item', () => {
+                expect(resolveSchemaPath(['users[0]'])).toEqual('users.items');
+            });
+
+            it('should resolve a complex path with multiple parts and arrays', () => {
+                expect(resolveSchemaPath(['user', 'addresses[0]', 'street'])).toEqual('user.properties.addresses.items.properties.street');
+            });
+
+            it('should handle multiple array notations correctly', () => {
+                expect(resolveSchemaPath(['users[0]', 'friends[0]', 'name'])).toEqual('users.items.properties.friends.items.properties.name');
+            });
+
+            it('should work with a single property', () => {
+                expect(resolveSchemaPath(['name'])).toEqual('name');
+            });
         });
     });
 });

@@ -1,4 +1,4 @@
-import { SchemaFormRenderProps, WithArrayProps, WithObjectProps, WithRegisterProps } from '@basestacks/schema-form';
+import { SchemaFormField, SchemaFormRenderProps, useArray, useController, useObject, useRegister } from '@basestacks/schema-form';
 
 export interface FormRenderContext {
     readonly inputType: string;
@@ -13,14 +13,16 @@ export function FormLayout({ form, onSubmit, children }: SchemaFormRenderProps<F
     );
 };
 
-export function InputField({
-    name,
-    placeholder,
-    title,
-    register,
-    renderContext,
-    error
-}: WithRegisterProps<FormRenderContext>) {
+export function InputField() {
+    const {
+        name,
+        placeholder,
+        title,
+        register,
+        renderContext,
+        error
+    } = useRegister<FormRenderContext>();
+
     return (
         <div className="field">
             <label htmlFor={name}>{title}</label>
@@ -35,12 +37,14 @@ export function InputField({
     );
 }
 
-export function CheckboxField({
-    name,
-    title,
-    register,
-    error
-}: WithRegisterProps<FormRenderContext>) {
+export function CheckboxField() {
+    const {
+        name,
+        title,
+        register,
+        error
+    } = useRegister<FormRenderContext>();
+
     return (
         <div className="field">
             <div>
@@ -52,14 +56,16 @@ export function CheckboxField({
     );
 }
 
-export function SelectField({
-    schema,
-    register,
-    name,
-    title,
-    placeholder,
-    error,
-}: WithRegisterProps<FormRenderContext>) {
+export function SelectField() {
+    const {
+        schema,
+        name,
+        placeholder,
+        title,
+        register,
+        error
+    } = useRegister<FormRenderContext>();
+
     return (
         <div className="field">
             <label htmlFor={name}>{title}</label>
@@ -78,11 +84,21 @@ export function SelectField({
     );
 }
 
-export function ObjectField({ children }: WithObjectProps) {
-    return <div className="field-object">{children}</div>;
+export function ObjectField() {
+    const { fields } = useObject<FormRenderContext>();
+    return (
+        <div className="field-object">
+            {fields.map((field) => (
+                <div key={field} className="field-object-item">
+                    <SchemaFormField name={field} />
+                </div>
+            ))}
+        </div>
+    );
 }
 
-export function ArrayField({ title, array, error, renderItem }: WithArrayProps) {
+export function ArrayField() {
+    const { title, error, array, getItemName } = useArray<FormRenderContext>();
     return (
         <div className="field-array">
             <div>
@@ -92,7 +108,7 @@ export function ArrayField({ title, array, error, renderItem }: WithArrayProps) 
             <div className="field-array-items">
                 {array.fields.map((field, index) => (
                     <div key={field.id} className="field-array-item">
-                        {renderItem(index)}
+                        <SchemaFormField name={getItemName(index)} />
                         <button onClick={() => array.remove(index)}>x</button>
                     </div>
                 ))}

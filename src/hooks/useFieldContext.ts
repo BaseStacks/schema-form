@@ -1,10 +1,16 @@
 import { FieldValues } from 'react-hook-form';
-import { BaseFieldSchema, RenderContext } from '../types';
-import { useMemo } from 'react';
-import { useSchemaForm } from './useSchemaForm';
+import { RenderContext, SchemaFieldContextType } from '../types';
+import { useContext } from 'react';
+import { SchemaFieldContext } from '../contexts';
 
-export const useFieldContext = <TFormValue extends FieldValues>(field: BaseFieldSchema<RenderContext, TFormValue>) => {
-    const { renderContext: formContext } = useSchemaForm();
-    const fieldContext = useMemo(() => Object.assign({}, formContext, field.renderContext), [formContext, field.renderContext]);
+export const useFieldContext = <
+    TRenderContext extends RenderContext = RenderContext,
+    TFormValue extends FieldValues = FieldValues
+>() => {
+    const fieldContext = useContext<SchemaFieldContextType<TRenderContext, TFormValue>>(SchemaFieldContext);
+    if (!fieldContext) {
+        throw new Error('useFieldContext must be used within a SchemaFieldContext.Provider');
+    }
+
     return fieldContext;
 };

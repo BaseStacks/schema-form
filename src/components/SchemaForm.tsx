@@ -13,7 +13,11 @@ export type SchemaFormProps<TFormValue extends FieldValues = FieldValues, TRende
 };
 
 /**
- * Main Schema Form component
+ * A generic SchemaForm component that provides a flexible and extensible way to build forms
+ * based on a schema definition. It integrates with React Hook Form for form state management
+ * and supports custom rendering through a render context.
+ *
+ * @param props - {@link SchemaFormProps}.
  */
 export function SchemaForm<TFormValue extends FieldValues = FieldValues, TRenderContext extends RenderContext = RenderContext>({
     fields,

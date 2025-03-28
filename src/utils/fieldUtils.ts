@@ -11,9 +11,9 @@ export const getValidationProps = (field: FieldSchemaType<any>) => {
     }, {} as Record<string, any>);
 };
 
-export const getValidationStats = (field: FieldSchemaType<any>): ValidationStats | undefined => {
+export const getValidationStats = (field: FieldSchemaType<any, any>): ValidationStats | undefined => {
     if (!field) return undefined;
-    
+
     const validationProps = getValidationProps(field);
 
     if (!validationProps) return undefined;
@@ -34,7 +34,7 @@ export const getValidationStats = (field: FieldSchemaType<any>): ValidationStats
     return validationStats;
 };
 
-export const getValidationRules = (field: FieldSchemaType<any>, defaultMessages?: DefaultMessages) => {
+export const getValidationRules = (field: FieldSchemaType<any, any>, defaultMessages?: DefaultMessages) => {
     const validationRules: Record<string, any> = {};
 
     const validationProps = getValidationProps(field);
@@ -67,5 +67,43 @@ export const getValidationRules = (field: FieldSchemaType<any>, defaultMessages?
         }
     }
 
-    return validationRules as ValidationRules;
+    const stats = getValidationStats(field);
+
+    return {
+        ...validationRules,
+        stats,
+    } as ValidationRules;
+};
+
+// Pure function to resolve field path that can be tested independently
+export const resolveSchemaPath = (pathParts: string[]): string => {
+    const pathItems: string[] = [];
+
+    for (const pathPart of pathParts) {
+        let name = '';
+
+        const isArrayItem = pathPart.endsWith(']');
+        const parent = pathItems[pathItems.length - 1];
+
+        if (isArrayItem) {
+            const arrayName = isArrayItem ? pathPart.split('[')[0] : pathPart;
+
+            if (parent) {
+                name += 'properties.';
+            }
+
+            name += isArrayItem ? `${arrayName}.items` : pathPart;
+        }
+        else {
+            if (parent) {
+                name += 'properties.';
+            }
+
+            name += pathPart;
+        }
+
+        pathItems.push(name);
+    }
+
+    return pathItems.map((part) => part).join('.');
 };
