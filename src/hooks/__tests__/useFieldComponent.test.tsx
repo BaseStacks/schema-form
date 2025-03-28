@@ -8,6 +8,7 @@ jest.mock('../useGlobalContext');
 describe('useFieldComponent', () => {
     const mockTextComponent = () => <div>Text Field</div>;
     const mockNumberComponent = () => <div>Number Field</div>;
+    const mockCustomComponent = () => <div>Custom Field</div>;
 
     beforeEach(() => {
         // Setup the mock implementation
@@ -22,22 +23,32 @@ describe('useFieldComponent', () => {
     });
 
     it('should return the correct field component for text type', () => {
-        const { result } = renderHook(() => useFieldComponent('text'));
+        const { result } = renderHook(() => useFieldComponent({ type: 'text' }));
         expect(result.current).toBe(mockTextComponent);
     });
 
     it('should return the correct field component for number type', () => {
-        const { result } = renderHook(() => useFieldComponent('number'));
+        const { result } = renderHook(() => useFieldComponent({ type: 'number' }));
         expect(result.current).toBe(mockNumberComponent);
     });
 
-    it('should return undefined for unknown field types', () => {
-        const { result } = renderHook(() => useFieldComponent('unknown'));
-        expect(result.current).toBeUndefined();
+    it('should throw error for unknown field types', () => {
+        expect(() => {
+            renderHook(() => useFieldComponent({ type: 'unknown' }));
+        }).toThrow('No field component found for type: unknown');
     });
 
-    it('should return undefined for missing field types', () => {
-        const { result } = renderHook(() => useFieldComponent(undefined));
-        expect(result.current).toBeNull();
+    it('should return custom component when type is not defined but Component is provided', () => {
+        const { result } = renderHook(() => 
+            useFieldComponent({ Component: mockCustomComponent })
+        );
+        expect(result.current).toBe(mockCustomComponent);
+    });
+
+    it('should handle schema with no type and no Component property', () => {
+        const { result } = renderHook(() => 
+            useFieldComponent({})
+        );
+        expect(result.current).toBeUndefined();
     });
 });

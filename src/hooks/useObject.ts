@@ -25,6 +25,10 @@ export const useObject = <
     const { title, description, placeholder } = objectSchema;
 
     const fields = useMemo(() => {
+        if(!objectSchema.properties) {
+            return [];
+        }
+        
         return Object.keys(objectSchema.properties!).map((key) => {
             return `${name}.${key}` as FieldPath<TFormValue>;
         });
