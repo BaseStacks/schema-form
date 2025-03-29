@@ -12,6 +12,9 @@ jobs:
       - name: Install Dependencies
         uses: ./.github/actions/install-dependencies
 
+      - name: Install Cypress binary
+        run: npx cypress install
+
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
