@@ -1,4 +1,4 @@
-import { FieldArrayPath, FieldErrors, FieldPath, FieldValues, Path, RegisterOptions, SubmitHandler, UseFormReturn } from 'react-hook-form';
+import { FieldArrayPath, FieldPath, FieldValues, RegisterOptions, SubmitHandler, UseFormReturn } from 'react-hook-form';
 
 export type RenderContext = Record<any, any>;
 
@@ -82,7 +82,6 @@ export interface SchemaFieldContextType<
     | ObjectFieldSchema<TRenderContext, TFormValue, any>;
     readonly name: FieldPath<TFormValue> | FieldArrayPath<TFormValue>;
     readonly rules: ValidationRules;
-    readonly error?: FieldErrors<TFormValue>[Path<TFormValue>];
     readonly renderContext: TRenderContext;
 }
 

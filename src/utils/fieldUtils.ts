@@ -34,23 +34,30 @@ export const getValidationStats = (field: FieldSchemaType<any, any>): Validation
     return validationStats;
 };
 
-const processValidationRule = (key: string, rule: any, defaultMessages?: DefaultMessages) => {
+export const processValidationRule = (key: string, rule: any, defaultMessages?: DefaultMessages) => {
     if (rule === null || rule === undefined) {
         return null;
     }
-    
+
     if (key === 'validate') {
         return rule;
     }
-    
+
     if (key === 'required') {
-        return typeof rule === 'boolean' ? defaultMessages?.required : rule;
+        if(typeof rule === 'string') {
+            return rule;
+        }
+        if(rule === true) {
+            return defaultMessages?.required ?? true;
+        }
+
+        return false;
     }
-    
+
     if (typeof rule === 'object') {
         return rule;
     }
-    
+
     return {
         value: rule,
         message: defaultMessages?.[key as keyof DefaultMessages]
@@ -60,20 +67,20 @@ const processValidationRule = (key: string, rule: any, defaultMessages?: Default
 export const getValidationRules = (field: FieldSchemaType<any, any>, defaultMessages?: DefaultMessages) => {
     const validationRules: Record<string, any> = {};
     const validationProps = getValidationProps(field);
-    
+
     if (!validationProps) {
         return { stats: {} } as ValidationRules;
     }
-    
+
     Object.entries(validationProps).forEach(([key, rule]) => {
         const processedRule = processValidationRule(key, rule, defaultMessages);
         if (processedRule !== null) {
             validationRules[key] = processedRule;
         }
     });
-    
+
     const stats = getValidationStats(field);
-    
+
     return {
         ...validationRules,
         stats,
@@ -89,8 +96,8 @@ export const resolveSchemaPath = (pathParts: string[]): string => {
         const arrayName = isArrayItem ? pathPart.split('[')[0] : pathPart;
         const parentPrefix = pathItems.length > 0 ? 'properties.' : '';
 
-        const name = isArrayItem 
-            ? `${parentPrefix}${arrayName}.items` 
+        const name = isArrayItem
+            ? `${parentPrefix}${arrayName}.items`
             : `${parentPrefix}${pathPart}`;
 
         pathItems.push(name);

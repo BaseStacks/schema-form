@@ -54,7 +54,7 @@ export const useController = <
 >(
         baseSchema?: RegisterOptions<TFormValue>
     ): UseControllerReturn<TRenderContext, TFormValue> => {
-    const { schema, name, rules, renderContext, error } = useFieldContext<TRenderContext, TFormValue>();
+    const { schema, name, rules, renderContext } = useFieldContext<TRenderContext, TFormValue>();
 
     const genericSchema = useMemo(() => ({
         ...baseSchema,
@@ -80,7 +80,7 @@ export const useController = <
         description,
         placeholder,
         renderContext,
-        error,
+        error: fieldState.error,
         required: rules.stats.required,
         min: rules.stats.min,
         max: rules.stats.max,

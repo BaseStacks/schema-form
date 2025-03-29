@@ -47,16 +47,13 @@ export function SchemaFormField<
 
     const fieldStatus = useFieldStatus(schema as BaseFieldSchema, formValues);
 
-    const error = form.formState.errors[name];
-
     const fieldContext = useMemo((): SchemaFieldContextType<TRenderContext, TFormValue> => ({
         form,
         name,
-        error,
         schema,
         rules,
         renderContext: fieldRenderContext
-    }), [form, name, error, schema, rules, fieldRenderContext]);
+    }), [form, name, schema, rules, fieldRenderContext]);
 
     if (!fieldStatus.isVisible) {
         return null;

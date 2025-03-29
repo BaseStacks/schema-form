@@ -1,7 +1,6 @@
-import { SchemaFormField, SchemaFormRenderProps, useArray, useObject, useRegister } from '@basestacks/schema-form';
-
+import { SchemaFormField, SchemaFormRenderProps, useArray, useController, useObject } from '@basestacks/schema-form';
 export interface FormRenderContext {
-    readonly inputType: string;
+    readonly inputType?: string;
 }
 
 export function FormLayout({ form, onSubmit, children }: SchemaFormRenderProps<FormRenderContext>) {
@@ -15,13 +14,13 @@ export function FormLayout({ form, onSubmit, children }: SchemaFormRenderProps<F
 
 export function InputField() {
     const {
+        field,
         name,
         placeholder,
         title,
-        register,
         renderContext,
-        error
-    } = useRegister<FormRenderContext>();
+        error,
+    } = useController<FormRenderContext>();
 
     return (
         <div className="field">
@@ -30,7 +29,7 @@ export function InputField() {
                 id={name}
                 type={renderContext.inputType ?? 'text'}
                 placeholder={placeholder}
-                {...register}
+                {...field}
             />
             {error?.message && <div className="field-error">{error?.message}</div>}
         </div>
@@ -39,16 +38,16 @@ export function InputField() {
 
 export function CheckboxField() {
     const {
+        field,
         name,
         title,
-        register,
         error
-    } = useRegister<FormRenderContext>();
+    } = useController<FormRenderContext>();
 
     return (
         <div className="field">
             <div>
-                <input type="checkbox" id={name} {...register} />{' '}
+                <input type="checkbox" id={name} {...field} />{' '}
                 <label htmlFor={name}>{title}</label>
             </div>
             {error?.message && <div className="field-error">{error?.message}</div>}
@@ -58,19 +57,19 @@ export function CheckboxField() {
 
 export function SelectField() {
     const {
+        field,
         schema,
         name,
         placeholder,
         title,
-        register,
         error
-    } = useRegister<FormRenderContext>();
+    } = useController<FormRenderContext>();
 
     return (
         <div className="field">
             <label htmlFor={name}>{title}</label>
-            <select {...register}>
-                <option selected value="">
+            <select {...field} id={name}>
+                <option value="">
                     {placeholder}
                 </option>
                 {schema?.options?.map((o) => (

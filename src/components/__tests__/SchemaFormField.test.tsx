@@ -67,7 +67,6 @@ describe('SchemaFormField', () => {
                     form: mockForm,
                     name: 'testField',
                     schema: mockSchema,
-                    error: undefined,
                     renderContext: expect.any(Object),
                     rules: expect.any(Object)
                 })
@@ -151,43 +150,6 @@ describe('SchemaFormField', () => {
                         size: 'large',
                         variant: 'outlined'
                     })
-                })
-            }),
-            undefined
-        );
-    });
-
-    it('includes field error in context when available', () => {
-        const mockTextComponent = jest.fn(() => <div>Text Field</div>);
-        const mockError = { type: 'required', message: 'This field is required' };
-
-        const mockFormWithError = {
-            ...mockForm,
-            formState: { errors: { testField: mockError } }
-        };
-
-        (useSchemaForm as jest.Mock).mockReturnValue({
-            form: mockFormWithError,
-            renderContext: {}
-        });
-
-        const mockSchema = {
-            type: 'text',
-            title: 'Test Field'
-        };
-
-        (useFieldSchema as jest.Mock).mockReturnValue(mockSchema);
-        (useFieldComponent as jest.Mock).mockReturnValue(mockTextComponent);
-
-        render(<SchemaFormField name="testField" />);
-
-        expect(mockTextComponent).toHaveBeenCalled();
-
-        // Verify error is passed in context
-        expect(SchemaFieldContext.Provider).toHaveBeenCalledWith(
-            expect.objectContaining({
-                value: expect.objectContaining({
-                    error: mockError
                 })
             }),
             undefined

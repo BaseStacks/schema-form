@@ -1,5 +1,5 @@
 import { useMemo, useCallback } from 'react';
-import { FieldValues, FieldPath, useFieldArray, FieldArrayPath, UseFieldArrayProps, UseFieldArrayReturn } from 'react-hook-form';
+import { FieldValues, FieldPath, useFieldArray, FieldArrayPath, UseFieldArrayProps, UseFieldArrayReturn, useFormState } from 'react-hook-form';
 import { ArrayFieldSchema, RenderContext } from '../types';
 import { useFieldContext } from './useFieldContext';
 
@@ -53,7 +53,7 @@ export const useArray = <
     TFormValue extends FieldValues = FieldValues,
     TItem extends FieldValues = FieldValues
 >(baseSchema?: UseFieldArrayProps<any>['rules']): UseArrayReturn<TRenderContext, TFormValue, TItem> => {
-    const { schema, name, rules, renderContext, error } = useFieldContext<TRenderContext, TFormValue>();
+    const { schema, name, rules, renderContext } = useFieldContext<TRenderContext, TFormValue>();
 
     const arraySchema = useMemo(() => ({
         ...baseSchema,
@@ -66,6 +66,9 @@ export const useArray = <
         rules
     });
 
+    const { errors } = useFormState({ name: name as FieldPath<TFormValue> });
+    const error = errors[name];
+    
     const { fields } = array;
 
     // Get min/max items constraints from field
