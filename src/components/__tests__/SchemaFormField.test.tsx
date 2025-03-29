@@ -155,4 +155,101 @@ describe('SchemaFormField', () => {
             undefined
         );
     });
+    
+    it('handles null formRenderContext properly', () => {
+        const mockTextComponent = jest.fn(() => <div>Text Field</div>);
+        const schemaRenderContext = { theme: 'dark' };
+        const fieldRenderContext = { size: 'large' };
+
+        (useSchemaForm as jest.Mock).mockReturnValue({
+            form: mockForm,
+            renderContext: null
+        });
+
+        const mockSchema = {
+            type: 'text',
+            renderContext: schemaRenderContext
+        };
+
+        (useFieldSchema as jest.Mock).mockReturnValue(mockSchema);
+        (useFieldComponent as jest.Mock).mockReturnValue(mockTextComponent);
+
+        render(<SchemaFormField name="testField" renderContext={fieldRenderContext} />);
+
+        expect(mockTextComponent).toHaveBeenCalled();
+        expect(SchemaFieldContext.Provider).toHaveBeenCalledWith(
+            expect.objectContaining({
+                value: expect.objectContaining({
+                    renderContext: expect.objectContaining({
+                        theme: 'dark',
+                        size: 'large'
+                    })
+                })
+            }),
+            undefined
+        );
+    });
+
+    it('handles undefined formRenderContext properly', () => {
+        const mockTextComponent = jest.fn(() => <div>Text Field</div>);
+        const schemaRenderContext = { theme: 'dark' };
+        const fieldRenderContext = { size: 'large' };
+
+        (useSchemaForm as jest.Mock).mockReturnValue({
+            form: mockForm,
+            renderContext: undefined
+        });
+
+        const mockSchema = {
+            type: 'text',
+            renderContext: schemaRenderContext
+        };
+
+        (useFieldSchema as jest.Mock).mockReturnValue(mockSchema);
+        (useFieldComponent as jest.Mock).mockReturnValue(mockTextComponent);
+
+        render(<SchemaFormField name="testField" renderContext={fieldRenderContext} />);
+
+        expect(mockTextComponent).toHaveBeenCalled();
+        expect(SchemaFieldContext.Provider).toHaveBeenCalledWith(
+            expect.objectContaining({
+                value: expect.objectContaining({
+                    renderContext: expect.objectContaining({
+                        theme: 'dark',
+                        size: 'large'
+                    })
+                })
+            }),
+            undefined
+        );
+    });
+
+    it('handles all null/undefined render contexts', () => {
+        const mockTextComponent = jest.fn(() => <div>Text Field</div>);
+
+        (useSchemaForm as jest.Mock).mockReturnValue({
+            form: mockForm,
+            renderContext: undefined
+        });
+
+        const mockSchema = {
+            type: 'text',
+            renderContext: null
+        };
+
+        (useFieldSchema as jest.Mock).mockReturnValue(mockSchema);
+        (useFieldComponent as jest.Mock).mockReturnValue(mockTextComponent);
+
+        render(<SchemaFormField name="testField" />);
+
+        expect(mockTextComponent).toHaveBeenCalled();
+        expect(SchemaFieldContext.Provider).toHaveBeenCalledWith(
+            expect.objectContaining({
+                value: expect.objectContaining({
+                    renderContext: {}
+                })
+            }),
+            undefined
+        );
+    });
 });

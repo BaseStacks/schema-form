@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { FieldPath, FieldValues, RegisterOptions, UseFormRegisterReturn } from 'react-hook-form';
+import { FieldErrors, FieldPath, FieldValues, RegisterOptions, UseFormRegisterReturn, useFormState } from 'react-hook-form';
 import { GenericFieldSchema, RenderContext } from '../types';
 import { useFieldContext } from './useFieldContext';
 
@@ -11,6 +11,7 @@ export interface UseRegisterReturn<TRenderContext extends RenderContext = Render
     readonly description?: string;
     readonly placeholder?: string;
     readonly renderContext: TRenderContext;
+    readonly error?: FieldErrors<TFormValue>[string];
     readonly required?: boolean;
     readonly min?: number;
     readonly max?: number;
@@ -54,6 +55,12 @@ export const useRegister = <
         ...schema
     } as GenericFieldSchema<TRenderContext, TFormValue>), [baseSchema, schema]);
 
+    const { errors } = useFormState({
+        name: name as FieldPath<TFormValue>,
+    });
+
+    const error = errors[name];
+
     const { title, description, placeholder } = genericSchema;
 
     const register = useMemo(() => {
@@ -69,7 +76,8 @@ export const useRegister = <
         description,
         placeholder,
         renderContext,
-        required: !!rules?.required,
+        error,
+        required: rules.stats.required,
         min: rules.stats.min,
         max: rules.stats.max,
         minLength: rules.stats.minLength,

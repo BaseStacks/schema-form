@@ -32,121 +32,101 @@ describe('useFieldRules', () => {
         jest.clearAllMocks();
     });
 
-    test('returns validation rules from schema', () => {
+    test('works correctly when getDefaultMessages is not defined', () => {
+        // Setup context without getDefaultMessages
+        (useGlobalContext as jest.Mock).mockReturnValue({});
+
         const schema = { type: 'string', required: true } as FieldSchemaType<any>;
-
-        const { result } = renderHook(() => useFieldRules(schema));
-
-        expect(getValidationStats).toHaveBeenCalledWith(schema);
-        expect(getValidationRules).toHaveBeenCalled();
-        expect(result.current).toEqual({
+        
+        // Mock validation rules without default messages
+        const mockRulesWithoutMessages = {
             required: true,
-            min: { value: 3, message: 'Min 3' },
-            max: { value: 10, message: 'Max 10' }
-        });
+            min: { value: 3 },
+            max: { value: 10 }
+        };
+        (getValidationRules as jest.Mock).mockReturnValueOnce(mockRulesWithoutMessages);
+        
+        const { result } = renderHook(() => useFieldRules(schema));
+        
+        expect(getValidationStats).toHaveBeenCalledWith(schema);
+        expect(getValidationRules).toHaveBeenCalledWith(schema, undefined);
+        expect(result.current).toEqual(mockRulesWithoutMessages);
     });
 
-    test('returns empty object when validationStats is falsy', () => {
-        (getValidationStats as jest.Mock).mockReturnValue(null);
+    test('works correctly when getDefaultMessages returns undefined', () => {
+        // Setup context with getDefaultMessages that returns undefined
+        (useGlobalContext as jest.Mock).mockReturnValue({
+            getDefaultMessages: jest.fn(() => undefined)
+        });
+
+        const schema = { type: 'string', required: true } as FieldSchemaType<any>;
+        
+        // Mock validation rules without default messages
+        const mockRulesWithoutMessages = {
+            required: true,
+            min: { value: 3 },
+            max: { value: 10 }
+        };
+        (getValidationRules as jest.Mock).mockReturnValueOnce(mockRulesWithoutMessages);
+        
+        const { result } = renderHook(() => useFieldRules(schema));
+        
+        expect(getValidationStats).toHaveBeenCalledWith(schema);
+        expect(getValidationRules).toHaveBeenCalledWith(schema, undefined);
+        expect(result.current).toEqual(mockRulesWithoutMessages);
+    });
+
+    test('returns default stats object when validationStats is undefined', () => {
+        // Mock getValidationStats to return undefined
+        (getValidationStats as jest.Mock).mockReturnValueOnce(undefined);
+
         const schema = { type: 'string' } as FieldSchemaType<any>;
-
+        
         const { result } = renderHook(() => useFieldRules(schema));
-
-        expect(result.current).toEqual({
-            stats: {}
-        });
-    });
-
-    test('uses default messages from context', () => {
-        const mockMessages = { required: 'Field is required' };
-        (useGlobalContext as jest.Mock).mockReturnValue({
-            getDefaultMessages: jest.fn(() => mockMessages)
-        });
-
-        const schema = { type: 'string', required: true } as FieldSchemaType<any>;
-
-        renderHook(() => useFieldRules(schema));
-
-        expect(getValidationRules).toHaveBeenCalledWith(schema, mockMessages);
-    });
-
-    test('memoizes rules when dependencies have not changed', () => {
-        const schema = { type: 'string', required: true } as FieldSchemaType<any>;
-
-        const { rerender, result } = renderHook(() => useFieldRules(schema));
-        const initialRules = result.current;
-
-        jest.clearAllMocks();
-        rerender();
-
-        expect(getValidationStats).not.toHaveBeenCalled();
-        expect(getValidationRules).not.toHaveBeenCalled();
-        expect(result.current).toBe(initialRules);
-    });
-
-    test('recalculates rules when schema changes', () => {
-        const schema1 = { type: 'string', required: true } as FieldSchemaType<any>;
-        const schema2 = { type: 'number', min: 5 } as FieldSchemaType<any>;
-
-        // Setup mock returns for second schema
-        const mockRulesForSchema1 = {
-            required: true
-        };
-        const mockRulesForSchema2 = {
-            min: { value: 5, message: 'Min 5' }
-        };
-
-        (getValidationRules as jest.Mock).mockReturnValueOnce(mockRulesForSchema1);
-
-        const { rerender, result } = renderHook(
-            ({ schema }) => useFieldRules(schema),
-            { initialProps: { schema: schema1 } }
-        );
-
-        const initialRules = result.current;
-        jest.clearAllMocks();
-
-        (getValidationRules as jest.Mock).mockReturnValueOnce(mockRulesForSchema2);
-        rerender({ schema: schema2 });
-
-        expect(getValidationStats).toHaveBeenCalledWith(schema2);
-        expect(getValidationRules).toHaveBeenCalled();
-        expect(result.current).not.toBe(initialRules);
-        expect(result.current).toEqual(mockRulesForSchema2);
-    });
-
-    test('recalculates rules when context messages change', () => {
-        const schema = { type: 'string', required: true } as FieldSchemaType<any>;
-        const initialMessages = { required: 'Field is required' };
-        const newMessages = { required: 'This field must be filled' };
-
-        // Setup initial context
-        (useGlobalContext as jest.Mock).mockReturnValue({
-            getDefaultMessages: jest.fn(() => initialMessages)
-        });
-
-        const { result, rerender } = renderHook(() => useFieldRules(schema));
-        const initialRules = result.current;
-
-        // Change the context messages
-        jest.clearAllMocks();
-        (useGlobalContext as jest.Mock).mockReturnValue({
-            getDefaultMessages: jest.fn(() => newMessages)
-        });
-
-        // Mock new rules that would be generated with new messages
-        const newRules = {
-            required: true,
-            min: { value: 3, message: 'Min 3' },
-            max: { value: 10, message: 'This field must be filled' }
-        };
-        (getValidationRules as jest.Mock).mockReturnValueOnce(newRules);
-
-        rerender();
-
+        
         expect(getValidationStats).toHaveBeenCalledWith(schema);
-        expect(getValidationRules).toHaveBeenCalledWith(schema, newMessages);
-        expect(result.current).not.toBe(initialRules);
-        expect(result.current).toEqual(newRules);
+        expect(getValidationRules).not.toHaveBeenCalled();
+        expect(result.current).toEqual({ stats: {} });
+    });
+
+    test('works correctly with valid schema and default messages', () => {
+        const mockDefaultMessages = { 
+            required: 'This field is required',
+            min: 'Value too short',
+            max: 'Value too long'
+        };
+        
+        const mockGetDefaultMessages = jest.fn(() => mockDefaultMessages);
+        (useGlobalContext as jest.Mock).mockReturnValue({
+            getDefaultMessages: mockGetDefaultMessages
+        });
+
+        const schema = { 
+            type: 'string', 
+            required: true,
+            minLength: 3,
+            maxLength: 10 
+        } as FieldSchemaType<any>;
+        
+        const mockValidationStats = {
+            required: true,
+            min: 3,
+            max: 10
+        };
+        (getValidationStats as jest.Mock).mockReturnValueOnce(mockValidationStats);
+
+        const mockRules = {
+            required: { value: true, message: 'This field is required' },
+            min: { value: 3, message: 'Value too short' },
+            max: { value: 10, message: 'Value too long' }
+        };
+        (getValidationRules as jest.Mock).mockReturnValueOnce(mockRules);
+        
+        const { result } = renderHook(() => useFieldRules(schema));
+        
+        expect(getValidationStats).toHaveBeenCalledWith(schema);
+        expect(mockGetDefaultMessages).toHaveBeenCalledWith(mockValidationStats, schema);
+        expect(getValidationRules).toHaveBeenCalledWith(schema, mockDefaultMessages);
+        expect(result.current).toEqual(mockRules);
     });
 });

@@ -136,4 +136,80 @@ describe('SchemaForm', () => {
             })
         );
     });
+    
+    it('handles undefined globalRenderContext correctly', () => {
+        (useGlobalContext as jest.Mock).mockReturnValue({
+            components: {
+                Form: mockFormComponent,
+                fields: {}
+            },
+            renderContext: undefined
+        });
+        
+        const formRenderContext = { size: 'large' };
+        render(<SchemaForm fields={mockFields} renderContext={formRenderContext} />);
+        
+        expect(mockFormComponent).toHaveBeenCalledWith(
+            expect.objectContaining({
+                renderContext: expect.objectContaining({
+                    size: 'large'
+                })
+            }),
+            undefined
+        );
+    });
+    
+    it('handles null globalRenderContext correctly', () => {
+        (useGlobalContext as jest.Mock).mockReturnValue({
+            components: {
+                Form: mockFormComponent,
+                fields: {}
+            },
+            renderContext: null
+        });
+        
+        const formRenderContext = { size: 'large' };
+        render(<SchemaForm fields={mockFields} renderContext={formRenderContext} />);
+        
+        expect(mockFormComponent).toHaveBeenCalledWith(
+            expect.objectContaining({
+                renderContext: expect.objectContaining({
+                    size: 'large'
+                })
+            }),
+            undefined
+        );
+    });
+    
+    it('works with both undefined globalRenderContext and renderContext', () => {
+        (useGlobalContext as jest.Mock).mockReturnValue({
+            components: {
+                Form: mockFormComponent,
+                fields: {}
+            },
+            renderContext: undefined
+        });
+        
+        render(<SchemaForm fields={mockFields} />);
+        
+        expect(mockFormComponent).toHaveBeenCalledWith(
+            expect.objectContaining({
+                renderContext: expect.objectContaining({})
+            }),
+            undefined
+        );
+    });
+    
+    it('does not submit if onSubmit is not provided', () => {
+        render(<SchemaForm fields={mockFields} />);
+        
+        const submitButton = screen.getByTestId('submit-button');
+        fireEvent.submit(submitButton);
+        
+        expect(mockForm.handleSubmit).toHaveBeenCalled();
+        const submitHandler = mockForm.handleSubmit.mock.calls[0][0];
+        const result = submitHandler({});
+        
+        expect(result).toBeUndefined();
+    });
 });
