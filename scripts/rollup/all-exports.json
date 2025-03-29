@@ -3,7 +3,7 @@
     "SchemaFormField",
     "SchemaFormProvider",
     "useArray",
-    "useController",
+    "useField",
     "useObject",
-    "useRegister"
+    "useUncontrolledField"
 ]

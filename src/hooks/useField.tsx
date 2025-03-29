@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
-import { ControllerFieldState, ControllerRenderProps, FieldPath, FieldValues, RegisterOptions, UseFormStateReturn, useController as _useController } from 'react-hook-form';
+import { ControllerFieldState, ControllerRenderProps, FieldPath, FieldValues, RegisterOptions, UseFormStateReturn, useController } from 'react-hook-form';
 import { GenericFieldSchema, RenderContext } from '../types';
 import { useFieldContext } from './useFieldContext';
 
-export interface UseControllerReturn<
+export interface UseFieldReturn<
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues
 > {
@@ -30,7 +30,7 @@ export interface UseControllerReturn<
  *
  * @param baseSchema - Optional, which can include validation rules and other properties.
  *
- * @returns An {@link UseControllerReturn} object containing the field controller, schema, and various field-related properties:
+ * @returns An {@link UseFieldReturn} object containing the field controller, schema, and various field-related properties:
  * - `field`: The field's input props and methods for managing its state.
  * - `fieldState`: The state of the field, including validation errors.
  * - `formState`: The state of the entire form.
@@ -48,12 +48,12 @@ export interface UseControllerReturn<
  * - `maxLength`: The maximum length for the field, derived from the validation rules.
  * - `pattern`: The regex pattern for the field, derived from the validation rules.
  */
-export const useController = <
+export const useField = <
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues
 >(
         baseSchema?: RegisterOptions<TFormValue>
-    ): UseControllerReturn<TRenderContext, TFormValue> => {
+    ): UseFieldReturn<TRenderContext, TFormValue> => {
     const { schema, name, rules, renderContext } = useFieldContext<TRenderContext, TFormValue>();
 
     const genericSchema = useMemo(() => ({
@@ -63,7 +63,7 @@ export const useController = <
 
     const { title, description, placeholder } = genericSchema;
 
-    const { field, fieldState, formState } = _useController({
+    const { field, fieldState, formState } = useController({
         name: name as FieldPath<TFormValue>,
         rules,
         shouldUnregister: genericSchema.shouldUnregister,

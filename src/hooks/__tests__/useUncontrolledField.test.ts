@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useRegister } from '../useRegister';
+import { useUncontrolledField } from '../useUncontrolledField';
 import { useFieldContext } from '../useFieldContext';
 
 // Mock dependencies
@@ -11,7 +11,7 @@ jest.mock('react-hook-form', () => ({
     })
 }));
 
-describe('useRegister', () => {
+describe('useUncontrolledField', () => {
     // Setup mock data and functions
     const mockRegister = jest.fn().mockReturnValue({
         onChange: jest.fn(),
@@ -55,8 +55,8 @@ describe('useRegister', () => {
         });
     });
 
-    it('should return the correct register result and properties', () => {
-        const { result } = renderHook(() => useRegister());
+    it('should return the correct field result and properties', () => {
+        const { result } = renderHook(() => useUncontrolledField());
 
         expect(mockForm.register).toHaveBeenCalledWith('testField', expect.objectContaining({
             ...mockSchema,
@@ -64,7 +64,7 @@ describe('useRegister', () => {
         }));
 
         expect(result.current).toEqual({
-            register: {
+            field: {
                 onChange: expect.any(Function),
                 onBlur: expect.any(Function),
                 name: 'testField',
@@ -90,7 +90,7 @@ describe('useRegister', () => {
             required: false
         };
 
-        renderHook(() => useRegister(baseSchema));
+        renderHook(() => useUncontrolledField(baseSchema));
 
         expect(mockForm.register).toHaveBeenCalledWith('testField', expect.objectContaining({
             ...baseSchema,
@@ -104,7 +104,7 @@ describe('useRegister', () => {
             pattern: /newPattern/,
         };
 
-        renderHook(() => useRegister(baseSchema));
+        renderHook(() => useUncontrolledField(baseSchema));
 
         expect(mockForm.register).toHaveBeenCalledWith('testField', expect.objectContaining({
             title: 'Test Title',

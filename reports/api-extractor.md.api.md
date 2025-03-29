@@ -205,10 +205,10 @@ export interface UseArrayReturn<TRenderContext extends RenderContext = RenderCon
 }
 
 // @public
-export const useController: <TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues>(baseSchema?: RegisterOptions<TFormValue>) => UseControllerReturn<TRenderContext, TFormValue>;
+export const useField: <TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues>(baseSchema?: RegisterOptions<TFormValue>) => UseFieldReturn<TRenderContext, TFormValue>;
 
 // @public (undocumented)
-export interface UseControllerReturn<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues> {
+export interface UseFieldReturn<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues> {
     // (undocumented)
     readonly description?: string;
     // (undocumented)
@@ -265,10 +265,10 @@ export interface UseObjectReturn<TRenderContext extends RenderContext = RenderCo
 }
 
 // @public
-export const useRegister: <TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues>(baseSchema?: RegisterOptions<TFormValue>) => UseRegisterReturn<TRenderContext, TFormValue>;
+export const useUncontrolledField: <TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues>(baseSchema?: RegisterOptions<TFormValue>) => UseUncontrolledFieldReturn<TRenderContext, TFormValue>;
 
 // @public (undocumented)
-export interface UseRegisterReturn<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues> {
+export interface UseUncontrolledFieldReturn<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues> {
     // (undocumented)
     readonly description?: string;
     // (undocumented)
@@ -288,7 +288,7 @@ export interface UseRegisterReturn<TRenderContext extends RenderContext = Render
     // (undocumented)
     readonly placeholder?: string;
     // (undocumented)
-    readonly register: UseFormRegisterReturn;
+    readonly field: UseFormRegisterReturn;
     // (undocumented)
     readonly renderContext: TRenderContext;
     // (undocumented)

@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
-import { useController } from '../useController';
+import { useField } from '../useField';
 import { useFieldContext } from '../useFieldContext';
-import { useController as _useController } from 'react-hook-form';
+import { useController } from 'react-hook-form';
 
 // Mock dependencies
 jest.mock('../useFieldContext');
@@ -10,7 +10,7 @@ jest.mock('react-hook-form', () => ({
     useController: jest.fn()
 }));
 
-describe('useController', () => {
+describe('useField', () => {
     beforeEach(() => {
         jest.clearAllMocks();
 
@@ -32,7 +32,7 @@ describe('useController', () => {
             error: null
         });
 
-        (_useController as jest.Mock).mockReturnValue({
+        (useController as jest.Mock).mockReturnValue({
             field: { value: 'test', onChange: jest.fn(), onBlur: jest.fn(), ref: jest.fn() },
             fieldState: { invalid: false, isTouched: false, isDirty: false },
             formState: { isDirty: false, dirtyFields: {}, touchedFields: {}, isSubmitted: false }
@@ -42,7 +42,7 @@ describe('useController', () => {
     test('should merge baseSchema with context schema', () => {
         const baseSchema = { required: true };
 
-        const { result } = renderHook(() => useController(baseSchema));
+        const { result } = renderHook(() => useField(baseSchema));
 
         expect(result.current.schema).toEqual({
             foo: 'bar',
@@ -50,7 +50,7 @@ describe('useController', () => {
         });
     });
 
-    test('should call _useController with correct parameters', () => {
+    test('should call useController with correct parameters', () => {
         (useFieldContext as jest.Mock).mockReturnValue({
             schema: { value: 'defaultValue', shouldUnregister: true },
             name: 'testField',
@@ -59,9 +59,9 @@ describe('useController', () => {
             error: null
         });
 
-        renderHook(() => useController());
+        renderHook(() => useField());
 
-        expect(_useController).toHaveBeenCalledWith({
+        expect(useController).toHaveBeenCalledWith({
             name: 'testField',
             rules: { stats: {} },
             shouldUnregister: true,
@@ -82,7 +82,7 @@ describe('useController', () => {
             error: null
         });
 
-        const { result } = renderHook(() => useController());
+        const { result } = renderHook(() => useField());
 
         expect(result.current.title).toBe('Test Title');
         expect(result.current.description).toBe('Test Description');
@@ -90,7 +90,7 @@ describe('useController', () => {
     });
 
     test('should return validation rules', () => {
-        const { result } = renderHook(() => useController());
+        const { result } = renderHook(() => useField());
 
         expect(result.current.required).toBe(true);
         expect(result.current.min).toBe(5);
