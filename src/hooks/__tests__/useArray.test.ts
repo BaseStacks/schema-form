@@ -15,6 +15,9 @@ describe('useArray', () => {
 
     beforeEach(() => {
         mockUseFieldContext.mockReturnValue({
+            form: {
+                getFieldState: jest.fn().mockReturnValue({}),
+            },
             schema: { title: 'Test Title', description: 'Test Description' },
             name: 'testArray',
             rules: { stats: { minLength: 1, maxLength: 3, required: true } },
@@ -94,6 +97,9 @@ describe('useArray', () => {
 
     it('should handle empty schema gracefully', () => {
         mockUseFieldContext.mockReturnValue({
+            form: {
+                getFieldState: jest.fn().mockReturnValue({}),
+            },
             schema: {},
             name: 'testArray',
             rules: {},

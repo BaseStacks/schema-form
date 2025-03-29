@@ -17,7 +17,6 @@ describe('useFieldContext', () => {
             schema: { type: 'string' },
             form: {} as any,
             rules: { stats: {} },
-            error: undefined,
             renderContext: {} as any,
         };
 

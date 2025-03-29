@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { FieldValues, FormProvider, SubmitHandler, useForm, UseFormProps, useWatch } from 'react-hook-form';
+import { FieldValues, FormProvider, SubmitHandler, useForm, UseFormProps } from 'react-hook-form';
 import { SchemaFormContextType, SchemaFormRenderProps, RenderContext, FieldSchemas } from '../types';
 import { SchemaFormField } from './SchemaFormField';
 import { useGlobalContext } from '../hooks/useGlobalContext';
@@ -35,8 +35,6 @@ export function SchemaForm<TFormValue extends FieldValues = FieldValues, TRender
     const form = useForm({
         ...formProps
     });
-
-    useWatch({ control: form.control });
 
     const mergedRenderContext = useMemo(() => ({
         ...(globalRenderContext ?? {}),

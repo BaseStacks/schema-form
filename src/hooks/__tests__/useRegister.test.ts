@@ -37,7 +37,6 @@ describe('useRegister', () => {
     };
     
     const mockRenderContext = { theme: 'light' };
-    const mockError = 'Test Error';
     
     beforeEach(() => {
         jest.clearAllMocks();
@@ -46,8 +45,7 @@ describe('useRegister', () => {
             schema: mockSchema,
             name: 'testField',
             rules: mockRules,
-            renderContext: mockRenderContext,
-            error: mockError
+            renderContext: mockRenderContext
         });
     });
     
@@ -72,7 +70,6 @@ describe('useRegister', () => {
             description: 'Test Description',
             placeholder: 'Test Placeholder',
             renderContext: mockRenderContext,
-            error: mockError,
             required: true,
             min: 10,
             max: 100,

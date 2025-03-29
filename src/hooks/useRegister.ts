@@ -11,7 +11,6 @@ export interface UseRegisterReturn<TRenderContext extends RenderContext = Render
     readonly description?: string;
     readonly placeholder?: string;
     readonly renderContext: TRenderContext;
-    readonly error?: any;
     readonly required?: boolean;
     readonly min?: number;
     readonly max?: number;
@@ -48,7 +47,7 @@ export const useRegister = <
 >(
         baseSchema?: RegisterOptions<TFormValue>
     ): UseRegisterReturn<TRenderContext, TFormValue> => {
-    const { form, schema, name, rules, renderContext, error } = useFieldContext<TRenderContext, TFormValue>();
+    const { form, schema, name, rules, renderContext } = useFieldContext<TRenderContext, TFormValue>();
 
     const genericSchema = useMemo(() => ({
         ...baseSchema,
@@ -70,7 +69,6 @@ export const useRegister = <
         description,
         placeholder,
         renderContext,
-        error,
         required: !!rules?.required,
         min: rules.stats.min,
         max: rules.stats.max,

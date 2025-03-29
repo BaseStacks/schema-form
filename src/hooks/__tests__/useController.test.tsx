@@ -99,19 +99,4 @@ describe('useController', () => {
         expect(result.current.maxLength).toBe(8);
         expect(result.current.pattern).toEqual(/test/);
     });
-
-    test('should return error from context', () => {
-        const testError = { type: 'required', message: 'This field is required' };
-        (useFieldContext as jest.Mock).mockReturnValue({
-            schema: {},
-            name: 'testField',
-            rules: { stats: {} },
-            renderContext: {},
-            error: testError
-        });
-
-        const { result } = renderHook(() => useController());
-
-        expect(result.current.error).toEqual(testError);
-    });
 });
