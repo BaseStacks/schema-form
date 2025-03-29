@@ -7,14 +7,12 @@
 import { ControllerFieldState } from 'react-hook-form';
 import { ControllerRenderProps } from 'react-hook-form';
 import { FieldArrayPath } from 'react-hook-form';
-import { FieldError } from 'react-hook-form';
+import { FieldErrors } from 'react-hook-form';
 import { FieldPath } from 'react-hook-form';
 import { FieldValues } from 'react-hook-form';
 import { JSX } from 'react/jsx-runtime';
 import { PropsWithChildren } from 'react';
 import { RegisterOptions } from 'react-hook-form';
-import { Resolver } from 'react-hook-form';
-import { ResolverOptions } from 'react-hook-form';
 import { SubmitHandler } from 'react-hook-form';
 import { UseFieldArrayProps } from 'react-hook-form';
 import { UseFieldArrayReturn } from 'react-hook-form';
@@ -40,9 +38,6 @@ export type BaseFieldSchema<TRenderContext extends RenderContext = RenderContext
 
 // @public
 export type ConditionedRule<T extends FieldValues = FieldValues> = ((formValues: T) => boolean) | boolean | string;
-
-// @public (undocumented)
-export type CreateValidationSchema<T extends FieldValues = FieldValues> = (values: T, renderContext: RenderContext, options: ResolverOptions<T>) => ValidationSchema;
 
 // @public (undocumented)
 export type CustomFieldSchema<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues> = GenericFieldSchema<TRenderContext, TFormValue> & {
@@ -80,7 +75,7 @@ export interface FieldSchemaWithOption {
 }
 
 // @public (undocumented)
-export type GenericFieldSchema<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues> = BaseFieldSchema<TRenderContext, TFormValue> & RegisterOptions<TFormValue> & FieldSchemaWithOption & FieldSchemaWithFormat & {};
+export type GenericFieldSchema<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues> = BaseFieldSchema<TRenderContext, TFormValue> & RegisterOptions<TFormValue> & FieldSchemaWithOption & FieldSchemaWithFormat;
 
 // @public (undocumented)
 export type Message = string | React.ReactNode;
@@ -96,15 +91,10 @@ export type ObjectFieldSchema<TRenderContext extends RenderContext = RenderConte
 };
 
 // @public (undocumented)
-export type RenderContext = any;
-
-// @public (undocumented)
-export type ResolverType<T extends FieldValues = FieldValues> = (schema: any, schemaOptions?: any, resolverOptions?: any) => Resolver<T>;
+export type RenderContext = Record<any, any>;
 
 // @public (undocumented)
 export interface SchemaFieldContextType<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues> {
-    // (undocumented)
-    readonly error?: FieldError;
     // (undocumented)
     readonly form: UseFormReturn<TFormValue>;
     // (undocumented)
@@ -129,7 +119,7 @@ export interface SchemaFormComponents<TRenderContext extends RenderContext = Ren
 }
 
 // @public
-export interface SchemaFormContextType<TFormValue extends FieldValues = FieldValues, TRenderContext extends RenderContext = RenderContext> {
+export interface SchemaFormContextType<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues> {
     readonly fields: FieldSchemas<TFormValue, TRenderContext>;
     readonly form: UseFormReturn<TFormValue>;
     readonly renderContext: TRenderContext;
@@ -282,7 +272,7 @@ export interface UseRegisterReturn<TRenderContext extends RenderContext = Render
     // (undocumented)
     readonly description?: string;
     // (undocumented)
-    readonly error?: any;
+    readonly error?: FieldErrors<TFormValue>[string];
     // (undocumented)
     readonly max?: number;
     // (undocumented)
@@ -313,9 +303,6 @@ export interface UseRegisterReturn<TRenderContext extends RenderContext = Render
 export type ValidationRules = Pick<RegisterOptions<any>, 'required' | 'minLength' | 'maxLength' | 'pattern' | 'min' | 'max' | 'validate'> & {
     readonly stats: ValidationStats;
 };
-
-// @public (undocumented)
-export type ValidationSchema = unknown;
 
 // @public (undocumented)
 export interface ValidationStats {
