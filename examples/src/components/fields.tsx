@@ -1,4 +1,4 @@
-import { SchemaFormField, SchemaFormRenderProps, useArray, useController, useObject } from '@basestacks/schema-form';
+import { SchemaFormField, SchemaFormRenderProps, useArray, useField, useObject } from '@basestacks/schema-form';
 export interface FormRenderContext {
     readonly inputType?: string;
 }
@@ -20,7 +20,7 @@ export function InputField() {
         title,
         renderContext,
         error,
-    } = useController<FormRenderContext>();
+    } = useField<FormRenderContext>();
 
     return (
         <div className="field">
@@ -42,7 +42,7 @@ export function CheckboxField() {
         name,
         title,
         error
-    } = useController<FormRenderContext>();
+    } = useField<FormRenderContext>();
 
     return (
         <div className="field">
@@ -63,7 +63,7 @@ export function SelectField() {
         placeholder,
         title,
         error
-    } = useController<FormRenderContext>();
+    } = useField<FormRenderContext>();
 
     return (
         <div className="field">

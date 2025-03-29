@@ -40,8 +40,8 @@ While **React Hook Form** provides an excellent foundation for handling forms in
     - [SchemaFormProvider](#schemaformprovider)
     - [SchemaFormField](#schemaformfield)
   - [Hooks](#hooks)
-    - [useRegister](#useregister)
-    - [useController](#usecontroller)
+    - [useUncontrolledField](#useuncontrolledfield)
+    - [useField](#usefield)
     - [useArray](#usearray)
     - [useObject](#useobject)
   - [Schema Types](#schema-types)
@@ -122,8 +122,8 @@ Create custom field components and a form layout to override the default UI:
 ```tsx
 import { PropsWithChildren } from "react";
 import {
-  useRegister,
-  useController,
+  useUncontrolledField,
+  useField,
   SchemaFormProvider,
   SchemaFormRenderProps,
 } from "@basestacks/schema-form";
@@ -164,25 +164,25 @@ function FormLayout({
 }
 
 function TextField() {
-  const { register, name, placeholder, title, renderContext } = useRegister();
+  const { field, name, placeholder, title, renderContext } = useUncontrolledField();
   return (
     <div className="field">
       <label htmlFor={name}>{title}</label>
       <input
         type={renderContext.secureTextEntry ? "password" : "text"}
         placeholder={placeholder}
-        {...register}
+        {...field}
       />
     </div>
   );
 }
 
 function CheckboxField() {
-  const { register, name, title } = useRegister();
+  const { field, name, title } = useUncontrolledField();
   return (
     <div className="field">
       <div>
-        <input type="checkbox" {...register} />{" "}
+        <input type="checkbox" {...field} />{" "}
         <label htmlFor={name}>{title}</label>
       </div>
     </div>
@@ -283,7 +283,7 @@ import { SchemaFormField } from '@basestacks/schema-form';
 
 ### Hooks
 
-#### useRegister
+#### useUncontrolledField
 
 A hook that registers a field with the form and provides access to field properties and validation rules.
 
@@ -295,7 +295,7 @@ A hook that registers a field with the form and provides access to field propert
 - `baseSchema?: RegisterOptions<TFormValue>` - Optional base schema to override or extend the context schema
 
 **Returns:** `WithRegisterReturn<TRenderContext, TFormValue>` object containing:
-- `register` - The React Hook Form register function result
+- `field` - The React Hook Form field function result
 - `schema` - The combined field schema
 - `name` - The field name
 - `title` - The field title
@@ -311,19 +311,19 @@ A hook that registers a field with the form and provides access to field propert
 **Example Usage:**
 ```tsx
 function TextField({ name, title, placeholder }: FieldProps) {
-  const { register, error, required } = useRegister();
+  const { field, error, required } = useUncontrolledField();
   
   return (
     <div className="field">
       <label htmlFor={name}>{title} {required && <span className="required">*</span>}</label>
-      <input type="text" placeholder={placeholder} {...register} />
+      <input type="text" placeholder={placeholder} {...field} />
       {error && <div className="error">{error.message}</div>}
     </div>
   );
 }
 ```
 
-#### useController
+#### useField
 
 A custom hook that provides a controller for managing form fields with schema-based validation.
 
@@ -334,7 +334,7 @@ A custom hook that provides a controller for managing form fields with schema-ba
 **Parameters:**
 - `baseSchema?: RegisterOptions<TFormValue>` - Optional base schema for the field, which can include validation rules and other properties
 
-**Returns:** `UseControllerReturn<TRenderContext, TFormValue>` object containing:
+**Returns:** `UseFieldReturn<TRenderContext, TFormValue>` object containing:
 - `field` - The field's input props and methods for managing its state
 - `fieldState` - The state of the field, including validation errors
 - `formState` - The state of the entire form
@@ -353,7 +353,7 @@ A custom hook that provides a controller for managing form fields with schema-ba
 **Example Usage:**
 ```tsx
 function RadioGroup({ options, title }: RadioGroupProps) {
-  const { field, error, required } = useController();
+  const { field, error, required } = useField();
   
   return (
     <div className="radio-group">

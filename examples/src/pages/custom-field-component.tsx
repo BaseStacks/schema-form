@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { FieldSchemas, SchemaForm, SchemaFormProvider, useController } from '@basestacks/schema-form';
+import { FieldSchemas, SchemaForm, SchemaFormProvider, useField } from '@basestacks/schema-form';
 import { ExampleFormProps, withExample } from '../components/hoc/withExample';
 import { FormLayout, FormRenderContext, InputField } from '../components/fields';
 
@@ -58,7 +58,7 @@ const fields: FieldSchemas<FormValues, FormRenderContext> = {
     agreeTermAndConditions: {
         validate: (value) => value || 'You must agree to terms and conditions',
         Component: function CustomCheckboxField() {
-            const { field, name, error } = useController();
+            const { field, name, error } = useField();
             
             return (
                 <div className="flex items-center col-span-12">
