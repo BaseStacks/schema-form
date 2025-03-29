@@ -6,6 +6,9 @@ import { useFieldArray } from 'react-hook-form';
 jest.mock('../useFieldContext');
 jest.mock('react-hook-form', () => ({
     ...jest.requireActual('react-hook-form'),
+    useFormState: jest.fn().mockReturnValue({
+        errors: {},
+    }),
     useFieldArray: jest.fn(),
 }));
 
@@ -15,9 +18,6 @@ describe('useArray', () => {
 
     beforeEach(() => {
         mockUseFieldContext.mockReturnValue({
-            form: {
-                getFieldState: jest.fn().mockReturnValue({}),
-            },
             schema: { title: 'Test Title', description: 'Test Description' },
             name: 'testArray',
             rules: { stats: { minLength: 1, maxLength: 3, required: true } },
@@ -81,6 +81,7 @@ describe('useArray', () => {
     it('should call remove when removing an item', () => {
         const removeMock = jest.fn();
         mockUseFieldArray.mockReturnValue({
+            form: {},
             fields: [{ id: '1' }, { id: '2' }],
             append: jest.fn(),
             remove: removeMock,
@@ -97,9 +98,6 @@ describe('useArray', () => {
 
     it('should handle empty schema gracefully', () => {
         mockUseFieldContext.mockReturnValue({
-            form: {
-                getFieldState: jest.fn().mockReturnValue({}),
-            },
             schema: {},
             name: 'testArray',
             rules: {},

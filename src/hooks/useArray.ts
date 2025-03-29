@@ -66,9 +66,12 @@ export const useArray = <
         rules
     });
 
-    const { errors } = useFormState({ name: name as FieldPath<TFormValue> });
+    const { errors } = useFormState({
+        name: name as FieldPath<TFormValue>
+    });
+
     const error = errors[name];
-    
+
     const { fields } = array;
 
     // Get min/max items constraints from field

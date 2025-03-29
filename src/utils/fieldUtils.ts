@@ -44,17 +44,17 @@ export const processValidationRule = (key: string, rule: any, defaultMessages?: 
     }
 
     if (key === 'required') {
-        if(typeof rule === 'string') {
+        if (typeof rule === 'string') {
             return rule;
         }
-        if(rule === true) {
+        if (rule === true) {
             return defaultMessages?.required ?? true;
         }
 
         return false;
     }
 
-    if (typeof rule === 'object') {
+    if (typeof rule === 'object' && rule.value) {
         return rule;
     }
 

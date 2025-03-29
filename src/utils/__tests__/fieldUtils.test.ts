@@ -75,42 +75,42 @@ describe('fieldUtils', () => {
             expect(result).toBeUndefined();
         });
 
-        test('extracts required validation rule correctly', () => {
+        it('extracts required validation rule correctly', () => {
             const rules = { required: 'This field is required' };
             const stats = getValidationStats(rules);
 
             expect(stats).toHaveProperty('required', 'This field is required');
         });
 
-        test('extracts min validation rule correctly', () => {
+        it('extracts min validation rule correctly', () => {
             const rules = { min: 5 };
             const stats = getValidationStats(rules);
 
             expect(stats).toHaveProperty('min', 5);
         });
 
-        test('extracts max validation rule correctly', () => {
+        it('extracts max validation rule correctly', () => {
             const rules = { max: 100 };
             const stats = getValidationStats(rules);
 
             expect(stats).toHaveProperty('max', 100);
         });
 
-        test('extracts minLength validation rule correctly', () => {
+        it('extracts minLength validation rule correctly', () => {
             const rules = { minLength: 3 };
             const stats = getValidationStats(rules);
 
             expect(stats).toHaveProperty('minLength', 3);
         });
 
-        test('extracts maxLength validation rule correctly', () => {
+        it('extracts maxLength validation rule correctly', () => {
             const rules = { maxLength: 50 };
             const stats = getValidationStats(rules);
 
             expect(stats).toHaveProperty('maxLength', 50);
         });
 
-        test('extracts pattern validation rule correctly', () => {
+        it('extracts pattern validation rule correctly', () => {
             const pattern = /^[A-Z]+$/;
             const rules = { pattern };
             const stats = getValidationStats(rules);
@@ -118,7 +118,7 @@ describe('fieldUtils', () => {
             expect(stats).toHaveProperty('pattern', pattern);
         });
 
-        test('handles multiple validation rules correctly', () => {
+        it('handles multiple validation rules correctly', () => {
             const pattern = /^\d+$/;
             const rules = {
                 required: true,
@@ -141,12 +141,12 @@ describe('fieldUtils', () => {
             });
         });
 
-        test('returns empty object for undefined rules', () => {
+        it('returns empty object for undefined rules', () => {
             const stats = getValidationStats(undefined!);
             expect(stats).toEqual(undefined);
         });
 
-        test('returns empty object for empty rules', () => {
+        it('returns empty object for empty rules', () => {
             const stats = getValidationStats({});
             expect(stats).toEqual(undefined);
         });
@@ -161,7 +161,7 @@ describe('fieldUtils', () => {
             expect(resolveSchemaPath(['users[0]'])).toEqual('users.items');
         });
 
-        it.only('should resolve a complex path with multiple parts and arrays', () => {
+        it('should resolve a complex path with multiple parts and arrays', () => {
             expect(resolveSchemaPath(['user', 'addresses[0]', 'street'])).toEqual('user.properties.addresses.items.properties.street');
         });
 
@@ -222,106 +222,103 @@ describe('fieldUtils', () => {
                 message: undefined
             });
         });
+    });
 
-        describe('getValidationRules', () => {
-            it('should return object with empty stats when no validation properties exist', () => {
-                const field = {
-                    someOtherProp: 'value'
-                };
+    describe('getValidationRules', () => {
+        it('should return object with empty stats when no validation properties exist', () => {
+            const field = {
+                someOtherProp: 'value'
+            };
 
-                const result = getValidationRules(field as any);
+            const result = getValidationRules(field as any);
 
-                expect(result).toEqual({ stats: {} });
-            });
+            expect(result).toEqual({ stats: {} });
+        });
 
-            it('should process validation rules with primitive values', () => {
-                const field = {
+        it('should process validation rules with primitive values', () => {
+            const field = {
+                required: true,
+                minLength: 5,
+                maxLength: 10
+            };
+
+            const result = getValidationRules(field);
+
+            expect(result).toEqual({
+                required: true,
+                minLength: { value: 5, message: undefined },
+                maxLength: { value: 10, message: undefined },
+                stats: {
                     required: true,
                     minLength: 5,
                     maxLength: 10
-                };
-
-                const result = getValidationRules(field);
-
-                expect(result).toEqual({
-                    required: true,
-                    minLength: { value: 5, message: undefined },
-                    maxLength: { value: 10, message: undefined },
-                    stats: {
-                        required: true,
-                        minLength: 5,
-                        maxLength: 10
-                    }
-                });
+                }
             });
+        });
 
-            it('should process validation rules with object values', () => {
-                const field = {
-                    required: { value: true, message: 'This field is required' },
-                    minLength: { value: 5, message: 'Min length is 5' }
-                };
+        it('should process validation rules with object values', () => {
+            const field = {
+                minLength: { value: 5, message: 'Min length is 5' }
+            };
 
-                const result = getValidationRules(field);
+            const result = getValidationRules(field);
 
-                expect(result).toEqual({
-                    required: { value: true, message: 'This field is required' },
-                    minLength: { value: 5, message: 'Min length is 5' },
-                    stats: {
-                        required: true,
-                        minLength: 5
-                    }
-                });
+            expect(result).toEqual({
+                minLength: { value: 5, message: 'Min length is 5' },
+                stats: {
+                    minLength: 5
+                }
             });
+        });
 
-            it('should apply default messages when provided', () => {
-                const field = {
+        it('should apply default messages when provided', () => {
+            const field = {
+                required: true,
+                minLength: 5
+            };
+
+            const defaultMessages: DefaultMessages = {
+                required: 'Field is required',
+                minLength: 'Min length is not met'
+            };
+
+            const result = getValidationRules(field, defaultMessages);
+
+            expect(result).toEqual({
+                required: 'Field is required',
+                minLength: { value: 5, message: 'Min length is not met' },
+                stats: {
                     required: true,
                     minLength: 5
-                };
-
-                const defaultMessages: DefaultMessages = {
-                    required: 'Field is required',
-                    minLength: 'Min length is not met'
-                };
-
-                const result = getValidationRules(field, defaultMessages);
-
-                expect(result).toEqual({
-                    required: 'Field is required',
-                    minLength: { value: 5, message: 'Min length is not met' },
-                    stats: {
-                        required: true,
-                        minLength: 5
-                    }
-                });
+                }
             });
+        });
 
-            it('should handle RegExp pattern correctly', () => {
-                const pattern = /^[A-Z]+$/;
-                const field = {
-                    pattern
-                };
+        it('should handle RegExp pattern correctly', () => {
+            const pattern = /^[A-Z]+$/;
+            const field = {
+                pattern
+            };
 
-                const result = getValidationRules(field);
+            const result = getValidationRules(field);
 
-                expect(result).toEqual({
-                    pattern: { value: pattern, message: undefined },
-                    stats: { pattern }
-                });
+            expect(result).toEqual({
+                pattern: { value: pattern, message: undefined },
+                stats: { pattern }
             });
+        });
 
-            it('should handle validate function correctly', () => {
-                const validateFn = () => true;
-                const field = {
-                    validate: validateFn
-                };
+        it('should handle validate function correctly', () => {
+            const validateFn = () => true;
+            const field = {
+                validate: validateFn
+            };
 
-                const result = getValidationRules(field);
+            const result = getValidationRules(field);
 
-                expect(result).toEqual({
-                    validate: validateFn,
-                    stats: { validate: validateFn }
-                });
+            expect(result).toEqual({
+                validate: validateFn,
+                stats: { validate: validateFn }
             });
         });
     });
