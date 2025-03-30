@@ -1,45 +1,80 @@
 import { renderHook } from '@testing-library/react';
 import { useFieldStatus } from '../useFieldStatus';
+import { useWatch } from 'react-hook-form';
 import { evaluateCondition } from '../../utils/conditionUtils';
-import { BaseFieldSchema } from '../../types';
+import { ConditionedRule } from '../../types';
 
-// Mock the evaluateCondition utility function
+// Mock dependencies
+jest.mock('react-hook-form', () => ({
+    useWatch: jest.fn(),
+}));
+
 jest.mock('../../utils/conditionUtils', () => ({
     evaluateCondition: jest.fn(),
 }));
 
-const mockedEvaluateCondition = evaluateCondition as jest.MockedFunction<typeof evaluateCondition>;
-
 describe('useFieldStatus', () => {
-    afterEach(() => {
+    beforeEach(() => {
         jest.clearAllMocks();
     });
 
+    it('should watch the correct field dependency', () => {
+        const mockCondition: ConditionedRule<any> = {
+            when: 'testField',
+            equal: 'testValue',
+        };
+
+        (useWatch as jest.Mock).mockReturnValue(['mockValue']);
+        (evaluateCondition as jest.Mock).mockReturnValue(true);
+
+        renderHook(() => useFieldStatus(mockCondition));
+
+        expect(useWatch).toHaveBeenCalledWith({
+            name: ['testField'],
+        });
+    });
+
+    it('should transform watched values correctly for condition evaluation', () => {
+        const mockCondition: ConditionedRule<any> = {
+            when: 'testField',
+            equal: 'testValue',
+        };
+
+        (useWatch as jest.Mock).mockReturnValue(['mockValue']);
+        (evaluateCondition as jest.Mock).mockReturnValue(true);
+
+        renderHook(() => useFieldStatus(mockCondition));
+
+        expect(evaluateCondition).toHaveBeenCalledWith(mockCondition, {
+            testField: 'mockValue',
+        });
+    });
+
     it('should return isVisible: true when condition evaluates to true', () => {
-        // Setup
-        const field: BaseFieldSchema = { visible: true };
-        const formValues = { someValue: 'test' };
-        mockedEvaluateCondition.mockReturnValue(true);
+        const mockCondition: ConditionedRule<any> = {
+            when: 'testField',
+            equal: 'testValue',
+        };
 
-        // Execute
-        const { result } = renderHook(() => useFieldStatus(field, formValues));
+        (useWatch as jest.Mock).mockReturnValue(['mockValue']);
+        (evaluateCondition as jest.Mock).mockReturnValue(true);
 
-        // Assert
-        expect(mockedEvaluateCondition).toHaveBeenCalledWith(true, formValues);
-        expect(result.current).toEqual({ isVisible: true });
+        const { result } = renderHook(() => useFieldStatus(mockCondition));
+
+        expect(result.current.isVisible).toBe(true);
     });
 
     it('should return isVisible: false when condition evaluates to false', () => {
-        // Setup
-        const field: BaseFieldSchema = { visible: false };
-        const formValues = { someValue: 'test' };
-        mockedEvaluateCondition.mockReturnValue(false);
+        const mockCondition: ConditionedRule<any> = {
+            when: 'testField',
+            equal: 'testValue',
+        };
 
-        // Execute
-        const { result } = renderHook(() => useFieldStatus(field, formValues));
+        (useWatch as jest.Mock).mockReturnValue(['mockValue']);
+        (evaluateCondition as jest.Mock).mockReturnValue(false);
 
-        // Assert
-        expect(mockedEvaluateCondition).toHaveBeenCalledWith(false, formValues);
-        expect(result.current).toEqual({ isVisible: false });
+        const { result } = renderHook(() => useFieldStatus(mockCondition));
+
+        expect(result.current.isVisible).toBe(false);
     });
 });

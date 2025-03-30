@@ -78,7 +78,8 @@ describe('SchemaFormField', () => {
     it('renders nothing when field is not visible', () => {
         (useFieldSchema as jest.Mock).mockReturnValue({
             type: 'text',
-            title: 'Test Field'
+            title: 'Test Field',
+            visible: false
         });
 
         (useFieldStatus as jest.Mock).mockReturnValue({ isVisible: false });
@@ -251,5 +252,74 @@ describe('SchemaFormField', () => {
             }),
             undefined
         );
+    });
+
+    it('renders the field when visible is undefined', () => {
+        const mockComponent = jest.fn(() => <div data-testid="test-field">Test Field</div>);
+        
+        (useFieldSchema as jest.Mock).mockReturnValue({
+            type: 'text',
+            // visible is undefined
+        });
+        
+        (useFieldComponent as jest.Mock).mockReturnValue(mockComponent);
+        
+        render(<SchemaFormField name="testField" />);
+        
+        expect(screen.getByTestId('test-field')).toBeInTheDocument();
+        expect(mockComponent).toHaveBeenCalled();
+    });
+
+    it('renders the field when visible is true', () => {
+        const mockComponent = jest.fn(() => <div data-testid="test-field">Test Field</div>);
+        
+        (useFieldSchema as jest.Mock).mockReturnValue({
+            type: 'text',
+            visible: true
+        });
+        
+        (useFieldComponent as jest.Mock).mockReturnValue(mockComponent);
+        
+        render(<SchemaFormField name="testField" />);
+        
+        expect(screen.getByTestId('test-field')).toBeInTheDocument();
+        expect(mockComponent).toHaveBeenCalled();
+    });
+
+    it('renders with FieldVisibilityCheck when visible is a condition', () => {
+        const mockComponent = jest.fn(() => <div data-testid="test-field">Test Field</div>);
+        const visibilityCondition = { when: 'otherField', is: true };
+        
+        (useFieldSchema as jest.Mock).mockReturnValue({
+            type: 'text',
+            visible: visibilityCondition
+        });
+        
+        (useFieldComponent as jest.Mock).mockReturnValue(mockComponent);
+        (useFieldStatus as jest.Mock).mockReturnValue({ isVisible: true });
+        
+        render(<SchemaFormField name="testField" />);
+        
+        expect(screen.getByTestId('test-field')).toBeInTheDocument();
+        expect(mockComponent).toHaveBeenCalled();
+        expect(useFieldStatus).toHaveBeenCalledWith(visibilityCondition);
+    });
+
+    it('renders nothing when FieldVisibilityCheck evaluates to false', () => {
+        const mockComponent = jest.fn(() => <div data-testid="test-field">Test Field</div>);
+        const visibilityCondition = { when: 'otherField', is: true };
+        
+        (useFieldSchema as jest.Mock).mockReturnValue({
+            type: 'text',
+            visible: visibilityCondition
+        });
+        
+        (useFieldComponent as jest.Mock).mockReturnValue(mockComponent);
+        (useFieldStatus as jest.Mock).mockReturnValue({ isVisible: false });
+        
+        const { container } = render(<SchemaFormField name="testField" />);
+        
+        expect(container).toBeEmptyDOMElement();
+        expect(useFieldStatus).toHaveBeenCalledWith(visibilityCondition);
     });
 });

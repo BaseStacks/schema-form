@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { ControllerFieldState, ControllerRenderProps, FieldPath, FieldValues, RegisterOptions, UseFormStateReturn, useController } from 'react-hook-form';
+import { ControllerFieldState, ControllerRenderProps, FieldError, FieldPath, FieldValues, RegisterOptions, UseFormStateReturn, useController } from 'react-hook-form';
 import { GenericFieldSchema, RenderContext } from '../types';
 import { useFieldContext } from './useFieldContext';
 
@@ -16,7 +16,7 @@ export interface UseFieldReturn<
     readonly description?: string;
     readonly placeholder?: string;
     readonly renderContext: TRenderContext;
-    readonly error?: any;
+    readonly error?: FieldError;
     readonly required?: boolean;
     readonly min?: number;
     readonly max?: number;
@@ -35,9 +35,7 @@ export interface UseFieldReturn<
 export const useField = <
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues
->(
-        baseSchema?: RegisterOptions<TFormValue>
-    ): UseFieldReturn<TRenderContext, TFormValue> => {
+>(baseSchema?: RegisterOptions<TFormValue>): UseFieldReturn<TRenderContext, TFormValue> => {
     const { schema, name, rules, renderContext } = useFieldContext<TRenderContext, TFormValue>();
 
     const genericSchema = useMemo(() => ({
@@ -50,11 +48,12 @@ export const useField = <
     const { field, fieldState, formState } = useController({
         name: name as FieldPath<TFormValue>,
         rules: {
-            ...genericSchema,
             ...rules,
+            deps: genericSchema.deps,
         },
         shouldUnregister: genericSchema.shouldUnregister,
-        defaultValue: genericSchema.value
+        defaultValue: genericSchema.value,
+        disabled: genericSchema.disabled,
     });
 
     return {
