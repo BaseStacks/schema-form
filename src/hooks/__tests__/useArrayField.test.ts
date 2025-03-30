@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
-import { useArray } from '../useArray';
+import { useArrayField } from '../useArrayField';
 import { useFieldContext } from '../useFieldContext';
 import { useFieldArray } from 'react-hook-form';
 
@@ -12,7 +12,7 @@ jest.mock('react-hook-form', () => ({
     useFieldArray: jest.fn(),
 }));
 
-describe('useArray', () => {
+describe('useArrayField', () => {
     const mockUseFieldContext = useFieldContext as jest.Mock;
     const mockUseFieldArray = useFieldArray as jest.Mock;
 
@@ -37,7 +37,7 @@ describe('useArray', () => {
     });
 
     it('should return the correct schema and metadata', () => {
-        const { result } = renderHook(() => useArray());
+        const { result } = renderHook(() => useArrayField());
 
         expect(result.current.schema.title).toBe('Test Title');
         expect(result.current.schema.description).toBe('Test Description');
@@ -48,14 +48,14 @@ describe('useArray', () => {
     });
 
     it('should determine if items can be added or removed', () => {
-        const { result } = renderHook(() => useArray());
+        const { result } = renderHook(() => useArrayField());
 
         expect(result.current.canAddItem).toBe(true); // maxLength is 3, fields.length is 2
         expect(result.current.canRemoveItem).toBe(true); // minLength is 1, fields.length is 2
     });
 
     it('should return the correct item name', () => {
-        const { result } = renderHook(() => useArray());
+        const { result } = renderHook(() => useArrayField());
 
         expect(result.current.getItemName(0)).toBe('testArray[0]');
         expect(result.current.getItemName(1)).toBe('testArray[1]');
@@ -69,7 +69,7 @@ describe('useArray', () => {
             remove: jest.fn(),
         });
 
-        const { result } = renderHook(() => useArray());
+        const { result } = renderHook(() => useArrayField());
 
         act(() => {
             result.current.array.append({ id: '3' });
@@ -87,7 +87,7 @@ describe('useArray', () => {
             remove: removeMock,
         });
 
-        const { result } = renderHook(() => useArray());
+        const { result } = renderHook(() => useArrayField());
 
         act(() => {
             result.current.array.remove(1);
@@ -105,7 +105,7 @@ describe('useArray', () => {
             error: null,
         });
 
-        const { result } = renderHook(() => useArray());
+        const { result } = renderHook(() => useArrayField());
 
         expect(result.current.schema.title).toBeUndefined();
         expect(result.current.schema.description).toBeUndefined();

@@ -3,7 +3,7 @@ import { FieldPath, FieldValues } from 'react-hook-form';
 import { ObjectFieldSchema, RenderContext } from '../types';
 import { useFieldContext } from './useFieldContext';
 
-export interface UseObjectReturn<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues, TFieldValue extends FieldValues = FieldValues> {
+export interface UseObjectFieldReturn<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues, TFieldValue extends FieldValues = FieldValues> {
     readonly schema: ObjectFieldSchema<TRenderContext, TFormValue, TFieldValue>;
     readonly name: string;
     readonly title?: string | null;
@@ -18,7 +18,7 @@ export interface UseObjectReturn<TRenderContext extends RenderContext = RenderCo
  * in a form context. This hook extracts schema details, field names, and other
  * metadata for rendering and managing object fields.
  *
- * @returns An {@link UseObjectReturn} object containing:
+ * @returns An {@link UseObjectFieldReturn} object containing:
  * - `schema`: The object field schema.
  * - `name`: The name of the field.
  * - `title`: The title of the object field.
@@ -27,11 +27,11 @@ export interface UseObjectReturn<TRenderContext extends RenderContext = RenderCo
  * - `renderContext`: The render context for the field.
  * - `fields`: An array of field paths for the properties of the object field.
  */
-export const useObject = <
+export const useObjectField = <
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues,
     TFieldValue extends FieldValues = FieldValues
->(): UseObjectReturn<TRenderContext, TFormValue, TFieldValue> => {
+>(): UseObjectFieldReturn<TRenderContext, TFormValue, TFieldValue> => {
     const { schema, name, renderContext } = useFieldContext<TRenderContext, TFormValue>();
 
     const objectSchema = schema as ObjectFieldSchema<TRenderContext, TFormValue, TFieldValue>;

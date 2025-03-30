@@ -170,10 +170,10 @@ export type SelectOption<TValue = any, TRenderContext = Record<string, any>> = T
 };
 
 // @public
-export const useArray: <TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues, TItem extends FieldValues = FieldValues>(baseSchema?: UseFieldArrayProps<any>["rules"]) => UseArrayReturn<TRenderContext, TFormValue, TItem>;
+export const useArrayField: <TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues, TItem extends FieldValues = FieldValues>(baseSchema?: UseFieldArrayProps<any>["rules"]) => UseArrayFieldReturn<TRenderContext, TFormValue, TItem>;
 
 // @public (undocumented)
-export interface UseArrayReturn<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues, TItem extends FieldValues = FieldValues> {
+export interface UseArrayFieldReturn<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues, TItem extends FieldValues = FieldValues> {
     // (undocumented)
     readonly array: UseFieldArrayReturn<TFormValue>;
     // (undocumented)
@@ -244,10 +244,10 @@ export interface UseFieldReturn<TRenderContext extends RenderContext = RenderCon
 }
 
 // @public
-export const useObject: <TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues, TFieldValue extends FieldValues = FieldValues>() => UseObjectReturn<TRenderContext, TFormValue, TFieldValue>;
+export const useObjectField: <TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues, TFieldValue extends FieldValues = FieldValues>() => UseObjectFieldReturn<TRenderContext, TFormValue, TFieldValue>;
 
 // @public (undocumented)
-export interface UseObjectReturn<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues, TFieldValue extends FieldValues = FieldValues> {
+export interface UseObjectFieldReturn<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues, TFieldValue extends FieldValues = FieldValues> {
     // (undocumented)
     readonly description?: string;
     // (undocumented)
