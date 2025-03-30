@@ -20,24 +20,28 @@ function FormProvider({ children }: PropsWithChildren) {
 };
 
 interface FormValues {
-    readonly visibleTrue: string;
-    readonly visibleFalse: string;
+    readonly receiveNewsletter: boolean;
+    readonly email: string;
 }
 
 const fields: FieldSchemas<FormValues, FormRenderContext> = {
-    visibleTrue: {
-        type: 'text',
-        title: 'Visible Field',
-        placeholder: 'This field is always visible',
-        required: 'This field is required',
-        visible: true
+    receiveNewsletter: {
+        type: 'checkbox',
+        title: 'Receive newsletter'
     },
-    visibleFalse: {
+    email: {
         type: 'text',
-        title: 'Hidden Field',
-        placeholder: 'This field is conditionally visible',
-        visible: false,
-        required: 'This field is required',
+        title: 'Email',
+        placeholder: 'Enter your email',
+        visible: {
+            when: 'receiveNewsletter',
+            equal: true,
+        },
+        required: 'Email is required',
+        pattern: {
+            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+            message: 'Invalid email address',
+        },
     },
 };
 
