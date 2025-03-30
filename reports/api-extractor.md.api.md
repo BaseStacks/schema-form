@@ -4,9 +4,11 @@
 
 ```ts
 
+import { ArrayPath } from 'react-hook-form';
 import { ControllerFieldState } from 'react-hook-form';
 import { ControllerRenderProps } from 'react-hook-form';
 import { FieldArrayPath } from 'react-hook-form';
+import { FieldError } from 'react-hook-form';
 import { FieldErrors } from 'react-hook-form';
 import { FieldPath } from 'react-hook-form';
 import { FieldValues } from 'react-hook-form';
@@ -32,12 +34,30 @@ export type BaseFieldSchema<TRenderContext extends RenderContext = RenderContext
     readonly title?: string | null;
     readonly description?: string;
     readonly placeholder?: string;
-    readonly visible?: ConditionedRule<TFormValue>;
+    readonly visible?: ConditionedRule<TFormValue> | boolean;
     readonly renderContext?: Partial<TRenderContext>;
 };
 
 // @public
-export type ConditionedRule<T extends FieldValues = FieldValues> = ((formValues: T) => boolean) | boolean | string;
+export type ConditionedRule<T extends FieldValues = FieldValues> = {
+    when: FieldPath<T>;
+    equal: any;
+} | {
+    when: FieldPath<T>;
+    notEqual: any;
+} | {
+    when: FieldPath<T>;
+    lessThan: any;
+} | {
+    when: FieldPath<T>;
+    lessThanOrEqual: any;
+} | {
+    when: FieldPath<T>;
+    greaterThan: any;
+} | {
+    when: FieldPath<T>;
+    greaterThanOrEqual: any;
+};
 
 // @public (undocumented)
 export type CustomFieldSchema<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues> = GenericFieldSchema<TRenderContext, TFormValue> & {
@@ -126,7 +146,7 @@ export interface SchemaFormContextType<TRenderContext extends RenderContext = Re
 }
 
 // @public
-export function SchemaFormField<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues>({ name, renderContext }: SchemaFormFieldProps<TRenderContext, TFormValue>): JSX.Element | null;
+export function SchemaFormField<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues>({ name, renderContext }: SchemaFormFieldProps<TRenderContext, TFormValue>): JSX.Element;
 
 // @public (undocumented)
 export interface SchemaFormFieldProps<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues> {
@@ -183,7 +203,7 @@ export interface UseArrayFieldReturn<TRenderContext extends RenderContext = Rend
     // (undocumented)
     readonly description?: string;
     // (undocumented)
-    readonly error?: any;
+    readonly error?: FieldErrors<TFormValue>[ArrayPath<TFormValue>];
     // (undocumented)
     readonly getItemName: (index: number) => FieldPath<TFormValue>;
     // (undocumented)
@@ -212,7 +232,7 @@ export interface UseFieldReturn<TRenderContext extends RenderContext = RenderCon
     // (undocumented)
     readonly description?: string;
     // (undocumented)
-    readonly error?: any;
+    readonly error?: FieldError;
     // (undocumented)
     readonly field: ControllerRenderProps<TFormValue>;
     // (undocumented)
@@ -246,7 +266,7 @@ export interface UseFieldReturn<TRenderContext extends RenderContext = RenderCon
 // @public
 export const useObjectField: <TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues, TFieldValue extends FieldValues = FieldValues>() => UseObjectFieldReturn<TRenderContext, TFormValue, TFieldValue>;
 
-// @public (undocumented)
+// @public
 export interface UseObjectFieldReturn<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues, TFieldValue extends FieldValues = FieldValues> {
     // (undocumented)
     readonly description?: string;
@@ -272,7 +292,7 @@ export interface UseUncontrolledFieldReturn<TRenderContext extends RenderContext
     // (undocumented)
     readonly description?: string;
     // (undocumented)
-    readonly error?: FieldErrors<TFormValue>[string];
+    readonly field: UseFormRegisterReturn;
     // (undocumented)
     readonly max?: number;
     // (undocumented)
@@ -287,8 +307,6 @@ export interface UseUncontrolledFieldReturn<TRenderContext extends RenderContext
     readonly pattern?: RegExp;
     // (undocumented)
     readonly placeholder?: string;
-    // (undocumented)
-    readonly field: UseFormRegisterReturn;
     // (undocumented)
     readonly renderContext: TRenderContext;
     // (undocumented)
