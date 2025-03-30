@@ -1,23 +1,26 @@
-import { FieldValues } from 'react-hook-form';
-import { BaseFieldSchema } from '../types';
+import { FieldPath, FieldValues, useWatch } from 'react-hook-form';
+import { ConditionedRule } from '../types';
 import { evaluateCondition } from '../utils/conditionUtils';
 
 export type FieldStatus = {
     readonly isVisible: boolean;
 };
 
-export const useFieldStatus = <TFormValue extends FieldValues>(field: BaseFieldSchema, formValues: TFormValue): FieldStatus => {
-    // First check if field should be visible
-    const isVisible = evaluateCondition(field.visible, formValues);
+export const useFieldStatus = <TFormValue extends FieldValues>(condition: ConditionedRule<TFormValue>): FieldStatus => {
+    const depsKeys: FieldPath<TFormValue>[] = [condition.when];
 
-    // If not visible, return default state
-    if (!isVisible) {
-        return {
-            isVisible: false
-        };
-    }
+    const formValues = useWatch({
+        name: depsKeys,
+    });
+
+    const depsValues = depsKeys.reduce((acc, key, index) => {
+        acc[key] = formValues[index];
+        return acc;
+    }, {} as TFormValue);
+
+    const isVisible = evaluateCondition(condition, depsValues);
 
     return {
-        isVisible: true
+        isVisible
     };
 };

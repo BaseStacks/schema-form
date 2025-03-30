@@ -12,4 +12,8 @@ export const routes = [{
     path: '/custom-field-component',
     title: 'Custom Field Component',
     Component: React.lazy(() => import('./pages/custom-field-component')),
+}, {
+    path: '/field-visibility',
+    title: 'Field Visibility',
+    Component: React.lazy(() => import('./pages/field-visibility')),
 }];

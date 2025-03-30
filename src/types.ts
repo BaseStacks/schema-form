@@ -108,7 +108,7 @@ export type BaseFieldSchema<
     readonly placeholder?: string;
 
     /** Field status */
-    readonly visible?: ConditionedRule<TFormValue>;
+    readonly visible?: ConditionedRule<TFormValue> | boolean;
 
     // Context and component overrides
     readonly renderContext?: Partial<TRenderContext>;
@@ -178,6 +178,9 @@ export type FieldSchemaType<
  * Condition for when a field should be displayed
  */
 export type ConditionedRule<T extends FieldValues = FieldValues> =
-    | ((formValues: T) => boolean)
-    | boolean
-    | string;
+    | { when: FieldPath<T>; equal: any; }
+    | { when: FieldPath<T>; notEqual: any; }
+    | { when: FieldPath<T>; lessThan: any; }
+    | { when: FieldPath<T>; lessThanOrEqual: any; }
+    | { when: FieldPath<T>; greaterThan: any; }
+    | { when: FieldPath<T>; greaterThanOrEqual: any; };
