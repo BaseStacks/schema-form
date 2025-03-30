@@ -3,14 +3,27 @@ import { FieldPath, FieldValues } from 'react-hook-form';
 import { ObjectFieldSchema, RenderContext } from '../types';
 import { useFieldContext } from './useFieldContext';
 
+/**
+ * Return type for the useObjectField hook which manages object fields in forms.
+ * 
+ * @property schema - The schema definition for this object field.
+ * @property name - The field name in the form.
+ * @property title - Optional title to display for the field.
+ * @property description - Optional description text for the field.
+ * @property placeholder - Optional placeholder text for the field.
+ * @property fields - Array of nested field paths contained within this object field.
+ * @property renderContext - The context object used for rendering this field.
+ */
 export interface UseObjectFieldReturn<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues, TFieldValue extends FieldValues = FieldValues> {
     readonly schema: ObjectFieldSchema<TRenderContext, TFormValue, TFieldValue>;
     readonly name: string;
     readonly title?: string | null;
     readonly description?: string;
     readonly placeholder?: string;
-    readonly renderContext: TRenderContext;
+    
+    // The nested field names of the object schema
     readonly fields: FieldPath<TFormValue>[];
+    readonly renderContext: TRenderContext;
 }
 
 /**
@@ -18,14 +31,7 @@ export interface UseObjectFieldReturn<TRenderContext extends RenderContext = Ren
  * in a form context. This hook extracts schema details, field names, and other
  * metadata for rendering and managing object fields.
  *
- * @returns An {@link UseObjectFieldReturn} object containing:
- * - `schema`: The object field schema.
- * - `name`: The name of the field.
- * - `title`: The title of the object field.
- * - `description`: The description of the object field.
- * - `placeholder`: The placeholder for the object field.
- * - `renderContext`: The render context for the field.
- * - `fields`: An array of field paths for the properties of the object field.
+ * @returns see {@link UseObjectFieldReturn}
  */
 export const useObjectField = <
     TRenderContext extends RenderContext = RenderContext,

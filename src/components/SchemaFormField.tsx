@@ -1,5 +1,5 @@
 import { FieldPath, FieldValues } from 'react-hook-form';
-import { BaseFieldSchema, RenderContext, SchemaFieldContextType } from '../types';
+import { BaseFieldSchema, ConditionedRule, RenderContext, SchemaFieldContextType } from '../types';
 import { useFieldStatus } from '../hooks/useFieldStatus';
 import { useFieldSchema } from '../hooks/useFieldSchema';
 import { useSchemaForm } from '../hooks/useSchemaForm';
@@ -30,7 +30,6 @@ export function SchemaFormField<
     TFormValue extends FieldValues = FieldValues
 >({ name, renderContext }: SchemaFormFieldProps<TRenderContext, TFormValue>) {
     const { form, renderContext: formRenderContext } = useSchemaForm<TRenderContext, TFormValue>();
-    const formValues = form.getValues();
 
     const schema = useFieldSchema<TFormValue, TRenderContext>(name);
     const rules = useFieldRules(schema);
@@ -45,8 +44,6 @@ export function SchemaFormField<
         [renderContext, schema.renderContext, formRenderContext]
     );
 
-    const fieldStatus = useFieldStatus(schema as BaseFieldSchema, formValues);
-
     const fieldContext = useMemo((): SchemaFieldContextType<TRenderContext, TFormValue> => ({
         form,
         name,
@@ -55,13 +52,45 @@ export function SchemaFormField<
         renderContext: fieldRenderContext
     }), [form, name, schema, rules, fieldRenderContext]);
 
-    if (!fieldStatus.isVisible) {
-        return null;
-    }
+    const renderField = () => {
+        if (schema.visible === undefined || schema.visible === true) {
+            return <FieldComponent />;
+        }
+
+        if (schema.visible === false) {
+            return null;
+        }
+
+        return (
+            <ConditionedField schema={schema}>
+                <FieldComponent />
+            </ConditionedField>
+        );
+    };
 
     return (
         <SchemaFieldContext.Provider value={fieldContext}>
-            <FieldComponent />
+            {renderField()}
         </SchemaFieldContext.Provider>
     );
 }
+
+interface ConditionedFieldProps<
+    TRenderContext extends RenderContext = RenderContext,
+    TFormValue extends FieldValues = FieldValues
+> {
+    readonly schema: BaseFieldSchema<TRenderContext, TFormValue>;
+    readonly children: React.ReactNode;
+}
+
+function ConditionedField<
+    TRenderContext extends RenderContext = RenderContext,
+    TFormValue extends FieldValues = FieldValues
+>({ schema, children }: ConditionedFieldProps<TRenderContext, TFormValue>) {
+    const { isVisible } = useFieldStatus(schema.visible as ConditionedRule<TFormValue>);
+    if (!isVisible) {
+        return null;
+    }
+
+    return children;
+};
