@@ -16,4 +16,8 @@ export const routes = [{
     path: '/field-visibility',
     title: 'Field Visibility',
     Component: React.lazy(() => import('./pages/field-visibility')),
+}, {
+    path: '/field-visibility-conditioned',
+    title: 'Field Visibility (Conditioned)',
+    Component: React.lazy(() => import('./pages/field-visibility-conditioned')),
 }];
