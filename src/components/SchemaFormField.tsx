@@ -62,9 +62,9 @@ export function SchemaFormField<
         }
 
         return (
-            <ConditionedField schema={schema}>
+            <FieldVisibilityCheck schema={schema}>
                 <FieldComponent />
-            </ConditionedField>
+            </FieldVisibilityCheck>
         );
     };
 
@@ -75,7 +75,7 @@ export function SchemaFormField<
     );
 }
 
-interface ConditionedFieldProps<
+interface FieldVisibilityCheckProps<
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues
 > {
@@ -83,10 +83,10 @@ interface ConditionedFieldProps<
     readonly children: React.ReactNode;
 }
 
-function ConditionedField<
+function FieldVisibilityCheck<
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues
->({ schema, children }: ConditionedFieldProps<TRenderContext, TFormValue>) {
+>({ schema, children }: FieldVisibilityCheckProps<TRenderContext, TFormValue>) {
     const { isVisible } = useFieldStatus(schema.visible as ConditionedRule<TFormValue>);
     if (!isVisible) {
         return null;
