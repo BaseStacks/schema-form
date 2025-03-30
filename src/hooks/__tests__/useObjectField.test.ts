@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useObject } from '../useObject';
+import { useObjectField } from '../useObjectField';
 import { useFieldContext } from '../useFieldContext';
 import { ObjectFieldSchema, RenderContext } from '../../types';
 
@@ -8,7 +8,7 @@ jest.mock('../useFieldContext', () => ({
     useFieldContext: jest.fn(),
 }));
 
-describe('useObject hook', () => {
+describe('useObjectField hook', () => {
     // Default mock values
     const mockSchema: ObjectFieldSchema<any, any, any> = {
         type: 'object',
@@ -34,7 +34,7 @@ describe('useObject hook', () => {
     });
 
     it('should return correct object properties', () => {
-        const { result } = renderHook(() => useObject());
+        const { result } = renderHook(() => useObjectField());
         
         expect(result.current).toEqual({
             schema: mockSchema,
@@ -54,7 +54,7 @@ describe('useObject hook', () => {
             renderContext: mockRenderContext,
         });
 
-        const { result } = renderHook(() => useObject());
+        const { result } = renderHook(() => useObjectField());
         
         expect(result.current.fields).toEqual([]);
     });
@@ -66,7 +66,7 @@ describe('useObject hook', () => {
             renderContext: mockRenderContext,
         });
 
-        const { result } = renderHook(() => useObject());
+        const { result } = renderHook(() => useObjectField());
         
         expect(result.current.fields).toEqual([]);
     });
@@ -87,7 +87,7 @@ describe('useObject hook', () => {
             renderContext: mockRenderContext,
         });
 
-        const { result } = renderHook(() => useObject());
+        const { result } = renderHook(() => useObjectField());
         
         expect(result.current.fields).toEqual([
             'person.name',

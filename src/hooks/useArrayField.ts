@@ -3,7 +3,7 @@ import { FieldValues, FieldPath, useFieldArray, FieldArrayPath, UseFieldArrayPro
 import { ArrayFieldSchema, RenderContext } from '../types';
 import { useFieldContext } from './useFieldContext';
 
-export interface UseArrayReturn<
+export interface UseArrayFieldReturn<
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues,
     TItem extends FieldValues = FieldValues
@@ -32,27 +32,13 @@ export interface UseArrayReturn<
  * @param baseSchema - Optional object that contains validation rules
  * for the array field, which will be merged with the schema from the field context.
  *
- * @returns An {@link UseArrayReturn} object containing:
- * - `array`: The `useFieldArray` instance for managing array items.
- * - `schema`: The merged schema for the array field.
- * - `name`: The name of the array field.
- * - `title`: The title of the array field from the schema.
- * - `description`: The description of the array field from the schema.
- * - `placeholder`: The placeholder for the array field from the schema.
- * - `canAddItem`: A boolean indicating if more items can be added to the array.
- * - `canRemoveItem`: A boolean indicating if items can be removed from the array.
- * - `getItemName`: A function to get the name of an item in the array by index.
- * - `renderContext`: The render context for the field.
- * - `error`: The error state of the field.
- * - `required`: A boolean indicating if the field is required.
- * - `minLength`: The minimum number of items allowed in the array.
- * - `maxLength`: The maximum number of items allowed in the array.
+ * @returns an {@link UseArrayFieldReturn}
  */
-export const useArray = <
+export const useArrayField = <
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues,
     TItem extends FieldValues = FieldValues
->(baseSchema?: UseFieldArrayProps<any>['rules']): UseArrayReturn<TRenderContext, TFormValue, TItem> => {
+>(baseSchema?: UseFieldArrayProps<any>['rules']): UseArrayFieldReturn<TRenderContext, TFormValue, TItem> => {
     const { schema, name, rules, renderContext } = useFieldContext<TRenderContext, TFormValue>();
 
     const arraySchema = useMemo(() => ({

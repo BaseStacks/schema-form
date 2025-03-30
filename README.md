@@ -42,8 +42,8 @@ While **React Hook Form** provides an excellent foundation for handling forms in
   - [Hooks](#hooks)
     - [useUncontrolledField](#useuncontrolledfield)
     - [useField](#usefield)
-    - [useArray](#usearray)
-    - [useObject](#useobject)
+    - [useArrayField](#usearrayfield)
+    - [useObjectField](#useobjectfield)
   - [Schema Types](#schema-types)
   - [Validation](#validation)
   - [RenderContext](#rendercontext)
@@ -377,7 +377,7 @@ function RadioGroup({ options, title }: RadioGroupProps) {
 }
 ```
 
-#### useArray
+#### useArrayField
 
 A custom hook for managing array fields in a form using `react-hook-form`.
 
@@ -389,7 +389,7 @@ A custom hook for managing array fields in a form using `react-hook-form`.
 **Parameters:**
 - `baseSchema?: UseFieldArrayProps<any>['rules']` - Optional base schema for the array field, which will be merged with the schema from the field context
 
-**Returns:** `UseArrayReturn<TRenderContext, TFormValue, TFieldValue>` object containing:
+**Returns:** `UseArrayFieldReturn<TRenderContext, TFormValue, TFieldValue>` object containing:
 - `array` - The `useFieldArray` instance for managing array items
 - `schema` - The merged schema for the array field
 - `name` - The name of the array field
@@ -414,7 +414,7 @@ function ContactsArray() {
     canAddItem, 
     canRemoveItem, 
     getItemName 
-  } = useArray();
+  } = useArrayField();
   
   return (
     <div className="array-field">
@@ -449,7 +449,7 @@ function ContactsArray() {
 }
 ```
 
-#### useObject
+#### useObjectField
 
 A custom hook that provides utilities for working with an object field schema in a form context.
 
@@ -461,7 +461,7 @@ A custom hook that provides utilities for working with an object field schema in
 **Parameters:**
 - None
 
-**Returns:** `UseObjectReturn<TRenderContext, TFormValue, TFieldValue>` object containing:
+**Returns:** `UseObjectFieldReturn<TRenderContext, TFormValue, TFieldValue>` object containing:
 - `schema` - The object field schema
 - `name` - The name of the field
 - `title` - The title of the object field
@@ -473,7 +473,7 @@ A custom hook that provides utilities for working with an object field schema in
 **Example Usage:**
 ```tsx
 function AddressField() {
-  const { title, fields, renderContext } = useObject();
+  const { title, fields, renderContext } = useObjectField();
   
   return (
     <fieldset className={`object-field ${renderContext.variant || 'default'}`}>

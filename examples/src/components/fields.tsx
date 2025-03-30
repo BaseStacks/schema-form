@@ -1,4 +1,4 @@
-import { SchemaFormField, SchemaFormRenderProps, useArray, useField, useObject } from '@basestacks/schema-form';
+import { SchemaFormField, SchemaFormRenderProps, useArrayField, useField, useObjectField } from '@basestacks/schema-form';
 export interface FormRenderContext {
     readonly inputType?: string;
 }
@@ -84,7 +84,7 @@ export function SelectField() {
 }
 
 export function ObjectField() {
-    const { fields } = useObject<FormRenderContext>();
+    const { fields } = useObjectField<FormRenderContext>();
     return (
         <div className="field-object">
             {fields.map((field) => (
@@ -97,7 +97,7 @@ export function ObjectField() {
 }
 
 export function ArrayField() {
-    const { title, error, array, getItemName } = useArray<FormRenderContext>();
+    const { title, error, array, getItemName } = useArrayField<FormRenderContext>();
     return (
         <div className="field-array">
             <div>

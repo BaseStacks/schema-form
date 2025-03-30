@@ -2,8 +2,8 @@
     "SchemaForm",
     "SchemaFormField",
     "SchemaFormProvider",
-    "useArray",
+    "useArrayField",
     "useField",
-    "useObject",
+    "useObjectField",
     "useUncontrolledField"
 ]
