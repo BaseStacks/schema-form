@@ -34,7 +34,7 @@ While **React Hook Form** provides an excellent foundation for handling forms in
   - [Defining Form Schema](#defining-form-schema)
   - [Customization UI](#customization-ui)
   - [Using the Form](#using-the-form)
-- [API Reference](#https://github.com/basestacks/schema-form/docs)
+- [API Reference](https://github.com/basestacks/schema-form/tree/master/docs)
 - [Contributing](#contributing)
 
 ## Installation
