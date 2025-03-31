@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { FieldSchemas, SchemaForm, SchemaFormProvider } from '@basestacks/schema-form';
+import { FormSchema, SchemaForm, SchemaFormProvider } from '@basestacks/schema-form';
 import { ExampleFormProps, withExample } from '../components/hoc/withExample';
 import { CheckboxField, FormLayout, FormRenderContext, InputField } from '../components/fields';
 
@@ -24,7 +24,7 @@ interface FormValues {
     readonly email: string;
 }
 
-const fields: FieldSchemas<FormValues, FormRenderContext> = {
+const fields: FormSchema<FormValues, FormRenderContext> = {
     receiveNewsletter: {
         type: 'checkbox',
         title: 'Receive newsletter'

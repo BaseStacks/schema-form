@@ -1,12 +1,12 @@
 import { useCallback, useMemo } from 'react';
 import { FieldValues, FormProvider, SubmitHandler, useForm, UseFormProps } from 'react-hook-form';
-import { SchemaFormContextType, SchemaFormRenderProps, RenderContext, FieldSchemas } from '../types';
+import { SchemaFormContextType, SchemaFormRenderProps, RenderContext, FormSchema } from '../types';
 import { SchemaFormField } from './SchemaFormField';
 import { useGlobalContext } from '../hooks/useGlobalContext';
 import { SchemaFormContext } from '../contexts';
 
 export type SchemaFormProps<TFormValue extends FieldValues = FieldValues, TRenderContext extends RenderContext = RenderContext> = UseFormProps<TFormValue> & {
-    readonly fields: FieldSchemas<TFormValue, TRenderContext>;
+    readonly fields: FormSchema<TFormValue, TRenderContext>;
     readonly renderContext?: TRenderContext;
     readonly onSubmit?: SubmitHandler<TFormValue>;
     readonly children?: (innerProps: SchemaFormRenderProps<TRenderContext, TFormValue>) => React.ReactNode;

@@ -3,17 +3,6 @@ import { FieldPath, FieldValues } from 'react-hook-form';
 import { ObjectFieldSchema, RenderContext } from '../types';
 import { useFieldContext } from './useFieldContext';
 
-/**
- * Return type for the useObjectField hook which manages object fields in forms.
- * 
- * @property schema - The schema definition for this object field.
- * @property name - The field name in the form.
- * @property title - Optional title to display for the field.
- * @property description - Optional description text for the field.
- * @property placeholder - Optional placeholder text for the field.
- * @property fields - Array of nested field paths contained within this object field.
- * @property renderContext - The context object used for rendering this field.
- */
 export interface UseObjectFieldReturn<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues, TFieldValue extends FieldValues = FieldValues> {
     readonly schema: ObjectFieldSchema<TRenderContext, TFormValue, TFieldValue>;
     readonly name: string;
