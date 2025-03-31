@@ -1,7 +1,8 @@
 import { useMemo, useCallback } from 'react';
-import { FieldValues, FieldPath, useFieldArray, FieldArrayPath, UseFieldArrayProps, UseFieldArrayReturn, useFormState, FieldErrors, ArrayPath } from 'react-hook-form';
+import { FieldValues, FieldPath, useFieldArray, FieldArrayPath, UseFieldArrayProps, UseFieldArrayReturn, useFormState } from 'react-hook-form';
 import { ArrayFieldSchema, RenderContext } from '../types';
 import { useFieldContext } from './useFieldContext';
+import { FieldError } from 'react-hook-form';
 
 export interface UseArrayFieldReturn<
     TRenderContext extends RenderContext = RenderContext,
@@ -18,7 +19,7 @@ export interface UseArrayFieldReturn<
     readonly canRemoveItem: boolean;
     readonly getItemName: (index: number) => FieldPath<TFormValue>;
     readonly renderContext: TRenderContext;
-    readonly error?: FieldErrors<TFormValue>[ArrayPath<TFormValue>];
+    readonly error?: FieldError;
     readonly required?: boolean;
     readonly minLength?: number;
     readonly maxLength?: number;
@@ -56,7 +57,7 @@ export const useArrayField = <
         name: name as FieldPath<TFormValue>
     });
 
-    const error = errors[name] as FieldErrors<TFormValue>[ArrayPath<TFormValue>];
+    const error = errors[name] as FieldError;
 
     const { fields } = array;
 
