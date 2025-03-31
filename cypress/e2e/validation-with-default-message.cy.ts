@@ -1,6 +1,6 @@
 describe('validation with default messages', () => {
     beforeEach(() => {
-        cy.visit('http://localhost:3000/validation-with-default-messages');
+        cy.visit('/validation-with-default-messages');
     });
 
     it('should display default validation messages for required fields', () => {

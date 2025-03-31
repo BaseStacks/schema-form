@@ -10,9 +10,7 @@
   "main": "src/index.tsx",
   "scripts": {
     "build": "react-scripts build",
-    "eject": "react-scripts eject",
-    "start": "cross-env BROWSER=none react-scripts start",
-    "test": "react-scripts test --env=jsdom"
+    "start": "cross-env BROWSER=none react-scripts start"
   },
   "browserslist": [
     ">0.2%",
@@ -31,6 +29,7 @@
   "devDependencies": {
     "@types/react": "^19.0.12",
     "@types/react-dom": "^19.0.4",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "cross-env": "^7.0.3"
   }
 }

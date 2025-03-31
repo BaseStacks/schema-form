@@ -58,7 +58,8 @@
         "test": "jest --config ./scripts/jest/jest.config.ts",
         "test:coverage": "pnpm test --coverage",
         "test:watch": "pnpm test--onlyChanged --watch",
-        "type": "tsc --noEmit"
+        "type": "tsc --noEmit",
+        "prerelease": "sh ./scripts/pre-release.sh"
     },
     "dependencies": {
         "react-hook-form": "^7.54.2"

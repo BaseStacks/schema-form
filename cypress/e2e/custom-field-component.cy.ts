@@ -1,6 +1,6 @@
 describe('Custom Field Component', () => {
     beforeEach(() => {
-        cy.visit('http://localhost:3000/custom-field-component');
+        cy.visit('/custom-field-component');
     });
 
     it('should validate required fields and show error messages', () => {
