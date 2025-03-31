@@ -189,8 +189,6 @@ Wrap your form with the `FormProvider` to apply custom UI components and context
 
 Check out the [example](https://codesandbox.io/p/sandbox/55msn7) for a complete implementation.
 
-## API Reference
-
 ## Contributing
 
 We welcome contributions to make `@basestacks/schema-form` even better! Whether you're fixing bugs, improving documentation, or adding new features, your help is appreciated.
