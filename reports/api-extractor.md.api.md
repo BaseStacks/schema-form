@@ -4,12 +4,10 @@
 
 ```ts
 
-import { ArrayPath } from 'react-hook-form';
 import { ControllerFieldState } from 'react-hook-form';
 import { ControllerRenderProps } from 'react-hook-form';
 import { FieldArrayPath } from 'react-hook-form';
 import { FieldError } from 'react-hook-form';
-import { FieldErrors } from 'react-hook-form';
 import { FieldPath } from 'react-hook-form';
 import { FieldValues } from 'react-hook-form';
 import { JSX } from 'react/jsx-runtime';
@@ -203,7 +201,7 @@ export interface UseArrayFieldReturn<TRenderContext extends RenderContext = Rend
     // (undocumented)
     readonly description?: string;
     // (undocumented)
-    readonly error?: FieldErrors<TFormValue>[ArrayPath<TFormValue>];
+    readonly error?: FieldError;
     // (undocumented)
     readonly getItemName: (index: number) => FieldPath<TFormValue>;
     // (undocumented)
