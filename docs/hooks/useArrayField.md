@@ -16,7 +16,7 @@ import { useArrayField } from '@basestacks/schema-form';
 
 ## Returns
 
-`UseArrayFieldReturn<TRenderContext, TFormValue, TFieldValue>` object containing:
+`UseArrayFieldReturn` object containing:
 
 | Property | Type | Description |
 |----------|------|-------------|

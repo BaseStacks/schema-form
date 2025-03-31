@@ -1,6 +1,6 @@
 # useUncontrolledField
 
-A hook that registers a field with the form and provides access to field properties and validation rules.
+A hook that registers a field with the form, allowing it to be used in uncontrolled mode. This is useful for simple input elements that guarantee better performance by avoiding unnecessary re-renders.
 
 ## Import
 
