@@ -38,7 +38,7 @@ export const useArrayField = <
     TRenderContext extends RenderContext = RenderContext,
     TFormValue extends FieldValues = FieldValues,
     TItem extends FieldValues = FieldValues
->(baseSchema?: UseFieldArrayProps<any>['rules']): UseArrayFieldReturn<TRenderContext, TFormValue, TItem> => {
+>(baseSchema?: UseFieldArrayProps<TFormValue>['rules']): UseArrayFieldReturn<TRenderContext, TFormValue, TItem> => {
     const { schema, name, rules, renderContext } = useFieldContext<TRenderContext, TFormValue>();
 
     const arraySchema = useMemo(() => ({

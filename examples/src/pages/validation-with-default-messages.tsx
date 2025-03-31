@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { FieldSchemas, SchemaForm, SchemaFormProvider } from '@basestacks/schema-form';
+import { FormSchema, SchemaForm, SchemaFormProvider } from '@basestacks/schema-form';
 import { ExampleFormProps, withExample } from '../components/hoc/withExample';
 import { ArrayField, CheckboxField, FormLayout, FormRenderContext, InputField, ObjectField, SelectField } from '../components/fields';
 
@@ -46,7 +46,7 @@ interface FormValues {
     socialLinks: { value: string }[];
 }
 
-const fields: FieldSchemas<FormValues, FormRenderContext> = {
+const fields: FormSchema<FormValues, FormRenderContext> = {
     fullName: {
         type: 'text',
         title: 'FullName',

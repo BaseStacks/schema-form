@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { FieldSchemas, SchemaForm, SchemaFormProvider } from '@basestacks/schema-form';
+import { FormSchema, SchemaForm, SchemaFormProvider } from '@basestacks/schema-form';
 import { ExampleFormProps, withExample } from '../components/hoc/withExample';
 import { CheckboxField, FormLayout, FormRenderContext, InputField } from '../components/fields';
 
@@ -25,7 +25,7 @@ interface FormValues {
     readonly rememberMe: boolean;
 }
 
-const fields: FieldSchemas<FormValues, FormRenderContext> = {
+const fields: FormSchema<FormValues, FormRenderContext> = {
     username: {
         type: 'text',
         title: 'Username',

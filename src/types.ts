@@ -22,7 +22,7 @@ export type SelectOption<TValue = any, TRenderContext = Record<string, any>> = T
 
 export type SchemaFormRenderProps<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues> = {
     readonly form: UseFormReturn<TFormValue>;
-    readonly fields: FieldSchemas<TFormValue>;
+    readonly fields: FormSchema<TFormValue>;
     readonly onSubmit: SubmitHandler<TFormValue>;
     readonly renderContext: TRenderContext;
     readonly children: React.ReactNode;
@@ -67,7 +67,7 @@ export interface SchemaFormContextType<TRenderContext extends RenderContext = Re
     /** Form control object */
     readonly form: UseFormReturn<TFormValue>;
     /** Field schema definitions */
-    readonly fields: FieldSchemas<TFormValue, TRenderContext>;
+    readonly fields: FormSchema<TFormValue, TRenderContext>;
     /** Render context */
     readonly renderContext: TRenderContext;
 }
@@ -155,7 +155,7 @@ export type ObjectFieldProperties<
         | ArrayFieldSchema<TRenderContext, TProperties, TProperties[K] extends FieldValues ? TProperties[K] : any>;
     };
 
-export type FieldSchemas<
+export type FormSchema<
     TFormValue extends FieldValues = FieldValues,
     TRenderContext extends RenderContext = RenderContext,
 > = {
