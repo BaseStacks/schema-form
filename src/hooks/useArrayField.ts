@@ -12,9 +12,9 @@ export interface UseArrayFieldReturn<
     readonly array: UseFieldArrayReturn<TFormValue>;
     readonly schema: ArrayFieldSchema<TRenderContext, TFormValue, TItem[]>;
     readonly name: string;
-    readonly title?: string | null;
-    readonly description?: string;
-    readonly placeholder?: string;
+    readonly title?: string | React.ReactNode | null;
+    readonly description?: string | React.ReactNode | null;
+    readonly placeholder?: string | React.ReactNode | null;
     readonly canAddItem: boolean;
     readonly canRemoveItem: boolean;
     readonly getItemName: (index: number) => FieldPath<TFormValue>;

@@ -7,9 +7,9 @@ export interface UseUncontrolledFieldReturn<TRenderContext extends RenderContext
     readonly field: UseFormRegisterReturn;
     readonly schema: GenericFieldSchema<TRenderContext, TFormValue>;
     readonly name: string;
-    readonly title?: string | null;
-    readonly description?: string;
-    readonly placeholder?: string;
+    readonly title?: string | React.ReactNode | null;
+    readonly description?: string | React.ReactNode | null;
+    readonly placeholder?: string | React.ReactNode | null;
     readonly renderContext: TRenderContext;
     readonly required?: boolean;
     readonly min?: number;

@@ -1,3 +1,4 @@
+import React from 'react';
 import { FieldArrayPath, FieldPath, FieldValues, RegisterOptions, SubmitHandler, UseFormReturn } from 'react-hook-form';
 
 export type RenderContext = Record<any, any>;
@@ -103,9 +104,9 @@ export type BaseFieldSchema<
 > = {
     readonly type?: string;
     // Field information
-    readonly title?: string | null;
-    readonly description?: string;
-    readonly placeholder?: string;
+    readonly title?: string | React.ReactNode | null;
+    readonly description?: string | React.ReactNode | null;
+    readonly placeholder?: string | React.ReactNode | null;
 
     /** Field status */
     readonly visible?: ConditionedRule<TFormValue> | boolean;

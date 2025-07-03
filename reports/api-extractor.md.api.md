@@ -12,6 +12,7 @@ import { FieldPath } from 'react-hook-form';
 import { FieldValues } from 'react-hook-form';
 import { JSX } from 'react/jsx-runtime';
 import { PropsWithChildren } from 'react';
+import { default as React_2 } from 'react';
 import { RegisterOptions } from 'react-hook-form';
 import { SubmitHandler } from 'react-hook-form';
 import { UseFieldArrayProps } from 'react-hook-form';
@@ -29,9 +30,9 @@ export type ArrayFieldSchema<TRenderContext extends RenderContext = RenderContex
 // @public (undocumented)
 export type BaseFieldSchema<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues> = {
     readonly type?: string;
-    readonly title?: string | null;
-    readonly description?: string;
-    readonly placeholder?: string;
+    readonly title?: string | React_2.ReactNode | null;
+    readonly description?: string | React_2.ReactNode | null;
+    readonly placeholder?: string | React_2.ReactNode | null;
     readonly visible?: ConditionedRule<TFormValue> | boolean;
     readonly renderContext?: Partial<TRenderContext>;
 };
@@ -60,7 +61,7 @@ export type ConditionedRule<T extends FieldValues = FieldValues> = {
 // @public (undocumented)
 export type CustomFieldSchema<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues> = GenericFieldSchema<TRenderContext, TFormValue> & {
     readonly type?: undefined;
-    readonly Component: React.ComponentType<any>;
+    readonly Component: React_2.ComponentType<any>;
 };
 
 // @public (undocumented)
@@ -96,7 +97,7 @@ export type FormSchema<TFormValue extends FieldValues = FieldValues, TRenderCont
 export type GenericFieldSchema<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues> = BaseFieldSchema<TRenderContext, TFormValue> & RegisterOptions<TFormValue> & FieldSchemaWithOption & FieldSchemaWithFormat;
 
 // @public (undocumented)
-export type Message = string | React.ReactNode;
+export type Message = string | React_2.ReactNode;
 
 // @public (undocumented)
 export type ObjectFieldProperties<TRenderContext extends RenderContext = RenderContext, TProperties extends FieldValues = FieldValues> = {
@@ -131,9 +132,9 @@ export function SchemaForm<TFormValue extends FieldValues = FieldValues, TRender
 // @public (undocumented)
 export interface SchemaFormComponents<TRenderContext extends RenderContext = RenderContext> {
     readonly fields: {
-        readonly [key: string]: React.ComponentType;
+        readonly [key: string]: React_2.ComponentType;
     };
-    readonly Form: React.ComponentType<SchemaFormRenderProps<TRenderContext, any>>;
+    readonly Form: React_2.ComponentType<SchemaFormRenderProps<TRenderContext, any>>;
 }
 
 // @public
@@ -178,7 +179,7 @@ export type SchemaFormRenderProps<TRenderContext extends RenderContext = RenderC
     readonly fields: FormSchema<TFormValue>;
     readonly onSubmit: SubmitHandler<TFormValue>;
     readonly renderContext: TRenderContext;
-    readonly children: React.ReactNode;
+    readonly children: React_2.ReactNode;
 };
 
 // @public (undocumented)
@@ -199,7 +200,7 @@ export interface UseArrayFieldReturn<TRenderContext extends RenderContext = Rend
     // (undocumented)
     readonly canRemoveItem: boolean;
     // (undocumented)
-    readonly description?: string;
+    readonly description?: string | React.ReactNode | null;
     // (undocumented)
     readonly error?: FieldError;
     // (undocumented)
@@ -211,7 +212,7 @@ export interface UseArrayFieldReturn<TRenderContext extends RenderContext = Rend
     // (undocumented)
     readonly name: string;
     // (undocumented)
-    readonly placeholder?: string;
+    readonly placeholder?: string | React.ReactNode | null;
     // (undocumented)
     readonly renderContext: TRenderContext;
     // (undocumented)
@@ -219,7 +220,7 @@ export interface UseArrayFieldReturn<TRenderContext extends RenderContext = Rend
     // (undocumented)
     readonly schema: ArrayFieldSchema<TRenderContext, TFormValue, TItem[]>;
     // (undocumented)
-    readonly title?: string | null;
+    readonly title?: string | React.ReactNode | null;
 }
 
 // @public
@@ -228,7 +229,7 @@ export const useField: <TRenderContext extends RenderContext = RenderContext, TF
 // @public (undocumented)
 export interface UseFieldReturn<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues> {
     // (undocumented)
-    readonly description?: string;
+    readonly description?: string | React.ReactNode | null;
     // (undocumented)
     readonly error?: FieldError;
     // (undocumented)
@@ -250,7 +251,7 @@ export interface UseFieldReturn<TRenderContext extends RenderContext = RenderCon
     // (undocumented)
     readonly pattern?: RegExp;
     // (undocumented)
-    readonly placeholder?: string;
+    readonly placeholder?: string | React.ReactNode | null;
     // (undocumented)
     readonly renderContext: TRenderContext;
     // (undocumented)
@@ -258,7 +259,7 @@ export interface UseFieldReturn<TRenderContext extends RenderContext = RenderCon
     // (undocumented)
     readonly schema: GenericFieldSchema<TRenderContext, TFormValue>;
     // (undocumented)
-    readonly title?: string | null;
+    readonly title?: string | React.ReactNode | null;
 }
 
 // @public
@@ -267,19 +268,19 @@ export const useObjectField: <TRenderContext extends RenderContext = RenderConte
 // @public (undocumented)
 export interface UseObjectFieldReturn<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues, TFieldValue extends FieldValues = FieldValues> {
     // (undocumented)
-    readonly description?: string;
+    readonly description?: string | React.ReactNode | null;
     // (undocumented)
     readonly fields: FieldPath<TFormValue>[];
     // (undocumented)
     readonly name: string;
     // (undocumented)
-    readonly placeholder?: string;
+    readonly placeholder?: string | React.ReactNode | null;
     // (undocumented)
     readonly renderContext: TRenderContext;
     // (undocumented)
     readonly schema: ObjectFieldSchema<TRenderContext, TFormValue, TFieldValue>;
     // (undocumented)
-    readonly title?: string | null;
+    readonly title?: string | React.ReactNode | null;
 }
 
 // @public
@@ -288,7 +289,7 @@ export const useUncontrolledField: <TRenderContext extends RenderContext = Rende
 // @public (undocumented)
 export interface UseUncontrolledFieldReturn<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues> {
     // (undocumented)
-    readonly description?: string;
+    readonly description?: string | React.ReactNode | null;
     // (undocumented)
     readonly field: UseFormRegisterReturn;
     // (undocumented)
@@ -304,7 +305,7 @@ export interface UseUncontrolledFieldReturn<TRenderContext extends RenderContext
     // (undocumented)
     readonly pattern?: RegExp;
     // (undocumented)
-    readonly placeholder?: string;
+    readonly placeholder?: string | React.ReactNode | null;
     // (undocumented)
     readonly renderContext: TRenderContext;
     // (undocumented)
@@ -312,7 +313,7 @@ export interface UseUncontrolledFieldReturn<TRenderContext extends RenderContext
     // (undocumented)
     readonly schema: GenericFieldSchema<TRenderContext, TFormValue>;
     // (undocumented)
-    readonly title?: string | null;
+    readonly title?: string | React.ReactNode | null;
 }
 
 // @public (undocumented)

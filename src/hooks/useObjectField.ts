@@ -6,9 +6,9 @@ import { useFieldContext } from './useFieldContext';
 export interface UseObjectFieldReturn<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues, TFieldValue extends FieldValues = FieldValues> {
     readonly schema: ObjectFieldSchema<TRenderContext, TFormValue, TFieldValue>;
     readonly name: string;
-    readonly title?: string | null;
-    readonly description?: string;
-    readonly placeholder?: string;
+    readonly title?: string | React.ReactNode | null;
+    readonly description?: string | React.ReactNode | null;
+    readonly placeholder?: string | React.ReactNode | null;
     
     // The nested field names of the object schema
     readonly fields: FieldPath<TFormValue>[];
