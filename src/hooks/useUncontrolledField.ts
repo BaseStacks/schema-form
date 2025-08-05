@@ -9,7 +9,7 @@ export interface UseUncontrolledFieldReturn<TRenderContext extends RenderContext
     readonly name: string;
     readonly title?: string | React.ReactNode | null;
     readonly description?: string | React.ReactNode | null;
-    readonly placeholder?: string | React.ReactNode | null;
+    readonly placeholder?: string;
     readonly renderContext: TRenderContext;
     readonly required?: boolean;
     readonly min?: number;

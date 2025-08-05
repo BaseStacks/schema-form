@@ -14,7 +14,7 @@ export interface UseFieldReturn<
     readonly name: string;
     readonly title?: string | React.ReactNode | null;
     readonly description?: string | React.ReactNode | null;
-    readonly placeholder?: string | React.ReactNode | null;
+    readonly placeholder?: string;
     readonly renderContext: TRenderContext;
     readonly error?: FieldError;
     readonly required?: boolean;

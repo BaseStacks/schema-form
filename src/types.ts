@@ -106,7 +106,7 @@ export type BaseFieldSchema<
     // Field information
     readonly title?: string | React.ReactNode | null;
     readonly description?: string | React.ReactNode | null;
-    readonly placeholder?: string | React.ReactNode | null;
+    readonly placeholder?: string;
 
     /** Field status */
     readonly visible?: ConditionedRule<TFormValue> | boolean;

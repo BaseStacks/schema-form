@@ -14,7 +14,7 @@ export interface UseArrayFieldReturn<
     readonly name: string;
     readonly title?: string | React.ReactNode | null;
     readonly description?: string | React.ReactNode | null;
-    readonly placeholder?: string | React.ReactNode | null;
+    readonly placeholder?: string;
     readonly canAddItem: boolean;
     readonly canRemoveItem: boolean;
     readonly getItemName: (index: number) => FieldPath<TFormValue>;

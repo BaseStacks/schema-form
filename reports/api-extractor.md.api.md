@@ -212,7 +212,7 @@ export interface UseArrayFieldReturn<TRenderContext extends RenderContext = Rend
     // (undocumented)
     readonly name: string;
     // (undocumented)
-    readonly placeholder?: string | React.ReactNode | null;
+    readonly placeholder?: string;
     // (undocumented)
     readonly renderContext: TRenderContext;
     // (undocumented)
@@ -251,7 +251,7 @@ export interface UseFieldReturn<TRenderContext extends RenderContext = RenderCon
     // (undocumented)
     readonly pattern?: RegExp;
     // (undocumented)
-    readonly placeholder?: string | React.ReactNode | null;
+    readonly placeholder?: string;
     // (undocumented)
     readonly renderContext: TRenderContext;
     // (undocumented)
@@ -274,7 +274,7 @@ export interface UseObjectFieldReturn<TRenderContext extends RenderContext = Ren
     // (undocumented)
     readonly name: string;
     // (undocumented)
-    readonly placeholder?: string | React.ReactNode | null;
+    readonly placeholder?: string;
     // (undocumented)
     readonly renderContext: TRenderContext;
     // (undocumented)
@@ -305,7 +305,7 @@ export interface UseUncontrolledFieldReturn<TRenderContext extends RenderContext
     // (undocumented)
     readonly pattern?: RegExp;
     // (undocumented)
-    readonly placeholder?: string | React.ReactNode | null;
+    readonly placeholder?: string;
     // (undocumented)
     readonly renderContext: TRenderContext;
     // (undocumented)

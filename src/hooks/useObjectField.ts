@@ -8,7 +8,7 @@ export interface UseObjectFieldReturn<TRenderContext extends RenderContext = Ren
     readonly name: string;
     readonly title?: string | React.ReactNode | null;
     readonly description?: string | React.ReactNode | null;
-    readonly placeholder?: string | React.ReactNode | null;
+    readonly placeholder?: string;
     
     // The nested field names of the object schema
     readonly fields: FieldPath<TFormValue>[];

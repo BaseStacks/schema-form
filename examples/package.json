@@ -24,7 +24,8 @@
     "react-dom": "^19.0.0",
     "react-scripts": "^5.0.1",
     "react-router": "^7.4.0",
-    "react-router-dom": "^7.4.0"
+    "react-router-dom": "^7.4.0",
+    "react-hook-form": "^7.62.0"
   },
   "devDependencies": {
     "@types/react": "^19.0.12",

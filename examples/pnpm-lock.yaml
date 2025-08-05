@@ -10,13 +10,16 @@ importers:
     dependencies:
       '@basestacks/schema-form':
         specifier: file:..
-        version: file:..(react-hook-form@7.54.2(react@19.0.0))(react@19.0.0)
+        version: file:..(react-hook-form@7.62.0(react@19.0.0))(react@19.0.0)
       react:
         specifier: ^19.0.0
         version: 19.0.0
       react-dom:
         specifier: ^19.0.0
         version: 19.0.0(react@19.0.0)
+      react-hook-form:
+        specifier: ^7.62.0
+        version: 7.62.0(react@19.0.0)
       react-router:
         specifier: ^7.4.0
         version: 7.4.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -4416,8 +4419,8 @@ packages:
   react-error-overlay@6.1.0:
     resolution: {integrity: sha512-SN/U6Ytxf1QGkw/9ve5Y+NxBbZM6Ht95tuXNMKs8EJyFa/Vy/+Co3stop3KBHARfn/giv+Lj1uUnTfOJ3moFEQ==}
 
-  react-hook-form@7.54.2:
-    resolution: {integrity: sha512-eHpAUgUjWbZocoQYUHposymRb4ZP6d0uwUnooL2uOybA9/3tPUvoAKqEWK1WaSiTxxOfTpffNZP7QwlnM3/gEg==}
+  react-hook-form@7.62.0:
+    resolution: {integrity: sha512-7KWFejc98xqG/F4bAxpL41NB3o1nnvQO1RWZT3TqRZYL8RryQETGfEdVnJN2fy1crCiBLLjkRBVK05j24FxJGA==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
@@ -6379,10 +6382,10 @@ snapshots:
       '@babel/helper-string-parser': 7.25.9
       '@babel/helper-validator-identifier': 7.25.9
 
-  '@basestacks/schema-form@file:..(react-hook-form@7.54.2(react@19.0.0))(react@19.0.0)':
+  '@basestacks/schema-form@file:..(react-hook-form@7.62.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       react: 19.0.0
-      react-hook-form: 7.54.2(react@19.0.0)
+      react-hook-form: 7.62.0(react@19.0.0)
 
   '@bcoe/v8-coverage@0.2.3': {}
 
@@ -10747,7 +10750,7 @@ snapshots:
 
   react-error-overlay@6.1.0: {}
 
-  react-hook-form@7.54.2(react@19.0.0):
+  react-hook-form@7.62.0(react@19.0.0):
     dependencies:
       react: 19.0.0
 

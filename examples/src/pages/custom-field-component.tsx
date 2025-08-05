@@ -89,6 +89,7 @@ function ExampleForm({ onSubmit }: ExampleFormProps) {
         <SchemaForm
             fields={fields}
             onSubmit={onSubmit}
+            shouldUseNativeValidation={false}
         />
     );
 }
