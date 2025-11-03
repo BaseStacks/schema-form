@@ -58,6 +58,11 @@ export const processValidationRule = (key: string, rule: any, defaultMessages?: 
         return rule;
     }
 
+    const defaultMessage = defaultMessages?.[key as keyof DefaultMessages];
+    if (!defaultMessage) {
+        return rule;
+    }
+
     return {
         value: rule,
         message: defaultMessages?.[key as keyof DefaultMessages]

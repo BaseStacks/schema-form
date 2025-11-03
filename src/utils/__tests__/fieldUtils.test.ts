@@ -217,10 +217,7 @@ describe('fieldUtils', () => {
         });
 
         it('should transform primitive rules without default messages', () => {
-            expect(processValidationRule('minLength', 5)).toEqual({
-                value: 5,
-                message: undefined
-            });
+            expect(processValidationRule('minLength', 5)).toEqual(5);
         });
     });
 
@@ -246,8 +243,8 @@ describe('fieldUtils', () => {
 
             expect(result).toEqual({
                 required: true,
-                minLength: { value: 5, message: undefined },
-                maxLength: { value: 10, message: undefined },
+                minLength: 5,
+                maxLength: 10,
                 stats: {
                     required: true,
                     minLength: 5,
@@ -303,7 +300,7 @@ describe('fieldUtils', () => {
             const result = getValidationRules(field);
 
             expect(result).toEqual({
-                pattern: { value: pattern, message: undefined },
+                pattern: pattern,
                 stats: { pattern }
             });
         });
