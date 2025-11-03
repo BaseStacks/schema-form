@@ -48,7 +48,7 @@ npm install @basestacks/schema-form
 ### Defining Form Schema
 
 ```tsx
-import { SchemaForm, FormSchema } from "@basestacks/schema-form";
+import { SchemaForm, FormFields } from "@basestacks/schema-form";
 
 interface FormValues {
   username: string;
@@ -56,7 +56,7 @@ interface FormValues {
   rememberMe: boolean;
 }
 
-const fields: FormSchema<FormValues> = {
+const fields: FormFields<FormValues> = {
   username: {
     type: "text",
     title: "Username",
