@@ -27,7 +27,7 @@ interface SimpleForm {
     password: string;
 }
 
-const fields: FormSchema<SimpleForm> = {
+const fields: FormFields<SimpleForm> = {
     username: {
         type: 'text',
         title: 'Username',

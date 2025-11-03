@@ -14,4 +14,4 @@ This documentation provides detailed information about the API of `@basestacks/s
   - [useArrayField](./hooks/useArrayField.md)
   - [useObjectField](./hooks/useObjectField.md)
 - Types
-  - [FormSchema](./schema/FormSchema.md)
+  - [FormFields](./schema/FormFields.md)

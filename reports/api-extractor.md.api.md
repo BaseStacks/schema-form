@@ -89,7 +89,7 @@ export interface FieldSchemaWithOption {
 }
 
 // @public (undocumented)
-export type FormSchema<TFormValue extends FieldValues = FieldValues, TRenderContext extends RenderContext = RenderContext> = {
+export type FormFields<TFormValue extends FieldValues = FieldValues, TRenderContext extends RenderContext = RenderContext> = {
     readonly [K in keyof TFormValue]: CustomFieldSchema<TRenderContext, TFormValue> | GenericFieldSchema<TRenderContext, TFormValue> | ObjectFieldSchema<TRenderContext, TFormValue, TFormValue[K] extends FieldValues ? TFormValue[K] : any> | ArrayFieldSchema<TRenderContext, TFormValue, TFormValue[K] extends FieldValues ? TFormValue[K] : any>;
 };
 
@@ -139,7 +139,7 @@ export interface SchemaFormComponents<TRenderContext extends RenderContext = Ren
 
 // @public
 export interface SchemaFormContextType<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues> {
-    readonly fields: FormSchema<TFormValue, TRenderContext>;
+    readonly fields: FormFields<TFormValue, TRenderContext>;
     readonly form: UseFormReturn<TFormValue>;
     readonly renderContext: TRenderContext;
 }
@@ -164,7 +164,7 @@ export interface SchemaFormGlobalContextType {
 
 // @public (undocumented)
 export type SchemaFormProps<TFormValue extends FieldValues = FieldValues, TRenderContext extends RenderContext = RenderContext> = UseFormProps<TFormValue> & {
-    readonly fields: FormSchema<TFormValue, TRenderContext>;
+    readonly fields: FormFields<TFormValue, TRenderContext>;
     readonly renderContext?: TRenderContext;
     readonly onSubmit?: SubmitHandler<TFormValue>;
     readonly children?: (innerProps: SchemaFormRenderProps<TRenderContext, TFormValue>) => React.ReactNode;
@@ -176,7 +176,7 @@ export function SchemaFormProvider({ children, ...props }: PropsWithChildren<Sch
 // @public (undocumented)
 export type SchemaFormRenderProps<TRenderContext extends RenderContext = RenderContext, TFormValue extends FieldValues = FieldValues> = {
     readonly form: UseFormReturn<TFormValue>;
-    readonly fields: FormSchema<TFormValue>;
+    readonly fields: FormFields<TFormValue>;
     readonly onSubmit: SubmitHandler<TFormValue>;
     readonly renderContext: TRenderContext;
     readonly children: React_2.ReactNode;

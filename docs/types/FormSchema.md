@@ -1,10 +1,10 @@
-# FormSchema
+# FormFields
 
 The root schema definition type for form fields.
 
 ## Description
 
-`FormSchema` is a mapped type that defines the schema for a form based on the structure of the form values. It maps each key in the form values type to a corresponding field schema.
+`FormFields` is a mapped type that defines the schema for a form based on the structure of the form values. It maps each key in the form values type to a corresponding field schema.
 
 ## Example
 
@@ -15,7 +15,7 @@ interface LoginForm {
   rememberMe: boolean;
 }
 
-const fields: FormSchema<LoginForm> = {
+const fields: FormFields<LoginForm> = {
   username: {
     type: "text",
     title: "Username",
@@ -48,7 +48,7 @@ interface ProfileForm {
   };
 }
 
-const fields: FormSchema<ProfileForm> = {
+const fields: FormFields<ProfileForm> = {
   name: {
     type: "text",
     title: "Full Name",
@@ -87,7 +87,7 @@ interface ContactsForm {
   }>;
 }
 
-const fields: FormSchema<ContactsForm> = {
+const fields: FormFields<ContactsForm> = {
   contacts: {
     type: "array",
     title: "Contacts",
@@ -133,7 +133,7 @@ interface SurveyForm {
   companySize?: number;
 }
 
-const fields: FormSchema<SurveyForm> = {
+const fields: FormFields<SurveyForm> = {
   surveyType: {
     type: "select",
     title: "Survey Type",
@@ -171,7 +171,7 @@ const fields: FormSchema<SurveyForm> = {
 interface CustomFieldForm {
   customField: string;
 }
-const fields: FormSchema<CustomFieldForm> = {
+const fields: FormFields<CustomFieldForm> = {
   customField: {
     Component: CustomFieldComponent,
   }
@@ -180,7 +180,7 @@ const fields: FormSchema<CustomFieldForm> = {
 
 ## Notes
 
-- Each key in `FormSchema` corresponds to a field in your form
+- Each key in `FormFields` corresponds to a field in your form
 - The field schema determines how the field is validated and rendered
 - TypeScript helps ensure that your schema matches your form structure
 - Use `type` to specify what kind of field to render

@@ -12,7 +12,7 @@ import { SchemaForm } from '@basestacks/schema-form';
 
 | Prop | Type | Required | Description |
 |------|------|:--------:|-------------|
-| `fields` | `FormSchema` | ✓ | Schema definitions for form fields |
+| `fields` | `FormFields` | ✓ | Schema definitions for form fields |
 | `onSubmit` | `(data, event) => any` | | Form submission handler |
 | `renderContext` | `object` | | Context data passed to field renderers |
 | `children` | `(props: SchemaFormRenderProps) => ReactNode` | | Custom render function |
@@ -29,7 +29,7 @@ interface LoginForm {
   rememberMe: boolean;
 }
 
-const fields: FormSchema<LoginForm> = {
+const fields: FormFields<LoginForm> = {
   username: {
     type: "text",
     title: "Username",
