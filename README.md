@@ -34,6 +34,7 @@ While **React Hook Form** provides an excellent foundation for handling forms in
   - [Defining Form Schema](#defining-form-schema)
   - [Customization UI](#customization-ui)
   - [Using the Form](#using-the-form)
+  - [Remote Form Submission](#remote-form-submission)
 - [API Reference](https://github.com/basestacks/schema-form/tree/master/docs)
 - [Contributing](#contributing)
 
@@ -188,6 +189,56 @@ Wrap your form with the `FormProvider` to apply custom UI components and context
 ```
 
 Check out the [example](https://codesandbox.io/p/sandbox/55msn7) for a complete implementation.
+
+### Remote Form Submission
+
+You can trigger form submission from outside the form component using the `useSubmit` hook. This is useful for forms in modals, multi-step forms, or when the submit button needs to be placed separately from the form.
+
+```tsx
+import { SchemaForm, useSubmit, SchemaFormProvider } from "@basestacks/schema-form";
+
+function MyForm() {
+  const handleSubmit = (data) => {
+    console.log("Form submitted:", data);
+  };
+
+  return (
+    <SchemaForm
+      id="myForm"  // Form ID is required for remote submission
+      fields={{
+        name: {
+          type: "text",
+          title: "Name",
+          required: true,
+        },
+        email: {
+          type: "text",
+          title: "Email",
+          required: true,
+        },
+      }}
+      onSubmit={handleSubmit}
+    />
+  );
+}
+
+function SubmitButton() {
+  const submit = useSubmit("myForm");  // Get submit function by form ID
+
+  return <button onClick={submit}>Submit Form</button>;
+}
+
+function App() {
+  return (
+    <SchemaFormProvider>
+      <MyForm />
+      <SubmitButton />
+    </SchemaFormProvider>
+  );
+}
+```
+
+For more advanced use cases like multi-step forms and modal forms, see the [useSubmit documentation](https://github.com/basestacks/schema-form/blob/master/docs/hooks/useSubmit.md).
 
 ## Contributing
 

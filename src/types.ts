@@ -1,5 +1,13 @@
 import React from 'react';
-import { FieldArrayPath, FieldPath, FieldValues, RegisterOptions, SubmitHandler, UseFormReturn } from 'react-hook-form';
+
+import {
+    FieldArrayPath,
+    FieldPath,
+    FieldValues,
+    RegisterOptions,
+    SubmitHandler,
+    UseFormReturn,
+} from 'react-hook-form';
 
 export type RenderContext = Record<any, any>;
 
@@ -49,16 +57,24 @@ export interface SchemaFormComponents<TRenderContext extends RenderContext = Ren
     };
 }
 
+export interface FormMethods {
+    readonly submit: () => void;
+}
+
 /**
  * Global context for the JSON form configuration
  */
 export interface SchemaFormGlobalContextType {
+    /** Map of registered forms */
+    readonly formMap: Map<string, FormMethods>;
     /** Component overrides for form and fields */
     readonly components: SchemaFormComponents;
     /** Global render context */
     readonly renderContext?: RenderContext;
     /** Function to get default validation messages */
     readonly getDefaultMessages?: (validationStats: ValidationStats, options: FieldSchemaType<any, any>) => DefaultMessages;
+    /** Register a form instance by its ID */
+    readonly registerForm: (formId: string, methods: FormMethods) => () => void;
 }
 
 /**

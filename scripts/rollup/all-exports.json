@@ -5,5 +5,6 @@
     "useArrayField",
     "useField",
     "useObjectField",
+    "useSubmit",
     "useUncontrolledField"
 ]

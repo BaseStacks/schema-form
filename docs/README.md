@@ -13,5 +13,6 @@ This documentation provides detailed information about the API of `@basestacks/s
   - [useUncontrolledField](./hooks/useUncontrolledField.md)
   - [useArrayField](./hooks/useArrayField.md)
   - [useObjectField](./hooks/useObjectField.md)
+  - [useSubmit](./hooks/useSubmit.md)
 - Types
   - [FormFields](./schema/FormFields.md)

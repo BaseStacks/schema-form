@@ -20,4 +20,8 @@ export const routes = [{
     path: '/field-visibility-conditioned',
     title: 'Field Visibility (Conditioned)',
     Component: React.lazy(() => import('./pages/field-visibility-conditioned')),
+}, {
+    path: '/remote-submit',
+    title: 'Remote Form Submission (useSubmit)',
+    Component: React.lazy(() => import('./pages/remote-submit')),
 }];

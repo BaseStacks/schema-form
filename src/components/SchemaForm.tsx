@@ -1,11 +1,29 @@
-import { useCallback, useMemo } from 'react';
-import { FieldValues, FormProvider, SubmitHandler, useForm, UseFormProps } from 'react-hook-form';
-import { SchemaFormContextType, SchemaFormRenderProps, RenderContext, FormFields } from '../types';
-import { SchemaFormField } from './SchemaFormField';
-import { useGlobalContext } from '../hooks/useGlobalContext';
+import {
+    useCallback,
+    useEffect,
+    useMemo,
+} from 'react';
+
+import {
+    FieldValues,
+    FormProvider,
+    SubmitHandler,
+    useForm,
+    UseFormProps,
+} from 'react-hook-form';
+
 import { SchemaFormContext } from '../contexts';
+import { useGlobalContext } from '../hooks/useGlobalContext';
+import {
+    FormFields,
+    RenderContext,
+    SchemaFormContextType,
+    SchemaFormRenderProps,
+} from '../types';
+import { SchemaFormField } from './SchemaFormField';
 
 export type SchemaFormProps<TFormValue extends FieldValues = FieldValues, TRenderContext extends RenderContext = RenderContext> = UseFormProps<TFormValue> & {
+    readonly id?: string;
     readonly fields: FormFields<TFormValue, TRenderContext>;
     readonly renderContext?: TRenderContext;
     readonly onSubmit?: SubmitHandler<TFormValue>;
@@ -20,6 +38,7 @@ export type SchemaFormProps<TFormValue extends FieldValues = FieldValues, TRende
  * @param props - {@link SchemaFormProps}.
  */
 export function SchemaForm<TFormValue extends FieldValues = FieldValues, TRenderContext extends RenderContext = RenderContext>({
+    id,
     fields,
     renderContext,
     children,
@@ -29,9 +48,9 @@ export function SchemaForm<TFormValue extends FieldValues = FieldValues, TRender
     const {
         components,
         renderContext: globalRenderContext,
+        registerForm
     } = useGlobalContext();
 
-    // Initialize form with Ajv resolver for direct JSON Schema validation
     const form = useForm({
         ...formProps
     });
@@ -53,6 +72,29 @@ export function SchemaForm<TFormValue extends FieldValues = FieldValues, TRender
         }
     }, [onSubmit]);
 
+    const schemaForm: SchemaFormContextType<TRenderContext, TFormValue> = useMemo(() => ({
+        form,
+        fields,
+        renderContext: mergedRenderContext,
+    }), [form, fields, mergedRenderContext]);
+
+    useEffect(() => {
+        if (!id) {
+            return;
+        }
+
+        const unregister = registerForm(
+            id,
+            {
+                submit: form.handleSubmit(handleSubmit)
+            }
+        );
+
+        return () => {
+            unregister();
+        };
+    }, [id, form, form.formState, handleSubmit, registerForm]);
+
     const innerProps: SchemaFormRenderProps<TRenderContext, TFormValue> = {
         form,
         fields,
@@ -60,12 +102,6 @@ export function SchemaForm<TFormValue extends FieldValues = FieldValues, TRender
         children: childrenElements,
         renderContext: mergedRenderContext
     };
-
-    const schemaForm: SchemaFormContextType<TRenderContext, TFormValue> = useMemo(() => ({
-        form,
-        fields,
-        renderContext: mergedRenderContext,
-    }), [form, fields, mergedRenderContext]);
 
     return (
         <SchemaFormContext.Provider value={schemaForm}>

@@ -6,6 +6,7 @@ This section covers the custom hooks provided by `@basestacks/schema-form` for w
 - [useField](./useField.md) - Hook for controlled form fields
 - [useArrayField](./useArrayField.md) - Hook for managing array fields
 - [useObjectField](./useObjectField.md) - Hook for working with object fields
+- [useSubmit](./useSubmit.md) - Hook for remotely submitting forms by ID
 
 These hooks are designed to be used within custom field components to access field properties, validation rules, and form state.
 
@@ -26,6 +27,7 @@ Schema Form hooks follow a consistent pattern:
 | `useField` | For complex components that need controlled state management |
 | `useArrayField` | For repeatable field groups or dynamic lists |
 | `useObjectField` | For nested object structures with multiple fields |
+| `useSubmit` | To programmatically submit a form from outside the form component |
 
 ## Example: Creating a Custom Field Component
 

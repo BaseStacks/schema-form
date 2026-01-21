@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react';
-import { SchemaFormProvider } from '../SchemaFormProvider';
+
 import { SchemaFormGlobalContext } from '../../contexts';
+import { SchemaFormProvider } from '../SchemaFormProvider';
 
 describe('SchemaFormProvider', () => {
     it('renders children correctly', () => {
@@ -30,7 +31,7 @@ describe('SchemaFormProvider', () => {
 
         const mockRenderContext = { theme: 'dark' };
 
-        let contextValue;
+        let contextValue: any;
 
         render(
             <SchemaFormProvider components={mockComponents} renderContext={mockRenderContext}>
@@ -43,9 +44,11 @@ describe('SchemaFormProvider', () => {
             </SchemaFormProvider>
         );
 
-        expect(contextValue).toEqual({
+        expect(contextValue).toMatchObject({
             components: mockComponents,
             renderContext: mockRenderContext
         });
+        expect(contextValue.formMap).toBeInstanceOf(Map);
+        expect(typeof contextValue.registerForm).toBe('function');
     });
 });

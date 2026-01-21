@@ -1,7 +1,24 @@
 import { PropsWithChildren } from 'react';
-import { FormSchema, SchemaForm, SchemaFormProvider } from '@basestacks/schema-form';
-import { ExampleFormProps, withExample } from '../components/hoc/withExample';
-import { ArrayField, CheckboxField, FormLayout, FormRenderContext, InputField, ObjectField, SelectField } from '../components/fields';
+
+import {
+  FormFields,
+  SchemaForm,
+  SchemaFormProvider,
+} from '@basestacks/schema-form';
+
+import {
+  ArrayField,
+  CheckboxField,
+  FormLayout,
+  FormRenderContext,
+  InputField,
+  ObjectField,
+  SelectField,
+} from '../components/fields';
+import {
+  ExampleFormProps,
+  withExample,
+} from '../components/hoc/withExample';
 
 function FormProvider({ children }: PropsWithChildren) {
     return (
@@ -46,7 +63,7 @@ interface FormValues {
     socialLinks: { value: string }[];
 }
 
-const fields: FormSchema<FormValues, FormRenderContext> = {
+const fields: FormFields<FormValues, FormRenderContext> = {
     fullName: {
         type: 'text',
         title: 'FullName',

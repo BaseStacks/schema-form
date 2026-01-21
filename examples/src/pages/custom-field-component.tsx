@@ -1,7 +1,21 @@
 import { PropsWithChildren } from 'react';
-import { FormSchema, SchemaForm, SchemaFormProvider, useField } from '@basestacks/schema-form';
-import { ExampleFormProps, withExample } from '../components/hoc/withExample';
-import { FormLayout, FormRenderContext, InputField } from '../components/fields';
+
+import {
+  FormFields,
+  SchemaForm,
+  SchemaFormProvider,
+  useField,
+} from '@basestacks/schema-form';
+
+import {
+  FormLayout,
+  FormRenderContext,
+  InputField,
+} from '../components/fields';
+import {
+  ExampleFormProps,
+  withExample,
+} from '../components/hoc/withExample';
 
 function FormProvider({ children }: PropsWithChildren) {
     return (
@@ -25,7 +39,7 @@ interface FormValues {
     readonly agreeTermAndConditions: boolean;
 }
 
-const fields: FormSchema<FormValues, FormRenderContext> = {
+const fields: FormFields<FormValues, FormRenderContext> = {
     username: {
         type: 'text',
         title: 'Username',

@@ -8,3 +8,4 @@ export * from './hooks/useArrayField';
 export * from './hooks/useObjectField';
 export * from './hooks/useField';
 export * from './hooks/useUncontrolledField';
+export * from './hooks/useSubmit';

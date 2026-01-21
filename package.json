@@ -1,6 +1,6 @@
 {
     "name": "@basestacks/schema-form",
-    "version": "0.5.0",
+    "version": "0.6.0",
     "description": "A React library built on top of react-hook-form that turns schema definitions into dynamic forms, reducing boilerplate and simplifying validation while maintaining full customizability.",
     "keywords": [
         "react",
@@ -62,7 +62,7 @@
         "prerelease": "sh ./scripts/pre-release.sh"
     },
     "dependencies": {
-        "react-hook-form": "^7.66.0"
+        "react-hook-form": "^7.71.1"
     },
     "devDependencies": {
         "@eslint/js": "^9.32.0",
